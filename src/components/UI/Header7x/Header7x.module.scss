@@ -1,14 +1,8 @@
 @import '../../../settings.scss';
 
-.header {
-    margin-bottom: 15px;
-}
-
 .container {
     @include container();
-    justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid $clr_red;
 }
 
 .logo_link {
@@ -24,47 +18,22 @@
 }
 
 .nav {
+    margin-top: 15px;
     display: flex;
-
+    margin-left: 250px;
     .nav_item:not(:last-child) {
-        margin-right: 15px;
+        margin-right: 75px;
     }  
 }
 
-
-.left_border {
+.line {
     position: absolute;
-    left: 0;
-    top: 175px;
-    width: 130px;
-    border-bottom: 2px solid $clr_red;
-
-    &::after {
-        content: '';
-        position: absolute;
-        left: 130px;
-        border-bottom: 2px solid $clr_red;
-        width: 144px;
-        transform-origin: left;
-        transform: rotate(-24.75deg);
-    }
+    z-index: -1;
+    width: 100%;
+    height: 100px;
+    background: url('../../../assets/images/header_line.svg') no-repeat;
 }
 
-.right_border {
-    position: absolute;
-    right: 0;
-    top: 175px;
-    width: 130px;
-    border-bottom: 2px solid $clr_red;
-
-    &::before {
-        content: '';
-        position: absolute;
-        right: 130px;
-        border-bottom: 2px solid $clr_red;
-        width: 144px;
-        transform-origin: right;
-        transform: rotate(24.75deg);
-    }
+.title {
+    margin-left: 30px;
 }
-
