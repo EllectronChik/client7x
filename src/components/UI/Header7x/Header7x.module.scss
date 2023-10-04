@@ -1,0 +1,70 @@
+@import '../../../settings.scss';
+
+.header {
+    margin-bottom: 15px;
+}
+
+.container {
+    @include container();
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid $clr_red;
+}
+
+.logo_link {
+    display: flex;
+    margin-top: 15px;
+    margin-left: 15px;
+    width: 100px;
+    height: 100px;
+    .logo {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.nav {
+    display: flex;
+
+    .nav_item:not(:last-child) {
+        margin-right: 15px;
+    }  
+}
+
+
+.left_border {
+    position: absolute;
+    left: 0;
+    top: 175px;
+    width: 130px;
+    border-bottom: 2px solid $clr_red;
+
+    &::after {
+        content: '';
+        position: absolute;
+        left: 130px;
+        border-bottom: 2px solid $clr_red;
+        width: 144px;
+        transform-origin: left;
+        transform: rotate(-24.75deg);
+    }
+}
+
+.right_border {
+    position: absolute;
+    right: 0;
+    top: 175px;
+    width: 130px;
+    border-bottom: 2px solid $clr_red;
+
+    &::before {
+        content: '';
+        position: absolute;
+        right: 130px;
+        border-bottom: 2px solid $clr_red;
+        width: 144px;
+        transform-origin: right;
+        transform: rotate(24.75deg);
+    }
+}
+

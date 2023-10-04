@@ -1,0 +1,26 @@
+@import 'settings.scss';
+
+@font-face {
+  font-family: 'RidleyGrotesque';
+  src: url('/fonts/RidleyGrotesque-Regular.woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  font-family: 'RidleyGrotesque';
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: $clr_light;
+  list-style-type: none;
+}
+
+body {
+  background-color: $clr_dark;
+}
+
+a {
+  text-decoration: none;
+}
+
