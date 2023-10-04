@@ -12,7 +12,7 @@ const Header7x = () => {
     <header className={classes.header}>
       <div className={classes.container}>
         <Link className={classes.logo_link} to='/'>
-          <img className={classes.logo} src={logo} alt="Logo_7x" />
+          <img className={classes.logo} src={logo} alt="Logo_7x" draggable="false"/>
         </Link>
         <DoubleText className={classes.title} text='Team-League'/>
         <nav>
