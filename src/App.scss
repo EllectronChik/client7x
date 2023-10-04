@@ -1,14 +1,17 @@
 @import 'settings.scss';
 
 @font-face {
-  font-family: 'RidleyGrotesque';
-  src: url('/fonts/RidleyGrotesque-Regular.woff2');
-  font-weight: normal;
+  font-family: 'RidleyGrotesk';
+  src: local('Ridley Grotesk Regular'), local('Ridley-Grotesk-Regular'),
+      url('/public/fonts/RidleyGrotesk-Regular.woff2') format('woff2'),
+      url('/public/fonts/RidleyGrotesk-Regular.woff') format('woff'),
+      url('/public/fonts/RidleyGrotesk-Regular.ttf') format('truetype');
+  font-weight: 400;
   font-style: normal;
 }
 
 * {
-  font-family: 'RidleyGrotesque';
+  font-family: 'RidleyGrotesk';
   margin: 0;
   padding: 0;
   box-sizing: border-box;
