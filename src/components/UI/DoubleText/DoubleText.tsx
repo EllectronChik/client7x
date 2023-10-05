@@ -8,7 +8,6 @@ interface DoubleTextProps {
 
 const DoubleText: React.FC<DoubleTextProps> = ({text, className}) => {
     const textArray = [...text];
-    console.log(textArray);
     return (
         <div className={`${classes.double_text} ${className}`}>
             {textArray.map((letter, index) => (
