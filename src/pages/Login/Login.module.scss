@@ -1,0 +1,80 @@
+@import '../../settings.scss';
+
+.container {
+    @include container();
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-top: 75px;
+
+    .block {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid $clr_red;
+        border-radius: 20px;
+        padding: 30px;
+
+        .bttns {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+
+            .btn {
+                padding: 15px 40px; 
+                border: 2px solid $clr_red;
+                font-size: 20px;
+            }
+
+            .active {
+                background-color: $clr_red;
+            }
+        }
+
+        .form {
+            
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 500px;
+            
+            input {
+                margin-bottom: 30px;
+                color: $clr_dark;
+                font-size: 30px;
+                border: 2px solid $clr_red;
+                border-radius: 20px;
+                text-align: center;
+                
+                &::placeholder {
+                    text-align: center;
+                }
+            }
+
+            .error {
+                color: $clr_red;
+                margin-bottom: 20px;
+            }
+
+            .important {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 70%;
+                margin-top: 30px;
+                .important_img {
+                    width: 50px;
+                }
+                p {
+                    margin-left: 15px;
+                }
+            }
+            
+            .sub_btn {
+                font-size: 30px;
+            }
+        }
+    }
+}
