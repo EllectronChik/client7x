@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
-import { IMatch } from './../assets/images/models/IMatch';
+import { IMatch } from '../models/IMatch';
 
 export const MatchesApi = createApi({
     reducerPath: 'matchesApi',
