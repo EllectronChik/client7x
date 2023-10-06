@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import classes from './Header7x.module.scss';
 import { Link } from 'react-router-dom';
 import logo from '@assets/images/favicon.svg';
@@ -6,13 +6,27 @@ import Link7x from '../Link7x/Link7x';
 import DoubleText from '../DoubleText/DoubleText';
 import { useCookies } from 'react-cookie';
 import { UsersApi } from 'services/UserService';
-import Button7x from '../Button7x/Button7x';
+import axios from 'axios';
 
 
 const Header7x: React.FC = () => {
   const [token, setToken] = useCookies(['token']);
   const [userId, setUserId] = useCookies(['userId']);
   const [logoutUser, {}] = UsersApi.useLogoutUserMutation();
+
+  useEffect(() => {
+    if (token.token) {
+      axios({
+        url: `${import.meta.env.VITE_API_URL}is_auth/`,
+        method: 'GET',
+        headers: {
+          Authorization: `Token ${token.token}`
+        }
+      }).catch((error) => {
+        logout();
+      })
+    }
+  }, [])
 
   const logout = async () => {
     await logoutUser(token.token);
@@ -29,11 +43,11 @@ const Header7x: React.FC = () => {
         </Link>
         <DoubleText className={classes.title} text='Team-League'/>
         <nav>
-          <ul className={classes.nav}>
+          <ul className={`${classes.nav} ${token.token ? classes.nav_after_log : ''}`}>
             <li className={classes.nav_item}><Link7x to='/statistics'>Statistic</Link7x></li>
             <li className={classes.nav_item}><Link7x to='/arhive'>Arhive</Link7x></li>
             {token.token ?
-            <li className={classes.nav_item}><Button7x onClick={() => logout()}>Logout</Button7x></li>
+            <li className={classes.nav_item}><Link7x to='/account'>My account</Link7x></li>
             :
             <li className={classes.nav_item}><Link7x to='/login'>Join</Link7x></li>
             }
