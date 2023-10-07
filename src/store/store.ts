@@ -1,12 +1,12 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { MatchesApi } from '../services/MatchesService';
 import { UsersApi } from 'services/UserService';
-import { ManagerApi } from 'services/ManagerService';
+import { StatusApi } from 'services/StatusService';
 
 const rootReducer = combineReducers({
     [MatchesApi.reducerPath]: MatchesApi.reducer,
     [UsersApi.reducerPath]: UsersApi.reducer,
-    [ManagerApi.reducerPath]: ManagerApi.reducer,
+    [StatusApi.reducerPath]: StatusApi.reducer,
 })
 
 export const setupStore = () => {
@@ -15,7 +15,7 @@ export const setupStore = () => {
         middleware: (getDefaultMiddleware) => getDefaultMiddleware()
         .concat(MatchesApi.middleware)
         .concat(UsersApi.middleware)
-        .concat(ManagerApi.middleware),
+        .concat(StatusApi.middleware),
 
     })
         
