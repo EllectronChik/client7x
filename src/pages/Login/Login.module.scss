@@ -40,18 +40,7 @@
             align-items: center;
             max-width: 500px;
             
-            input {
-                margin-bottom: 30px;
-                color: $clr_dark;
-                font-size: 30px;
-                border: 2px solid $clr_red;
-                border-radius: 20px;
-                text-align: center;
-                
-                &::placeholder {
-                    text-align: center;
-                }
-            }
+
 
             .error {
                 color: $clr_red;
