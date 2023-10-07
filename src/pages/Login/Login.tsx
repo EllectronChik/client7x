@@ -9,8 +9,7 @@ import { useCookies } from 'react-cookie';
 const Login: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [isError, setIsError] = useState<string | null>(null);
-  const [token, setToken] = useCookies(['token']);
-  const [userId, setUserId] = useCookies(['userId']);
+  const [Cookie, setСookie] = useCookies(['token', 'userId', 'have_account']);
 
   const [data, setData] = useState<IUserCreate>({
     username: '',
@@ -27,9 +26,13 @@ const Login: React.FC = () => {
     document.title = isLogin ? 'Sign up' : 'Sign in'
   }, [isLogin])
 
+  useEffect(() => {
+    setIsLogin(Cookie.have_account ? false : true);
+  }, [])
+
   const verify_registration = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await createUser(data); 
+    await createUser(data);
     verify_login(e);
   }
 
@@ -40,8 +43,11 @@ const Login: React.FC = () => {
       exp_date.setDate(exp_date.getDate() + 21);
       const responce = await loginUser({username: data.username, password: data.password});
       if('data' in responce) {
-        setToken('token', responce.data.auth_token, { expires: exp_date });
-        setUserId('userId', responce.data.user_id, { expires: exp_date });
+        if (!Cookie.have_account) {
+          setСookie('have_account', 1, { maxAge: 60 * 365 * 24 * 60 * 60 });
+        }
+        setСookie('token', responce.data.auth_token, { expires: exp_date });
+        setСookie('userId', responce.data.user_id, { expires: exp_date });
         setIsError(null);
       }
       else if (responce.error) {
@@ -55,7 +61,6 @@ const Login: React.FC = () => {
       console.log(err);
     }
   }
-
   return (
     <div className={classes.container}>
       <div className={classes.block}>
@@ -67,7 +72,7 @@ const Login: React.FC = () => {
           onClick={() => setIsLogin(false)}
           className={`${isLogin ? '' : classes.active} ${classes.btn}`}>SIGN IN</button>
       </div>
-      {isLogin 
+      {isLogin
       ?
         <form className={classes.form} onSubmit={verify_registration}>
           <input type="text" placeholder="Username" onChange={(e) => setData({...data, username: e.target.value})}/>
