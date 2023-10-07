@@ -8,6 +8,14 @@
     justify-content: space-around;
 }
 
-.button {
+.logout_btn {
     margin-top: 30px;
+}
+
+.tag_form {
+    display: flex;
+    align-items: center;
+    .search_btn {
+        margin-left: 50px;
+    }
 }
