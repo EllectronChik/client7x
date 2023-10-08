@@ -7,4 +7,5 @@ export interface IPlayer {
     total_games: number;
     race: number;
     team: number;
+    league: number;
 }
