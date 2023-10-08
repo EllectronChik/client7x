@@ -7,7 +7,7 @@ import classes from './Account.module.scss';
 import { useLogoutUser } from 'hooks/useLogoutUser';
 import Button7x from 'components/UI/Button7x/Button7x';
 import Input7x from 'components/UI/Input7x/Input7x';
-import PlayersList from 'components/PlayersList';
+import PlayersList from 'components/PlayersList/PlayersList';
 
 const Account: React.FC = () => {
     const [isManager, setIsManager] = useState<boolean>(false);
@@ -67,9 +67,9 @@ const Account: React.FC = () => {
                         <Input7x type="text" placeholder="ClanTag" onChange={(e) => setClanTag(e.target.value)}/>
                     <Button7x className={classes.search_btn}>Search</Button7x>
                     </form>}
-                    {renderList && <div>
+                    {renderList && <div className={classes.players_list}>
                         <PlayersList tag={clanTag} />
-                        <Button7x onClick={() => setRenderList(false)} >Return</Button7x>
+                        <Button7x className={classes.return_btn} onClick={() => setRenderList(false)} >Return</Button7x>
                     </div>}
                 </div>
                 }
