@@ -28,6 +28,9 @@
         width: 100%;
         display: flex;
         justify-content: space-between;
+        &:not(:last-child) {
+            margin-bottom: 20px;
+        }
     }
 
     .clanInfoTitle {
@@ -42,6 +45,30 @@
         }
         label {
             font-size: 20px;
+        }
+
+    }
+
+    .clanInputLogo {
+        width: 100%;
+        .logoInput {
+            display: none;
+        }
+        .logoDiv {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid $clr_red;
+            border-radius: 20px;
+            padding: 10px;
+            width: 100%;
+            min-height: 80px;
+            cursor: pointer;
+
+            img {
+                max-height: 80px;
+                max-width: 80px;
+            }
         }
     }
 }
