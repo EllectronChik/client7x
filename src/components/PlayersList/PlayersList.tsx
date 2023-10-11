@@ -6,6 +6,8 @@ import { IPlayer } from 'models/IPlayer';
 import classes from './PlayersList.module.scss';
 import Button7x from './../UI/Button7x/Button7x';
 import Input7x from 'components/UI/Input7x/Input7x';
+import { regionApi } from 'services/regionService';
+import Select from 'react-select';
 
 interface PlayersListProps {
     tag: string;
@@ -13,18 +15,14 @@ interface PlayersListProps {
 
 const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
     const {data: players, isLoading, error } = ClanApi.useFetchClanMembersQuery(tag);
+    const {data: regions, isLoading: regionsLoading, error: regionsError} = regionApi.useFetchAllRegionsQuery();
     const [selected, setSelected] = useState<IPlayer[]>([]);
     const [clanTag, setClanTag] = useState<string>(tag);
     const [clanName, setClanName] = useState<string>('');
     const [logo, setLogo] = useState<File | null>(null);
+    const [region, setRegion] = useState<number | null>(null);
     const [drag, setDrag] = useState<boolean>(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
-
-    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (e.target.files) {
-        setLogo(e.target.files[0]);
-      }
-    };
 
     const handleLogoDivClick = () => {
       if (fileInputRef.current) {
@@ -48,25 +46,12 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
       setDrag(false);
     }
 
+    const regionOptions = regions?.map((region) => ({
+      label: region.name,
+      value: region.id
+    }))
 
-
-    useEffect(() => {
-      if (error) {
-        console.log(error);
-      }
-    }, [error])
-
-    useEffect(() => {
-      console.log(drag);
-      
-    }, [drag])
-
-    useEffect(() => {
-      if (logo) {
-        console.log(logo);
-      }
-    }, [logo])
-
+    
     const filteredPlayers = players?.filter((player) => {
       return !selected.some((selectedPlayer) => selectedPlayer.id === player.id);
     })
@@ -97,6 +82,39 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
                 {!logo ? (drag ? 'Drop logo here' : 'Add logo') : null}
                 {logo && <img src={URL.createObjectURL(logo)} alt="logo" />}
                 </div>
+          </div>
+        </div>
+        <div className={classes.clanInfoBox}>
+          <div className={`${classes.clanInput} ${classes.clanInputRegion}`}>
+          <label htmlFor="region">Region:</label>
+          <Select 
+            styles={{
+              container: (baseStyles, ) => ({
+                ...baseStyles,
+                width: '100%',
+              }),
+              control: (baseStyles, ) => ({
+                ...baseStyles,
+                border: '2px solid #ff0000',
+              }),
+              option: (baseStyles, ) => ({
+                ...baseStyles,
+                color: '#1D1D1D',
+              }),
+              indicatorSeparator: (baseStyles, ) => ({
+                ...baseStyles,
+                display: 'none',
+              }),
+              dropdownIndicator: (baseStyles, ) => ({
+                ...baseStyles,
+                backgroundColor: '#ff0000',
+              })
+            }}
+          options={regionOptions} 
+          defaultValue={{label: 'Select region', value: 0}}
+          onChange={(selectedOption) => {
+            if (selectedOption) setRegion(selectedOption.value)
+            }}/>
           </div>
         </div>
       </form>
