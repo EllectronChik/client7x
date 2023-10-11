@@ -44,9 +44,13 @@
             font-size: 25px;
         }
         label {
+            margin-bottom: 5px;
             font-size: 20px;
         }
+    }
 
+    .clanInputRegion {
+        width: 100%;
     }
 
     .clanInputLogo {
@@ -72,3 +76,4 @@
         }
     }
 }
+
