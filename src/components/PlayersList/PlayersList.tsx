@@ -8,6 +8,8 @@ import Button7x from './../UI/Button7x/Button7x';
 import Input7x from 'components/UI/Input7x/Input7x';
 import { regionApi } from 'services/regionService';
 import Select from 'react-select';
+import ReloadinWarning from 'components/UI/ReloadinWarning';
+import { IResorce } from 'models/IResorce';
 
 interface PlayersListProps {
     tag: string;
@@ -15,14 +17,18 @@ interface PlayersListProps {
 
 const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
     const {data: players, isLoading, error } = ClanApi.useFetchClanMembersQuery(tag);
-    const {data: regions, isLoading: regionsLoading, error: regionsError} = regionApi.useFetchAllRegionsQuery();
+    const {data: regions, } = regionApi.useFetchAllRegionsQuery();
     const [selected, setSelected] = useState<IPlayer[]>([]);
     const [clanTag, setClanTag] = useState<string>(tag);
     const [clanName, setClanName] = useState<string>('');
     const [logo, setLogo] = useState<File | null>(null);
     const [region, setRegion] = useState<number | null>(null);
     const [drag, setDrag] = useState<boolean>(false);
+    const [resorces, setResorces] = useState<IResorce[]>([]);
+    const [resForms, setResForms] = useState<React.JSX.Element[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const media_url = '../../assets/images/socialMediaIcons/'
 
     const handleLogoDivClick = () => {
       if (fileInputRef.current) {
@@ -51,7 +57,41 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
       value: region.id
     }))
 
-    
+    const handleAddMediaForm = () => {
+      const newId = resForms.length;
+      const newMediaForm = <div className={classes.mediaForm} key={newId}>
+        <div className={classes.mediaFormBox}>
+        <label>Media {resForms.length + 1} url:</label>
+          <Input7x type="text" onChange={(e) => {
+      const newValue = e.target.value;
+      const newName = newValue.match((/\/([a-zA-Z]+)\.com\//));
+
+      setResorces((resorces) => {
+        const updatedResources = [...resorces];
+        if (!updatedResources[newId]) {
+          updatedResources[newId] = {
+            id: newId,
+            name: newName ? newName[1] : '',
+            url: newValue,
+            logo: newName ? media_url + newName[1] + '.svg' : '',
+          }
+        } else {
+          updatedResources[newId].name = newName ? newName[ 1] : '';
+          updatedResources[newId].url = newValue;
+        }
+        return updatedResources
+      })
+    }}/>
+        </div>
+      </div>
+      setResForms([...resForms, newMediaForm]);
+    }
+
+    useEffect(() => {
+      console.log(resorces);
+      
+    }, [resorces])
+
     const filteredPlayers = players?.filter((player) => {
       return !selected.some((selectedPlayer) => selectedPlayer.id === player.id);
     })
@@ -86,7 +126,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
         </div>
         <div className={classes.clanInfoBox}>
           <div className={`${classes.clanInput} ${classes.clanInputRegion}`}>
-          <label htmlFor="region">Region:</label>
+          <label>Region:</label>
           <Select 
             styles={{
               container: (baseStyles, ) => ({
@@ -117,7 +157,21 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
             }}/>
           </div>
         </div>
+        <div className={classes.clanInfoBox}>
+            <div className={`${classes.clanInput} ${classes.clanInputMedia}`}>
+              <label>
+                You can also add links to your clan's media:
+              </label>
+              <div onClick={handleAddMediaForm} className={classes.AddTeamBox}>
+                Add media
+              </div>
+              {resForms.map((form) => (
+                form
+              ))}
+            </div>
+        </div>
       </form>
+      {/* <ReloadinWarning /> */}
       <div className={classes.selectedList}>
         {selected.length === 0 && <h2>Select only the players who will participate in the leagues </h2>}
         {selected.length > 0 && 
@@ -132,7 +186,6 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
           <div className={classes.selectedListButtons}>
             <Button7x onClick={() => setSelected([])}>Clear selected</Button7x>
             <Button7x className={classes.submitButton} >Submit</Button7x>
-
           </div>
           </div>}
       </div>
