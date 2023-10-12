@@ -75,5 +75,33 @@
             }
         }
     }
+
+    .clanInputMedia {
+        width: 100%;
+        .AddTeamBox {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 80px;
+            border: 2px solid $clr_red;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .mediaForm {
+            display: inline-block;
+            justify-content: start;
+            .mediaFormBox {
+                display: flex;
+                flex-direction: column;
+                margin-top: 10px;
+            }
+            input {
+                font-size: 25px;
+                padding: 0 10px;
+            }
+        }
+    }
 }
 
