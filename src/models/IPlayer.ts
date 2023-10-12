@@ -1,5 +1,7 @@
 export interface IPlayer {
     id: number;
+    realm: number;
+    region: number;
     name: string;
     avatar: string;
     mmr: number;
