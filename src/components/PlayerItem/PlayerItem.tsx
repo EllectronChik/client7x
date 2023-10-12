@@ -1,6 +1,7 @@
 import { IPlayer } from 'models/IPlayer';
 import React, { useEffect, useState } from 'react';
 import classes from './PlayerItem.module.scss';
+import { PlayerLogoApi } from 'services/PlayerLogo';
 
 interface PlayerItemProps {
     player: IPlayer;   
@@ -12,6 +13,13 @@ const PlayerItem: React.FC<PlayerItemProps> = ({player, onClick, title}) => {
   const [playerLeagueLogo, setPlayerLeagueLogo] = useState<string>('');
   const [playerLeagueName, setPlayerLeagueName] = useState<string>('');
   const [playerRace, setPlayerRace] = useState<number>(0);
+  
+  const {data: playerLogo, error} = PlayerLogoApi.useFetchPlayerLogoQuery({region: player.region, realm: player.realm, id: player.id}); 
+  
+  useEffect(() => {
+    console.log(playerLogo);
+  }, [playerLogo])
+  
 
   useEffect(() => {
     switch (player.league) {
@@ -73,7 +81,13 @@ const PlayerItem: React.FC<PlayerItemProps> = ({player, onClick, title}) => {
       <div>
         {/* TODO: PLAYERS_AVATARS!!! */}
         <img className={classes.avatar} src={playerLeagueLogo} alt={playerLeagueName} />
-        <img className={classes.avatar} src={`${import.meta.env.VITE_SERVER_URL}media/players/logo/default.svg`} alt={player.name} />
+        {error 
+        ? 
+        <img className={`${classes.avatar} ${classes.logo}`} src={`${import.meta.env.VITE_SERVER_URL}media/players/logo/default.svg`} alt={player.name} /> 
+        :
+        <img className={`${classes.avatar} ${classes.logo}`} src={playerLogo} alt={player.name} onError={(e) => {
+          e.currentTarget.src = `${import.meta.env.VITE_SERVER_URL}media/players/logo/default.svg`;
+        }} />}
       </div>
       <div>
         <h3>Username: {player.name}</h3>
@@ -81,31 +95,11 @@ const PlayerItem: React.FC<PlayerItemProps> = ({player, onClick, title}) => {
       </div>
       </div>
       <div className={classes.select_wrapper} >
-        <select onClick={(e) => e.stopPropagation()} defaultValue={player.race.toString()} className={classes.select} name="race" id="race">
+        <select onClick={(e) => e.stopPropagation()} defaultValue={player.race.toString()} className={classes.select} name="race" id={`race_${player.id}`}>
           <option className={classes.option} value="0" disabled>Select Race</option>
           <option className={classes.option} value="1">Zerg</option>
           <option className={classes.option} value="2">Terran</option>
           <option className={classes.option} value="3">Protoss</option>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           <option className={classes.option} value="4">Random</option>
         </select>
       </div>
