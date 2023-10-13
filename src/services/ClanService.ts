@@ -1,5 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
+import { IClan } from "models/IClan";
 import { IPlayer } from "models/IPlayer";
+
 
 
 export const ClanApi = createApi({
@@ -14,6 +16,24 @@ export const ClanApi = createApi({
                 url: `/get_players/${tag}/`,
                 method: "GET",
             })
+        }),
+        postClan: builder.mutation<void, {clan: IClan, token: string}>({
+            query: ({clan, token}) => {
+                const formData = new FormData();
+                formData.append("name", clan.name);
+                formData.append("tag", clan.tag);
+                formData.append("logo", clan.logo);
+                formData.append("region", clan.region.toString());
+                formData.append("user", clan.user.toString());
+                return {
+                    url: `/teams/`,
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        Authorization: `Token ${token}`
+                    }         
+                }
+            }
         })
     })
 })
