@@ -2,6 +2,7 @@ import { IPlayer } from 'models/IPlayer';
 import React, { useEffect, useState } from 'react';
 import classes from './PlayerItem.module.scss';
 import { PlayerLogoApi } from 'services/PlayerLogo';
+import defaultPlayer from '../../assets/images/player/default.svg';
 
 interface PlayerItemProps {
     player: IPlayer;   
@@ -15,11 +16,6 @@ const PlayerItem: React.FC<PlayerItemProps> = ({player, onClick, title}) => {
   const [playerRace, setPlayerRace] = useState<number>(0);
   
   const {data: playerLogo, error} = PlayerLogoApi.useFetchPlayerLogoQuery({region: player.region, realm: player.realm, id: player.id}); 
-  
-  useEffect(() => {
-    console.log(playerLogo);
-  }, [playerLogo])
-  
 
   useEffect(() => {
     switch (player.league) {
@@ -79,15 +75,22 @@ const PlayerItem: React.FC<PlayerItemProps> = ({player, onClick, title}) => {
     <div {...(title && {title})} draggable="false" {...(onClick && {onClick})} className={classes.player_item}>
       <div className={classes.info_wrapper}>
       <div>
-        {/* TODO: PLAYERS_AVATARS!!! */}
-        <img className={classes.avatar} src={playerLeagueLogo} alt={playerLeagueName} />
-        {error 
-        ? 
-        <img className={`${classes.avatar} ${classes.logo}`} src={`${import.meta.env.VITE_SERVER_URL}media/players/logo/default.svg`} alt={player.name} /> 
+        <img className={classes.avatar} src={defaultPlayer} onLoad={(e) => e.currentTarget.src = playerLeagueLogo} alt={playerLeagueName} />
+          {!error
+          ?
+          <img className={`${classes.avatar} ${classes.logo}`} src={defaultPlayer} alt={player.name} 
+            onLoad={(e) => {
+              if (!e.currentTarget.classList.contains('error')) {
+                (playerLogo) ? e.currentTarget.src = playerLogo : e.currentTarget.src = defaultPlayer;
+              }}}
+            onError={(e) => {
+              if (!e.currentTarget.classList.contains('error')) {
+                e.currentTarget.src = defaultPlayer;
+                e.currentTarget.classList.add('error');
+          }}} />
         :
-        <img className={`${classes.avatar} ${classes.logo}`} src={playerLogo} alt={player.name} onError={(e) => {
-          e.currentTarget.src = `${import.meta.env.VITE_SERVER_URL}media/players/logo/default.svg`;
-        }} />}
+        <img className={`${classes.avatar} ${classes.logo}`} src={defaultPlayer} alt={player.name} /> 
+      }
       </div>
       <div>
         <h3>Username: {player.name}</h3>
