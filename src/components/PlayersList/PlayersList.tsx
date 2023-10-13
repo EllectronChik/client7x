@@ -10,6 +10,8 @@ import { regionApi } from 'services/regionService';
 import Select from 'react-select';
 import ReloadinWarning from 'components/UI/ReloadinWarning';
 import { IResorce } from 'models/IResorce';
+import { useCookies } from 'react-cookie';
+import { PlayerApi } from 'services/PlayerService';
 
 interface PlayersListProps {
     tag: string;
@@ -17,10 +19,13 @@ interface PlayersListProps {
 
 const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
     const {data: players, isLoading, error } = ClanApi.useFetchClanMembersQuery(tag);
-    const {data: regions, } = regionApi.useFetchAllRegionsQuery();
+    const [createClan, {error: createClanError}] = ClanApi.usePostClanMutation();
+    const [postPlayer, {error: postPlayerError}] = PlayerApi.usePostPlayerMutation();
+    const [cookies, setCookies] = useCookies(['token', 'userId']);
+    const {data: regions} = regionApi.useFetchAllRegionsQuery();
     const [selected, setSelected] = useState<IPlayer[]>([]);
     const [clanTag, setClanTag] = useState<string>(tag);
-    const [clanName, setClanName] = useState<string>('');
+    const [clanName, setClanName] = useState<string>(tag);
     const [logo, setLogo] = useState<File | null>(null);
     const [region, setRegion] = useState<number | null>(null);
     const [drag, setDrag] = useState<boolean>(false);
@@ -28,13 +33,44 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
     const [resForms, setResForms] = useState<React.JSX.Element[]>([]);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const media_url = '../../assets/images/socialMediaIcons/'
+    const media_url = '../../assets/images/socialMediaIcons/';
+
+    const handleCreateClan = async () => {
+      if (!region || !logo) {
+        return;
+      }
+      const clanData = {
+        tag: clanTag,
+        name: clanName,
+        logo: logo,
+        region: region,
+        user: cookies.userId,
+      }
+      
+      filteredPlayers?.map((player) => {
+        postPlayer({player: player, token: cookies.token});
+      })
+
+      await createClan({clan: clanData, token: cookies.token});
+    }
 
     const handleLogoDivClick = () => {
       if (fileInputRef.current) {
         fileInputRef.current.click();
       }
     }
+
+    useEffect(() => {
+      if (createClanError) {
+        console.log(createClanError);
+      }
+    }, [createClanError])
+
+    useEffect(() => {
+      if (postPlayerError) {
+        console.log(postPlayerError);
+      }
+    }, [postPlayerError])
 
     const handleLogoDivDrop = (e: React.DragEvent<HTMLDivElement>) => {
       e.preventDefault();
@@ -87,10 +123,6 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
       setResForms([...resForms, newMediaForm]);
     }
 
-    useEffect(() => {
-      console.log(resorces);
-      
-    }, [resorces])
 
     const filteredPlayers = players?.filter((player) => {
       return !selected.some((selectedPlayer) => selectedPlayer.id === player.id);
@@ -185,7 +217,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
           ))}
           <div className={classes.selectedListButtons}>
             <Button7x onClick={() => setSelected([])}>Clear selected</Button7x>
-            <Button7x className={classes.submitButton} >Submit</Button7x>
+            <Button7x className={classes.submitButton} onClick={handleCreateClan}>Submit</Button7x>
           </div>
           </div>}
       </div>
