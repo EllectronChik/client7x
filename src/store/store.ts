@@ -5,6 +5,8 @@ import { StatusApi } from 'services/StatusService';
 import { ClanApi } from 'services/ClanService';
 import { regionApi } from 'services/regionService';
 import { PlayerLogoApi } from 'services/PlayerLogo';
+import { PlayerApi } from 'services/PlayerService';
+import clanSlice from 'store/reducers/ClanSlice';
 
 const rootReducer = combineReducers({
     [MatchesApi.reducerPath]: MatchesApi.reducer,
@@ -13,6 +15,8 @@ const rootReducer = combineReducers({
     [ClanApi.reducerPath]: ClanApi.reducer,
     [regionApi.reducerPath]: regionApi.reducer,
     [PlayerLogoApi.reducerPath]: PlayerLogoApi.reducer,
+    [PlayerApi.reducerPath]: PlayerApi.reducer,
+    clan: clanSlice
 })
 
 export const setupStore = () => {
@@ -25,6 +29,7 @@ export const setupStore = () => {
         .concat(ClanApi.middleware)
         .concat(regionApi.middleware)
         .concat(PlayerLogoApi.middleware)
+        .concat(PlayerApi.middleware),
     })
         
 }
