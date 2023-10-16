@@ -1,7 +1,7 @@
 export interface IClan {
     tag: string;
     name: string;
-    logo: File;
+    logo: File | null;
     region: number;
     user: number;
 }
