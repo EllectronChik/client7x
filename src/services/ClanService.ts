@@ -17,12 +17,18 @@ export const ClanApi = createApi({
                 method: "GET",
             })
         }),
+        fetchClan: builder.query<IClan, string>({
+            query: (tag) => ({
+                url: `/teams?${tag}/`,
+                method: "GET",
+            })
+        }),
         postClan: builder.mutation<void, {clan: IClan, token: string}>({
             query: ({clan, token}) => {
                 const formData = new FormData();
                 formData.append("name", clan.name);
                 formData.append("tag", clan.tag);
-                formData.append("logo", clan.logo);
+                if (clan.logo) formData.append("logo", clan.logo);
                 formData.append("region", clan.region.toString());
                 formData.append("user", clan.user.toString());
                 return {
