@@ -12,121 +12,148 @@ import ReloadinWarning from 'components/UI/ReloadinWarning';
 import { IResorce } from 'models/IResorce';
 import { useCookies } from 'react-cookie';
 import { PlayerApi } from 'services/PlayerService';
+import axios from 'axios';
+import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
+import { setClan, updateClanField, setLoading, setError, selectClan, selectLoading, selectError } from 'store/reducers/ClanSlice';
 
 interface PlayersListProps {
     tag: string;
 }
 
+
+  
 const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
-    const {data: players, isLoading, error } = ClanApi.useFetchClanMembersQuery(tag);
-    const [createClan, {error: createClanError}] = ClanApi.usePostClanMutation();
-    const [postPlayer, {error: postPlayerError}] = PlayerApi.usePostPlayerMutation();
-    const [cookies, setCookies] = useCookies(['token', 'userId']);
-    const {data: regions} = regionApi.useFetchAllRegionsQuery();
-    const [selected, setSelected] = useState<IPlayer[]>([]);
-    const [clanTag, setClanTag] = useState<string>(tag);
-    const [clanName, setClanName] = useState<string>(tag);
-    const [logo, setLogo] = useState<File | null>(null);
-    const [region, setRegion] = useState<number | null>(null);
-    const [drag, setDrag] = useState<boolean>(false);
-    const [resorces, setResorces] = useState<IResorce[]>([]);
-    const [resForms, setResForms] = useState<React.JSX.Element[]>([]);
-    const fileInputRef = useRef<HTMLInputElement>(null);
-
-    const media_url = '../../assets/images/socialMediaIcons/';
-
-    const handleCreateClan = async () => {
-      if (!region || !logo) {
-        return;
-      }
-      const clanData = {
-        tag: clanTag,
-        name: clanName,
-        logo: logo,
-        region: region,
-        user: cookies.userId,
-      }
+  const dispatch = useAppDispatch();
+  const clan = useAppSelector(selectClan);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [cookies, setCookies] = useCookies(['token', 'userId']);
+  const [selected, setSelected] = useState<IPlayer[]>([]);
+  const [drag, setDrag] = useState<boolean>(false);
+  const [clanLogo, setClanLogo] = useState<File | null>(null);
+  const [resorces, setResorces] = useState<IResorce[]>([]);
+  const [resForms, setResForms] = useState<React.JSX.Element[]>([]);
       
-      filteredPlayers?.map((player) => {
-        postPlayer({player: player, token: cookies.token});
-      })
+  const media_url = '../../assets/images/socialMediaIcons/';
 
-      await createClan({clan: clanData, token: cookies.token});
-    }
+  const {data: players, isLoading, error } = ClanApi.useFetchClanMembersQuery(tag);
+  const {data: regions} = regionApi.useFetchAllRegionsQuery();
+  const [createClan, {error: createClanError}] = ClanApi.usePostClanMutation();
+  const [postPlayer, {error: postPlayerError}] = PlayerApi.usePostPlayerMutation();
 
-    const handleLogoDivClick = () => {
-      if (fileInputRef.current) {
-        fileInputRef.current.click();
-      }
-    }
-
-    useEffect(() => {
-      if (createClanError) {
-        console.log(createClanError);
-      }
-    }, [createClanError])
-
-    useEffect(() => {
-      if (postPlayerError) {
-        console.log(postPlayerError);
-      }
-    }, [postPlayerError])
-
-    const handleLogoDivDrop = (e: React.DragEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      setLogo(e.dataTransfer.files[0]);
-      setDrag(false);
-    }
-
-    const handleLogoDivDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      setDrag(true);
-    }
-
-    const handleLogoDivDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-      e.preventDefault();
-      setDrag(false);
-    }
-
-    const regionOptions = regions?.map((region) => ({
-      label: region.name,
-      value: region.id
+  useEffect(() => {
+    dispatch(setClan({
+      tag: tag,
+      name: tag,
+      logo: null,
+      region: 0,
+      user: cookies.userId,
     }))
+  }, [])
 
-    const handleAddMediaForm = () => {
-      const newId = resForms.length;
-      const newMediaForm = <div className={classes.mediaForm} key={newId}>
-        <div className={classes.mediaFormBox}>
-        <label>Media {resForms.length + 1} url:</label>
-          <Input7x type="text" onChange={(e) => {
-      const newValue = e.target.value;
-      const newName = newValue.match((/\/([a-zA-Z]+)\.com\//));
-
-      setResorces((resorces) => {
-        const updatedResources = [...resorces];
-        if (!updatedResources[newId]) {
-          updatedResources[newId] = {
-            id: newId,
-            name: newName ? newName[1] : '',
-            url: newValue,
-            logo: newName ? media_url + newName[1] + '.svg' : '',
-          }
-        } else {
-          updatedResources[newId].name = newName ? newName[ 1] : '';
-          updatedResources[newId].url = newValue;
-        }
-        return updatedResources
-      })
-    }}/>
-        </div>
-      </div>
-      setResForms([...resForms, newMediaForm]);
+  const handleCreateClan = async () => {
+    console.log(clan);
+    
+    if (!clan) {
+      return;
+    }
+    const clanData = {
+      tag: clan.tag,
+      name: clan.name,
+      logo: clanLogo,
+      region: clan.region,
+      user: cookies.userId,
     }
 
+    console.log(clanData);
+    
 
-    const filteredPlayers = players?.filter((player) => {
-      return !selected.some((selectedPlayer) => selectedPlayer.id === player.id);
+    await createClan({clan: clanData, token: cookies.token});
+
+    const createdClan = await axios.get(`${import.meta.env.VITE_API_URL}teams/?tag=${clan.tag}`);
+
+
+    if (filteredPlayers && createdClan) {
+      console.log(createdClan);
+      
+      await Promise.all(
+        filteredPlayers.map(async (player) => {
+          const played_data = {...player, 
+            team: createdClan.data.results[0].id,
+            total_games: 0,
+            wins: 0,
+            user: cookies.userId,
+          };
+          console.log(played_data);
+          
+
+          await postPlayer({ player: played_data, token: cookies.token });
+        })
+      );
+    }
+  }
+
+  const handleLogoDivClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  }
+
+  const handleLogoDivDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setClanLogo(e.dataTransfer.files[0]);
+    setDrag(false);
+  }
+
+  const handleLogoDivDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setDrag(true);
+  }
+
+  const handleLogoDivDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setDrag(false);
+  }
+
+  const regionOptions = regions?.map((region) => ({
+    label: region.name,
+    value: region.id
+  }))
+
+  const handleAddMediaForm = () => {
+    const newId = resForms.length;
+    const newMediaForm = <div className={classes.mediaForm} key={newId}>
+      <div className={classes.mediaFormBox}>
+      <label>Media {resForms.length + 1} url:</label>
+        <Input7x type="text" onChange={(e) => {
+    const newValue = e.target.value;
+    const newName = newValue.match((/\/([a-zA-Z]+)\.com\//));
+
+    setResorces((resorces) => {
+      const updatedResources = [...resorces];
+      if (!updatedResources[newId]) {
+        updatedResources[newId] = {
+          id: newId,
+          name: newName ? newName[1] : '',
+          url: newValue,
+          logo: newName ? media_url + newName[1] + '.svg' : '',
+        }
+      } else {
+        updatedResources[newId].name = newName ? newName[ 1] : '';
+        updatedResources[newId].url = newValue;
+      }
+      return updatedResources
     })
+  }}/>
+      </div>
+    </div>
+    setResForms([...resForms, newMediaForm]);
+  }
+
+
+  const filteredPlayers = players?.filter((player) => {
+    return !selected.some((selectedPlayer) => selectedPlayer.id === player.id);
+  })
+
   return (
     <div>
       <form className={classes.clanInfo}>
@@ -134,25 +161,26 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
         <div className={classes.clanInfoBox}>
           <div className={classes.clanInput}>
             <label htmlFor="tag">Tag:</label>
-            <Input7x className={classes.clanTag} id='tag' value={tag} onChange={(e) => setClanTag(e.target.value)} placeholder='Enter clan tag'/>
+            <Input7x className={classes.clanTag} id='tag' value={tag} onChange={(e) => dispatch(updateClanField({field: 'tag', value: e.target.value}))} placeholder='Enter clan tag'/>
           </div>
           <div className={classes.clanInput}>
             <label htmlFor="name">Name:</label>
-            <Input7x className={classes.clanTag} id='name' value={tag} onChange={(e) => setClanName(e.target.value)} placeholder='Enter clan name'/>
+            <Input7x className={classes.clanTag} id='name' value={tag} onChange={(e) => dispatch(updateClanField({field: 'name', value: e.target.value}))} placeholder='Enter clan name'/>
           </div>
         </div>
         <div className={classes.clanInfoBox}>
           <div className={`${classes.clanInputLogo} ${classes.clanInput}`}>
             <label htmlFor="logo">Logo:</label>
-            <input ref={fileInputRef} type="file" id="logo" className={classes.logoInput}  onChange={(e) => setLogo(e.target.files![0])} />
+            <input ref={fileInputRef} type="file" id="logo" className={classes.logoInput}  onChange={(e) => {
+              if (e.target.files) setClanLogo(e.target.files[0])}} />
             <div
               onClick={handleLogoDivClick} 
               onDragLeave={handleLogoDivDragLeave}
               onDragOver={handleLogoDivDragOver} 
               onDrop={handleLogoDivDrop} 
               className={classes.logoDiv}>
-                {!logo ? (drag ? 'Drop logo here' : 'Add logo') : null}
-                {logo && <img src={URL.createObjectURL(logo)} alt="logo" />}
+                {!clanLogo ? (drag ? 'Drop logo here' : 'Add logo') : null}
+                {clanLogo && <img src={URL.createObjectURL(clanLogo)} alt="logo" />}
                 </div>
           </div>
         </div>
@@ -185,7 +213,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
           options={regionOptions} 
           defaultValue={{label: 'Select region', value: 0}}
           onChange={(selectedOption) => {
-            if (selectedOption) setRegion(selectedOption.value)
+            if (selectedOption) dispatch(updateClanField({field: 'region', value: selectedOption.value}))
             }}/>
           </div>
         </div>
