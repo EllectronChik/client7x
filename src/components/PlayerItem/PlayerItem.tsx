@@ -78,7 +78,7 @@ const PlayerItem: React.FC<PlayerItemProps> = ({player, onClick, title}) => {
         <img className={classes.avatar} src={defaultPlayer} onLoad={(e) => e.currentTarget.src = playerLeagueLogo} alt={playerLeagueName} />
           {!error
           ?
-          <img className={`${classes.avatar} ${classes.logo}`} src={defaultPlayer} alt={player.name} 
+          <img className={`${classes.avatar} ${classes.logo}`} src={defaultPlayer} alt={player.username} 
             onLoad={(e) => {
               if (!e.currentTarget.classList.contains('error')) {
                 (playerLogo) ? e.currentTarget.src = playerLogo : e.currentTarget.src = defaultPlayer;
@@ -89,11 +89,11 @@ const PlayerItem: React.FC<PlayerItemProps> = ({player, onClick, title}) => {
                 e.currentTarget.classList.add('error');
           }}} />
         :
-        <img className={`${classes.avatar} ${classes.logo}`} src={defaultPlayer} alt={player.name} /> 
+        <img className={`${classes.avatar} ${classes.logo}`} src={defaultPlayer} alt={player.username} /> 
       }
       </div>
       <div>
-        <h3>Username: {player.name}</h3>
+        <h3>Username: {player.username}</h3>
         <p>MMR: {player.mmr}</p>
       </div>
       </div>

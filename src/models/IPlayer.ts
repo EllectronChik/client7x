@@ -2,7 +2,7 @@ export interface IPlayer {
     id: number;
     realm: number;
     region: number;
-    name: string;
+    username: string;
     avatar: string;
     mmr: number;
     wins: number;
@@ -10,4 +10,5 @@ export interface IPlayer {
     race: number;
     team: number;
     league: number;
+    user: number;
 }
