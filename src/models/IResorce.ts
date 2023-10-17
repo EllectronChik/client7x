@@ -1,6 +1,6 @@
 export interface IResorce {
     id: number,
-    name: string,
     url: string,
-    logo: string
+    team?: number,
+    user?: number
 }
