@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import classes from './PlayerItem.module.scss';
 import { PlayerLogoApi } from 'services/PlayerLogo';
 import defaultPlayer from '../../assets/images/player/default.svg';
+import { useAppDispatch } from 'hooks/reduxHooks';
+import { updatePlayerField, selectPlayerList } from 'store/reducers/PlayerListSlice';
 
 interface PlayerItemProps {
     player: IPlayer;   
@@ -11,12 +13,10 @@ interface PlayerItemProps {
 }
 
 const PlayerItem: React.FC<PlayerItemProps> = ({player, onClick, title}) => {
+  const dispatch = useAppDispatch();
   const [playerLeagueLogo, setPlayerLeagueLogo] = useState<string>('');
   const [playerLeagueName, setPlayerLeagueName] = useState<string>('');
-  const [playerRace, setPlayerRace] = useState<number>(0);
   
-  const {data: playerLogo, error} = PlayerLogoApi.useFetchPlayerLogoQuery({region: player.region, realm: player.realm, id: player.id}); 
-
   useEffect(() => {
     switch (player.league) {
       case 1: 
@@ -52,30 +52,33 @@ const PlayerItem: React.FC<PlayerItemProps> = ({player, onClick, title}) => {
         break;
     }
 
-    switch (player.race) {
-      case 1:
-        setPlayerRace(1);
-        break;
-      case 2:
-        setPlayerRace(2);
-        break;
-      case 3:
-        setPlayerRace(3);
-        break;
-      case 4:
-        setPlayerRace(4);
-        break;
-      default:
-        setPlayerRace(0);
-    }
   }, [player])
+
+  const {data: playerLogo, error} = PlayerLogoApi.useFetchPlayerLogoQuery({region: player.region, realm: player.realm, id: player.id}); 
+
+  useEffect(() => {
+    dispatch(updatePlayerField({
+      playerId: player.id,
+      field: 'avatar',
+      value: playerLogo,
+    }))
+  }, [playerLogo])
 
 
   return (
     <div {...(title && {title})} draggable="false" {...(onClick && {onClick})} className={classes.player_item}>
       <div className={classes.info_wrapper}>
       <div>
-        <img className={classes.avatar} src={defaultPlayer} onLoad={(e) => e.currentTarget.src = playerLeagueLogo} alt={playerLeagueName} />
+      <img className={`${classes.avatar}`} src={defaultPlayer} alt={player.username} 
+            onLoad={(e) => {
+              if (!e.currentTarget.classList.contains('error')) {
+                (playerLeagueLogo) ? e.currentTarget.src = playerLeagueLogo : e.currentTarget.src = defaultPlayer;
+              }}}
+            onError={(e) => {
+              if (!e.currentTarget.classList.contains('error')) {
+                e.currentTarget.src = defaultPlayer;
+                e.currentTarget.classList.add('error');
+          }}} />
           {!error
           ?
           <img className={`${classes.avatar} ${classes.logo}`} src={defaultPlayer} alt={player.username} 
