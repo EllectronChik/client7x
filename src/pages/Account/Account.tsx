@@ -8,11 +8,14 @@ import { useLogoutUser } from 'hooks/useLogoutUser';
 import Button7x from 'components/UI/Button7x/Button7x';
 import Input7x from 'components/UI/Input7x/Input7x';
 import PlayersList from 'components/PlayersList/PlayersList';
+import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
+import { setPageManager, selectManagerPage } from 'store/reducers/pageManagerSlice';
 
 const Account: React.FC = () => {
-    const [isManager, setIsManager] = useState<boolean>(false);
-    const [isStaff, setIsStaff] = useState<boolean>(false);
-    const [pageManager, setPageManager] = useState<number>(0);
+    const dispatch = useAppDispatch();
+    const pageManager = useAppSelector(selectManagerPage);
+    const [isManager, setIsManager] = useState<boolean | null>(null);
+    const [isStaff, setIsStaff] = useState<boolean | null>(null);
     const [clanTag, setClanTag] = useState<string>('');
     const [renderList, setRenderList] = useState<boolean>(false);
     const [cookie, setCookie] = useCookies(['token']);
@@ -36,27 +39,29 @@ const Account: React.FC = () => {
         }, [status]);
 
         useEffect(() => {
-            if (!isStaff && !isManager) {
-                setPageManager(0);
-            } else if (isManager && !isStaff) {
-                setPageManager(1);
-            } else if (!isManager && isStaff) {
-                setPageManager(2);
-            }
+                if (isStaff === false && isManager === false) {
+                    dispatch(setPageManager(0));
+                } else if (isManager && !isStaff) {
+                    dispatch(setPageManager(1));
+                } else if (!isManager && isStaff) {
+                    dispatch(setPageManager(2));
+                } else if (isManager && isStaff) {
+                    dispatch(setPageManager(3));
+                }         
         }, [isManager, isStaff]);
         return (
             <div className={classes.container}>
                 {isManager && isStaff && 
                 <div className={classes.bttns}>
                     <button 
-                        onClick={() => setPageManager(1)}
+                        onClick={() => dispatch(setPageManager(0))}
                         className={`${pageManager ? classes.active : ''} ${classes.btn}`}>TEAM</button>
                     <button 
-                        onClick={() => setPageManager(2)}
+                        onClick={() => dispatch(setPageManager(1))}
                         className={`${pageManager ? '' : classes.active} ${classes.btn}`}>STAFF</button>
                 </div>}
                 {isLoading && <Loader7x />}
-                {pageManager === 0 && 
+                {pageManager === 0 && !isLoading && 
                 <div>
                     {!renderList && <form className={classes.tag_form} onSubmit={
                     (e: React.FormEvent<HTMLFormElement>) => {
@@ -73,10 +78,10 @@ const Account: React.FC = () => {
                     </div>}
                 </div>
                 }
-                {pageManager === 1 &&
+                {pageManager === 1 && !isLoading &&
                 <div>Team</div>
                 }
-                {pageManager === 2 &&
+                {pageManager === 2 && !isLoading &&
                 <div>Staff</div>
                 }
                 <Button7x className={classes.logout_btn} onClick={() => {
