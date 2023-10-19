@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import classes from './Login.module.scss';
 import Button7x from 'components/UI/Button7x/Button7x';
-import important_svg from '@assets/images/important.svg';
+import important_svg from '@assets/images/techImages/important.svg';
 import { IUserCreate } from 'models/IUserCreate';
 import { UsersApi } from 'services/UserService';
 import { useCookies } from 'react-cookie';
