@@ -12,7 +12,7 @@ export const useLogoutUser = () => {
         setСookie('token', '', { expires: new Date(0) });
         setСookie('userId', '', { expires: new Date(0) });
       } catch (error) {
-        console.error("Ошибка при выходе из системы:", error);
+        console.error("Error when logging out of the system:", error);
       }
     };
   
