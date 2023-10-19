@@ -1,25 +1,32 @@
 import React, { useEffect, useState, useRef } from 'react';
+import axios from 'axios';
 import { ClanApi } from 'services/ClanService';
-import Loader7x from '../UI/Loader7x/Loader7x';
-import PlayerItem from '../PlayerItem/PlayerItem';
 import { IPlayer } from 'models/IPlayer';
-import classes from './PlayersList.module.scss';
-import Button7x from './../UI/Button7x/Button7x';
-import Input7x from 'components/UI/Input7x/Input7x';
 import { regionApi } from 'services/regionService';
-import Select from 'react-select';
-import ReloadinWarning from 'components/UI/ReloadinWarning';
 import { IResorce } from 'models/IResorce';
 import { useCookies } from 'react-cookie';
 import { PlayerApi } from 'services/PlayerService';
 import { ClanResourcesApi } from 'services/ClanResourcesService';
 import { ManagerApi } from 'services/ManagerSerevice';
-import axios from 'axios';
+import Loader7x from '../UI/Loader7x/Loader7x';
+import PlayerItem from '../PlayerItem/PlayerItem';
+import classes from './PlayersList.module.scss';
+import Button7x from './../UI/Button7x/Button7x';
+import Input7x from 'components/UI/Input7x/Input7x';
+import Select from 'react-select';
+import ReloadinWarning from 'components/UI/ReloadinWarning';
+import important from 'assets/images/techImages/important.svg';
 import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
-import { setClan, updateClanField, selectClan} from 'store/reducers/ClanSlice';
-import { setPlayerList, selectPlayerList } from 'store/reducers/PlayerListSlice';
+import {
+  setClan,
+  updateClanField,
+  selectClan
+} from 'store/reducers/ClanSlice';
+import {
+  setPlayerList,
+  selectPlayerList
+} from 'store/reducers/PlayerListSlice';
 import { setPageManager } from 'store/reducers/pageManagerSlice';
-import important from 'assets/images/important.svg';
 
 interface PlayersListProps {
     tag: string;
@@ -271,7 +278,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
               </div>
           </div>
         </form>
-        {/* <ReloadinWarning /> */}
+        <ReloadinWarning />
         <div className={classes.selectedList}>
           {selected.length === 0 && <h2>Select only the players who will participate in the leagues </h2>}
           {selected.length > 0 && 
