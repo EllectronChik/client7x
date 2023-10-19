@@ -24,6 +24,18 @@
     .nav_item:not(:last-child) {
         margin-right: 75px;
     }  
+
+    .nav_item {
+        .logout {
+            position: absolute;
+            margin-left: 250px;
+            transition: transform 0.5s;
+            transform: translateY(-500px);
+        }
+        .active {
+            transform: translateY(0);
+        }
+    }
 }
 
 .nav_after_log {
@@ -35,7 +47,7 @@
     z-index: -1;
     width: 100%;
     height: 100px;
-    background: url('../../../assets/images/header_line.svg') no-repeat;
+    background: url('../../../assets/images/techImages/header_line.svg') no-repeat;
 }
 
 .title {

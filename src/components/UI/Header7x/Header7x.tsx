@@ -1,19 +1,21 @@
 import React, { useEffect } from 'react'
 import classes from './Header7x.module.scss';
 import { Link } from 'react-router-dom';
-import logo from '@assets/images/favicon.svg';
+import logo from '@assets/images/techImages/favicon.svg';
 import Link7x from '../Link7x/Link7x';
 import DoubleText from '../DoubleText/DoubleText';
 import { useCookies } from 'react-cookie';
-import { UsersApi } from 'services/UserService';
 import axios from 'axios';
 import { useLogoutUser } from 'hooks/useLogoutUser';
+import Button7x from 'components/UI/Button7x/Button7x';
+import { useNavigate } from 'react-router-dom';
 
 
 const Header7x: React.FC = () => {
-  const [cookie, setСookie] = useCookies(['token', 'userId']);
-  const [logoutUser, {}] = UsersApi.useLogoutUserMutation();
+  const [cookie, ] = useCookies(['token', 'userId']);
   const logout = useLogoutUser();
+  const navigate = useNavigate();
+  let timeoutId: NodeJS.Timeout;
 
   useEffect(() => {
     if (cookie.token) {
@@ -23,8 +25,8 @@ const Header7x: React.FC = () => {
         headers: {
           Authorization: `Token ${cookie.token}`
         }
-      }).catch((error) => {
-        logout;
+      }).catch(() => {
+        logout();
       })
     }
   }, [])
@@ -42,7 +44,38 @@ const Header7x: React.FC = () => {
             <li className={classes.nav_item}><Link7x to='/statistics'>Statistic</Link7x></li>
             <li className={classes.nav_item}><Link7x to='/arhive'>Arhive</Link7x></li>
             {cookie.token ?
-            <li className={classes.nav_item}><Link7x to='/account'>My account</Link7x></li>
+            <div onMouseEnter={() => {
+              if (timeoutId) {
+                clearTimeout(timeoutId);
+              }
+              const logout = document.getElementById('logout');
+              logout?.classList.add(classes.active);
+              }} 
+              onMouseLeave={() => {
+                const logout = document.getElementById('logout');
+                timeoutId = setTimeout(() => {
+                  logout?.classList.remove(classes.active);
+                }, 500);
+              }}
+              className={classes.nav_item}>
+            <li><Link7x to='/account'>My account</Link7x></li>
+            <li onMouseEnter={() => {
+              if (timeoutId) {
+                clearTimeout(timeoutId);
+              }
+            }}
+            onMouseLeave={() => {
+              const logout = document.getElementById('logout');
+              timeoutId = setTimeout(() => {
+                logout?.classList.remove(classes.active);
+              }, 500);
+            }} 
+            className={classes.logout} id='logout'><Button7x type='button' onClick={() => {
+              logout();
+              navigate('/login');
+              }}>
+                Logout</Button7x></li>
+            </div>
             :
             <li className={classes.nav_item}><Link7x to='/login'>Join</Link7x></li>
             }
