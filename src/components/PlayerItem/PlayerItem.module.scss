@@ -20,15 +20,7 @@
 
 }
 
-.avatar {
-    width: 50px;
-    height: 50px;
-    -webkit-user-drag: none;
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-}
+
 
 .logo {
     border: 2px solid $clr_red;
@@ -37,6 +29,9 @@
 
 .select_wrapper {
     align-self: flex-end;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
     .select {
         font-size: 20px;
         background-color: $clr_dark;
@@ -44,8 +39,34 @@
         border-radius: 20px;
         text-align: center;
     }
+
 }
 
 .info_wrapper {
     display: flex;
+    align-items: center;
+    .avatar_wrapper {
+        display: flex;
+        flex-direction: column;
+        margin-right: 10px;
+        .flag {
+            width: 40px;
+            margin-bottom: 10px;
+            border: 1px teal solid;
+        }
+        .avatar_league {
+            width: 40px;
+        }
+
+    }
+    .avatar {
+        width: 50px;
+        height: 50px;
+        -webkit-user-drag: none;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+
 }

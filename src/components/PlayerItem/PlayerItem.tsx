@@ -4,7 +4,11 @@ import classes from './PlayerItem.module.scss';
 import { PlayerLogoApi } from 'services/PlayerLogo';
 import defaultPlayer from '../../assets/images/player/default.svg';
 import { useAppDispatch } from 'hooks/reduxHooks';
-import { updatePlayerField, selectPlayerList } from 'store/reducers/PlayerListSlice';
+import { updatePlayerField,  } from 'store/reducers/PlayerListSlice';
+import us_flag from 'assets/images/region_flags/us.svg';
+import eu_flag from 'assets/images/region_flags/eu.svg';
+import kr_flag from 'assets/images/region_flags/kr.svg';
+
 
 interface PlayerItemProps {
     player: IPlayer;   
@@ -15,7 +19,9 @@ interface PlayerItemProps {
 const PlayerItem: React.FC<PlayerItemProps> = ({player, onClick, title}) => {
   const dispatch = useAppDispatch();
   const [playerLeagueLogo, setPlayerLeagueLogo] = useState<string>('');
+  const [playerRegionFlag, setPlayerRegionFlag] = useState<typeof us_flag | null>(null);
   const [playerLeagueName, setPlayerLeagueName] = useState<string>('');
+
   
   useEffect(() => {
     switch (player.league) {
@@ -52,6 +58,22 @@ const PlayerItem: React.FC<PlayerItemProps> = ({player, onClick, title}) => {
         break;
     }
 
+    switch (player.region) {
+      case 1:
+        setPlayerRegionFlag(us_flag); 
+        console.log('playerRegionFlag', playerRegionFlag);
+        break;
+      case 2:
+        setPlayerRegionFlag(eu_flag);
+        break;
+      case 3:
+        setPlayerRegionFlag(kr_flag);
+        break;
+      default:
+        break;
+    }
+
+
   }, [player])
 
   const {data: playerLogo, error} = PlayerLogoApi.useFetchPlayerLogoQuery({region: player.region, realm: player.realm, id: player.id}); 
@@ -68,8 +90,13 @@ const PlayerItem: React.FC<PlayerItemProps> = ({player, onClick, title}) => {
   return (
     <div {...(title && {title})} draggable="false" {...(onClick && {onClick})} className={classes.player_item}>
       <div className={classes.info_wrapper}>
-      <div>
-      <img className={`${classes.avatar}`} src={defaultPlayer} alt={player.username} 
+      <div className={classes.avatar_wrapper}>
+      {playerRegionFlag && <img className={classes.flag} src={playerRegionFlag} alt={
+          (player.region === 1) ? 'US' : (player.region === 2) ? 'EU' : 'KR'
+        } />}
+
+        
+      <img className={`${classes.avatar_league}`} src={defaultPlayer} alt={playerLeagueName} 
             onLoad={(e) => {
               if (!e.currentTarget.classList.contains('error')) {
                 (playerLeagueLogo) ? e.currentTarget.src = playerLeagueLogo : e.currentTarget.src = defaultPlayer;
@@ -79,6 +106,7 @@ const PlayerItem: React.FC<PlayerItemProps> = ({player, onClick, title}) => {
                 e.currentTarget.src = defaultPlayer;
                 e.currentTarget.classList.add('error');
           }}} />
+      </div>
           {!error
           ?
           <img className={`${classes.avatar} ${classes.logo}`} src={defaultPlayer} alt={player.username} 
@@ -94,7 +122,6 @@ const PlayerItem: React.FC<PlayerItemProps> = ({player, onClick, title}) => {
         :
         <img className={`${classes.avatar} ${classes.logo}`} src={defaultPlayer} alt={player.username} /> 
       }
-      </div>
       <div>
         <h3>Username: {player.username}</h3>
         <p>MMR: {player.mmr}</p>
