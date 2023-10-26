@@ -61,7 +61,6 @@ const PlayerItem: React.FC<PlayerItemProps> = ({player, onClick, title}) => {
     switch (player.region) {
       case 1:
         setPlayerRegionFlag(us_flag); 
-        console.log('playerRegionFlag', playerRegionFlag);
         break;
       case 2:
         setPlayerRegionFlag(eu_flag);
@@ -123,12 +122,19 @@ const PlayerItem: React.FC<PlayerItemProps> = ({player, onClick, title}) => {
         <img className={`${classes.avatar} ${classes.logo}`} src={defaultPlayer} alt={player.username} /> 
       }
       <div>
-        <h3>Username: {player.username}</h3>
+        <h3>{player.username}</h3>
         <p>MMR: {player.mmr}</p>
       </div>
       </div>
       <div className={classes.select_wrapper} >
-        <select onClick={(e) => e.stopPropagation()} defaultValue={player.race.toString()} className={classes.select} name="race" id={`race_${player.id}`}>
+        <select 
+        onClick={(e) => e.stopPropagation()} 
+        defaultValue={player.race.toString()}
+        onChange={(e) => {
+          dispatch(updatePlayerField({playerId: player.id, field: 'race', value: Number(e.target.value)}));
+          console.log(e.target.value);
+          }}
+        className={classes.select} name="race" id={`race_${player.id}`}>
           <option className={classes.option} value="0" disabled>Select Race</option>
           <option className={classes.option} value="1">Zerg</option>
           <option className={classes.option} value="2">Terran</option>
