@@ -11,4 +11,5 @@ export interface IPlayer {
     team: number;
     league: number;
     user: number;
+    selected: boolean;
 }
