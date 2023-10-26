@@ -24,7 +24,8 @@ import {
 } from 'store/reducers/ClanSlice';
 import {
   setPlayerList,
-  selectPlayerList
+  selectPlayerList,
+  updatePlayerField
 } from 'store/reducers/PlayerListSlice';
 import { setPageManager } from 'store/reducers/pageManagerSlice';
 
@@ -40,16 +41,18 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
   const playersSliceList = useAppSelector(selectPlayerList);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [cookies, ] = useCookies(['token', 'userId']);
-  const [selected, setSelected] = useState<IPlayer[]>([]);
+
+  const [clanExists, setClanExists] = useState<boolean>(false);
   const [drag, setDrag] = useState<boolean>(false);
   const [clanLogo, setClanLogo] = useState<File | null>(null);
   const [resorces, setResorces] = useState<IResorce[]>([]);
   const [resForms, setResForms] = useState<React.JSX.Element[]>([]);
+  const [playerForms, setPlayerForms] = useState<React.JSX.Element[]>([]);
   const [isClanCreating, setIsClanCreating] = useState<boolean>(false);
   const {data: players, isLoading, error } = ClanApi.useFetchClanMembersQuery(tag);
   const {data: regions} = regionApi.useFetchAllRegionsQuery();
   const [createClan, {error: createClanError, isLoading: createClanLoading}] = ClanApi.usePostClanMutation();
-  const [postPlayer, {}] = PlayerApi.usePostPlayerMutation();
+  const [postPlayer, {error: postPlayerError}] = PlayerApi.usePostPlayerMutation();
   const [postResource, {}] = ClanResourcesApi.usePostClanResourceMutation();
   const [postManager, {}] = ManagerApi.usePostManagerMutation();
 
@@ -62,6 +65,10 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
       user: cookies.userId,
     }));    
   }, [])
+
+  useEffect(() => {
+    if (postPlayerError) console.error(postPlayerError);
+  }, [postPlayerError])
 
   useEffect(() => {
     if (players) dispatch(setPlayerList(
@@ -78,6 +85,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
         realm: player.realm,
         team: player.team,
         user: cookies.userId,
+        selected: false
       }))
     ));
     
@@ -97,17 +105,24 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
       user: cookies.userId,
     }    
 
+
+
     try {
+      if ((await axios.get(`${import.meta.env.VITE_API_URL}teams/?tag=${clan.tag}`)).data.results.length > 0) {
+        setIsClanCreating(false);
+        setClanExists(true);
+        return;
+      }
       await createClan({clan: clanData, token: cookies.token});
       setIsClanCreating(true);
 
       const createdClan = await axios.get(`${import.meta.env.VITE_API_URL}teams/?tag=${clan.tag}`);
 
 
-      if (selected && createdClan) {
+      if (playersSliceList.filter((player) => player.selected) && createdClan) {
         
         await Promise.all(
-          selected.map(async (player) => {
+          playersSliceList.filter((player) => player.selected).map(async (player) => {
             const playerData = { ...player };
             if (!player) {
               return;
@@ -172,7 +187,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
       <div className={classes.mediaFormBox}>
       <label>Media {resForms.length + 1} url:</label>
         <Input7x type="text" onChange={(e) => {
-    const newValue = e.target.value;
+        const newValue = e.target.value;
 
     setResorces((resorces) => {
       const updatedResources = [...resorces];
@@ -192,17 +207,55 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
     setResForms([...resForms, newMediaForm]);
   }
 
+  const handleAddPlayerForm = () => {
+    const newId = playerForms.length;
+    const newPlayerForm = 
+    <div className={classes.playerForm} key={newId}>
+      <h1>Player {playerForms.length + 1}</h1>
+      <div className={classes.playerFormBox}>
+      <label>Username:</label>
+        <Input7x placeholder='Username' type="text" onChange={(e) => {
+          const newUsername = e.target.value;
+          if (playersSliceList && playersSliceList[newId]) {
+            playersSliceList[newId].username = newUsername;
+          }
+        }}/>
+        <select defaultValue='0' onClick={
+          (e) => e.stopPropagation()} 
+          onChange={(e) => {
+            const newRace = Number(e.target.value);
+            if (playersSliceList && playersSliceList[newId]) {
+              playersSliceList[newId].race = newRace;
+            }
+          }}
+          className={classes.select} 
+          name="race" id={`race_${newId}`}>
+          <option className={classes.option} value="0" disabled>Select Race</option>
+          <option className={classes.option} value="1">Zerg</option>
+          <option className={classes.option} value="2">Terran</option>
+          <option className={classes.option} value="3">Protoss</option>
+          <option className={classes.option} value="4">Random</option>
+        </select>
+        <label>Mmr:</label>
+        <Input7x type="number" onChange={(e) => {
+          const newMmr = e.target.value;
+        }}/>
+        <label></label>
+      </div>
+    </div>
 
-  const filteredPlayers = playersSliceList?.filter((player) => {
-    return !selected.some((selectedPlayer) => selectedPlayer.id === player.id);
-  })
+    setPlayerForms([...playerForms, newPlayerForm]);
+    
+  }
+
 
   return (
-    <div>
+    <div className={classes.container}>
       {!isClanCreating ?
       <div>
         <form className={classes.clanInfo}>
           <h2 className={classes.clanInfoTitle}>Enter clan data:</h2>
+          {clan && clanExists && <div className={classes.error}><img className={classes.errorIcon} src={important} alt="ERROR: " />Clan with tag {clan.tag} already exists</div>}
           <div className={classes.clanInfoBox}>
             <div className={classes.clanInput}>
               <label htmlFor="tag">Tag:</label>
@@ -280,19 +333,23 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
         </form>
         <ReloadinWarning />
         <div className={classes.selectedList}>
-          {selected.length === 0 && <h2>Select only the players who will participate in the leagues </h2>}
-          {selected.length > 0 && 
+          {playersSliceList.filter((player) => player.selected).length === 0 && <h2>Select only the players who will participate in the leagues </h2>}
+          {playersSliceList.filter((player) => player.selected).length > 0 && 
           <div>
             <h2 className={classes.selectedListTitle}>Selected players</h2>
-            {selected.map((player) => (
+            {playersSliceList.filter((player) => player.selected).map((player) => (
               <PlayerItem title='Click to remove a player' onClick={() => {
-                setSelected(selected.filter((selectedPlayer) => selectedPlayer.id !== player.id));
-                filteredPlayers?.push(player);
+                dispatch(updatePlayerField({playerId: player.id, field: 'selected', value: false}));
               }} key={player.id} player={player}/>
             ))}
             {!createClanLoading &&
             <div className={classes.selectedListButtons}>
-              <Button7x onClick={() => setSelected([])}>Clear selected</Button7x>
+              <Button7x onClick={() => {
+                playersSliceList.map((player) => {
+                  () => dispatch(updatePlayerField({playerId: player.id, field: 'selected', value: false}))
+                  
+                })
+              }}>Clear selected</Button7x>
               <Button7x className={classes.submitButton} onClick={handleCreateClan}>Submit</Button7x>
             </div>
             }
@@ -304,10 +361,27 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
             {error && 'status' in error && error.status === 404 && <h1> There is no clan with that tag </h1>}
           </div>
           <div>
-            {!createClanLoading && filteredPlayers?.map((player) => (
-                <PlayerItem title='Click to add a player' onClick={() => {setSelected([...selected, player])}} key={player.id} player={player} />
+            {!createClanLoading && playersSliceList.filter((player) => player.selected === false)?.map((player) => (
+                <PlayerItem title='Click to add a player' onClick={
+                  () => dispatch(updatePlayerField({playerId: player.id, field: 'selected', value: true}))
+                } key={player.id} player={player} />
             ))}
         </div>
+        {players ? 
+        <div className={`${classes.techInfo} ${classes.techInfo_bottom}`}><h2>If any of your players are not on the list, you can add them manually</h2></div>
+        :
+        <div className={classes.techInfo}><h2>The system did not find a clan with this tag :( <br />
+          If you are sure you entered the tag correctly, please add players manually</h2></div>}
+          <div  className={classes.addPlayerButton}>
+            <Button7x onClick={
+              () => {
+                handleAddPlayerForm();
+              }
+            }>Add player</Button7x>
+          </div>
+          {playerForms.map((form) => (
+              form
+            ))}
       </div>
       :
       <Loader7x />}
