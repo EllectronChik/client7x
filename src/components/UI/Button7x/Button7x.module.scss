@@ -3,10 +3,12 @@
     position: relative;
     text-transform: uppercase;
     color: #fff;
+    font-size: 1em;
     cursor: pointer;
     .label{
       padding: 10px;
       display: inline-block;
+      font-size: 1em;
     }
 
    
@@ -45,7 +47,7 @@
         &:before, &:after{
           content: '';
           height: 1px;
-          width: 30px;
+          width: 2em;
           position: absolute;
           display: block;
           background: #f0202f;
@@ -67,7 +69,7 @@
             position: absolute;
             display: block;
             width: 2px;
-            height: 30px;
+            height: 1.5em;
             transition: height 0.5s;
           }
           &:before{
@@ -86,4 +88,5 @@
 button {
     background-color: transparent;
     border: none;
+    font-size: 1em;
 }
