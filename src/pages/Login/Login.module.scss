@@ -40,7 +40,9 @@
             align-items: center;
             max-width: 500px;
             
-
+            .input {
+                margin-bottom: 20px;
+            }
 
             .error {
                 color: $clr_red;
