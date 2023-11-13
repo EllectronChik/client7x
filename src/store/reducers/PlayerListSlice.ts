@@ -17,6 +17,7 @@ const initialState: PlayerListState = {
 export const setPlayerList = createAction<IPlayer[]>("playerList/setPlayerList");
 export const setLoading = createAction<boolean>("playerList/setLoading");
 export const setError = createAction<string | null>("playerList/setError");
+export const updatePlayerList = createAction<IPlayer[]>("playerList/updatePlayerList");
 export const updatePlayerField = createAction<{ playerId: number; field: keyof IPlayer; value: any }>("playerList/updatePlayerField");
 
 export const playerListSlice = createSlice({
@@ -33,6 +34,16 @@ export const playerListSlice = createSlice({
             })
             .addCase(setError, (state, action) => {
                 state.error = action.payload;
+            })
+            .addCase(updatePlayerList, (state, action) => {
+                action.payload.forEach((player) => {
+                    const index = state.players.findIndex((p) => p.id === player.id);
+                    if (index !== -1) {
+                        state.players[index] = player;
+                    } else {
+                        state.players.push(player);
+                    }
+                })
             })
             .addCase(updatePlayerField, (state, action) => {
                 const { playerId, field, value } = action.payload;
