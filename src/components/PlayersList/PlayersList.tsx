@@ -23,7 +23,7 @@ import {
   selectClan
 } from 'store/reducers/ClanSlice';
 import {
-  setPlayerList,
+  updatePlayerList,
   selectPlayerList,
   updatePlayerField
 } from 'store/reducers/PlayerListSlice';
@@ -46,15 +46,18 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
   const [drag, setDrag] = useState<boolean>(false);
   const [clanLogo, setClanLogo] = useState<File | null>(null);
   const [resorces, setResorces] = useState<IResorce[]>([]);
+  const [manualPlayers, setManualPlayers] = useState<IPlayer[]>([]);
   const [resForms, setResForms] = useState<React.JSX.Element[]>([]);
   const [playerForms, setPlayerForms] = useState<React.JSX.Element[]>([]);
   const [isClanCreating, setIsClanCreating] = useState<boolean>(false);
-  const {data: players, isLoading, error } = ClanApi.useFetchClanMembersQuery(tag);
+  const {data: players, isLoading, error: ClanFetchError } = ClanApi.useFetchClanMembersQuery(tag);
   const {data: regions} = regionApi.useFetchAllRegionsQuery();
   const [createClan, {error: createClanError, isLoading: createClanLoading}] = ClanApi.usePostClanMutation();
   const [postPlayer, {error: postPlayerError}] = PlayerApi.usePostPlayerMutation();
   const [postResource, {}] = ClanResourcesApi.usePostClanResourceMutation();
-  const [postManager, {}] = ManagerApi.usePostManagerMutation();
+  const [postManager, {}] = ManagerApi.usePostManagerMutation(); 
+  let mmr_timeout: NodeJS.Timeout;
+
 
   useEffect(() => {
     dispatch(setClan({
@@ -71,7 +74,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
   }, [postPlayerError])
 
   useEffect(() => {
-    if (players) dispatch(setPlayerList(
+    if (players) dispatch(updatePlayerList(
       players.map((player: IPlayer) => ({
         id: player.id,
         username: player.username,
@@ -91,6 +94,33 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
     
   }, [players]);
 
+  useEffect(() => {    
+    if (manualPlayers)
+     dispatch(updatePlayerList(
+      manualPlayers.map((player: IPlayer) => ({
+        id: player.id,
+        username: player.username,
+        race: player.race,
+        league: playersSliceList[player.id] ? playersSliceList[player.id].league : 0,
+        region: player.region,
+        avatar: '',
+        mmr: player.mmr,
+        wins: 0,
+        total_games: 0,
+        realm: player.realm,
+        team: player.team,
+        user: cookies.userId,
+        selected: true
+      }))
+    ))   
+    console.log(manualPlayers);
+         
+  }, [manualPlayers]);
+
+  // useEffect(() => {
+  //   console.log(playersSliceList);
+    
+  // }, [playersSliceList]);
 
   const handleCreateClan = async () => {    
     if (!clan) {
@@ -154,6 +184,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
     }
   }
 
+
   const handleLogoDivClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -196,6 +227,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
           id: newId,
           url: newValue,
         }
+        
       } else {
         updatedResources[newId].url = newValue;
       }
@@ -208,6 +240,8 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
   }
 
   const handleAddPlayerForm = () => {
+    
+    if (manualPlayers) {
     const newId = playerForms.length;
     const newPlayerForm = 
     <div className={classes.playerForm} key={newId}>
@@ -215,18 +249,59 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
       <div className={classes.playerFormBox}>
       <label>Username:</label>
         <Input7x placeholder='Username' type="text" onChange={(e) => {
-          const newUsername = e.target.value;
-          if (playersSliceList && playersSliceList[newId]) {
-            playersSliceList[newId].username = newUsername;
-          }
+          const newUsername = e.target.value;        
+          setManualPlayers((manualPlayers) => {
+            const updatedPlayers = [...manualPlayers];
+            if (!updatedPlayers[newId]) {            
+              updatedPlayers[newId] = {
+                id: newId,
+                username: newUsername,
+                selected: true,
+                race: 0,
+                league: 0,
+                region: 0,
+                avatar: '',
+                mmr: 0,
+                wins: 0,
+                total_games: 0,
+                realm: 0,
+                team: 0,
+                user: cookies.userId,
+              }
+              
+            } else {
+                updatedPlayers[newId].username = newUsername;
+              }
+              return updatedPlayers;
+            })
         }}/>
         <select defaultValue='0' onClick={
           (e) => e.stopPropagation()} 
           onChange={(e) => {
             const newRace = Number(e.target.value);
-            if (playersSliceList && playersSliceList[newId]) {
-              playersSliceList[newId].race = newRace;
-            }
+            setManualPlayers((manualPlayers) => {
+              const updatedPlayers = [...manualPlayers];
+              if (!updatedPlayers[newId]) {
+                updatedPlayers[newId] = {
+                  id: newId,
+                  username: '',
+                  selected: true,
+                  race: newRace,
+                  league: 0,
+                  region: 0,
+                  avatar: '',
+                  mmr: 0,
+                  wins: 0,
+                  total_games: 0,
+                  realm: 0,
+                  team: 0,
+                  user: cookies.userId,
+                }
+              } else {
+                updatedPlayers[newId].race = newRace;
+              }
+              return updatedPlayers;
+            })
           }}
           className={classes.select} 
           name="race" id={`race_${newId}`}>
@@ -238,14 +313,94 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
         </select>
         <label>Mmr:</label>
         <Input7x type="number" onChange={(e) => {
-          const newMmr = e.target.value;
+          const newMmr = parseInt(e.target.value);
+          setManualPlayers((manualPlayers) => {
+            const updatedPlayers = [...manualPlayers];
+            if (!updatedPlayers[newId]) {
+              updatedPlayers[newId] = {
+                id: newId,
+                username: '',
+                selected: true,
+                race: 0,
+                league: 0,
+                region: 0,
+                avatar: '',
+                mmr: newMmr,
+                wins: 0,
+                total_games: 0,
+                realm: 0,
+                team: 0,
+                user: cookies.userId,
+              }
+            } else {
+              updatedPlayers[newId].mmr = newMmr;
+              if (mmr_timeout) {
+                clearTimeout(mmr_timeout);
+              }
+              mmr_timeout = setTimeout(async () => {
+                let region;
+                switch (updatedPlayers[newId].region) {
+                  case 1:
+                    region = 'US';
+                    break;
+                  case 2:
+                    region = 'EU';
+                    break;
+                  case 3:
+                    region = 'KR';
+                    break;
+                  default:
+                    region = 'EU';
+                    break;
+                }
+                const league = await axios.get(`${import.meta.env.VITE_API_URL}get_league_by_mmr/?mmr=${updatedPlayers[newId].mmr}&region=${region}`);
+                if (league.status === 200) {
+                  dispatch(updatePlayerField({playerId: updatedPlayers[newId].id, field: 'league', value: league.data.league}));
+                }
+              }, 1000);
+            }
+            return updatedPlayers;
+          })
         }}/>
-        <label></label>
+        <label>Region:</label>
+        <select className={classes.select}
+         defaultValue='0' onClick={
+          (e) => e.stopPropagation()}
+          onChange={(e) => {
+            const newRegion = Number(e.target.value);
+            setManualPlayers((manualPlayers) => {
+              const updatedPlayers = [...manualPlayers];
+              if (!updatedPlayers[newId]) {
+                updatedPlayers[newId] = {
+                  id: newId,
+                  username: '',
+                  selected: true,
+                  race: 0,
+                  league: 0,
+                  region: newRegion,
+                  avatar: '',
+                  mmr: 0,
+                  wins: 0,
+                  total_games: 0,
+                  realm: 0,
+                  team: 0,
+                  user: cookies.userId,
+                }
+              } else {
+                updatedPlayers[newId].region = newRegion;
+              }
+              return updatedPlayers;
+          })}}>
+            <option className={classes.option} value="0" disabled>Select Account Region</option>
+            <option className={classes.option} value="1">US</option>
+            <option className={classes.option} value="2">EU</option>
+            <option className={classes.option} value="3">KR</option>
+          </select>
       </div>
     </div>
 
     setPlayerForms([...playerForms, newPlayerForm]);
-    
+    }
   }
 
 
@@ -259,11 +414,11 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
           <div className={classes.clanInfoBox}>
             <div className={classes.clanInput}>
               <label htmlFor="tag">Tag:</label>
-              <Input7x className={classes.clanTag} id='tag' value={tag} onChange={(e) => dispatch(updateClanField({field: 'tag', value: e.target.value}))} placeholder='Enter clan tag'/>
+              <Input7x className={classes.clanTag} id='tag' defaultValue={tag} onChange={(e) => dispatch(updateClanField({field: 'tag', value: e.target.value}))} placeholder='Enter clan tag'/>
             </div>
             <div className={classes.clanInput}>
               <label htmlFor="name">Name:</label>
-              <Input7x className={classes.clanTag} id='name' value={tag} onChange={(e) => dispatch(updateClanField({field: 'name', value: e.target.value}))} placeholder='Enter clan name'/>
+              <Input7x className={classes.clanTag} id='name' defaultValue={tag} onChange={(e) => dispatch(updateClanField({field: 'name', value: e.target.value}))} placeholder='Enter clan name'/>
             </div>
           </div>
           <div className={classes.clanInfoBox}>
@@ -333,7 +488,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
         </form>
         <ReloadinWarning />
         <div className={classes.selectedList}>
-          {playersSliceList.filter((player) => player.selected).length === 0 && <h2>Select only the players who will participate in the leagues </h2>}
+          {playersSliceList.filter((player) => player.selected).length === 0 && !ClanFetchError && <h2>Select only the players who will participate in the leagues </h2>}
           {playersSliceList.filter((player) => player.selected).length > 0 && 
           <div>
             <h2 className={classes.selectedListTitle}>Selected players</h2>
@@ -357,21 +512,22 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
         </div>
           <div className={classes.techInfo}>
             {(isLoading || createClanLoading) && <Loader7x />}
-            {error && 'status' in error && error.status === 'FETCH_ERROR' && <h1> Server do not response </h1>}
-            {error && 'status' in error && error.status === 404 && <h1> There is no clan with that tag </h1>}
+            {ClanFetchError && 'status' in ClanFetchError && ClanFetchError.status === 'FETCH_ERROR' && <h1> Server do not response </h1>}
+            {!isLoading && ClanFetchError && 'status' in ClanFetchError && ClanFetchError.status === 404 && <h1> There is no clan with that tag </h1>}
           </div>
           <div>
             {!createClanLoading && playersSliceList.filter((player) => player.selected === false)?.map((player) => (
                 <PlayerItem title='Click to add a player' onClick={
-                  () => dispatch(updatePlayerField({playerId: player.id, field: 'selected', value: true}))
+                  () => {dispatch(updatePlayerField({playerId: player.id, field: 'selected', value: true}));}
+                  
                 } key={player.id} player={player} />
             ))}
         </div>
-        {players ? 
+        {!isLoading && (players ? 
         <div className={`${classes.techInfo} ${classes.techInfo_bottom}`}><h2>If any of your players are not on the list, you can add them manually</h2></div>
         :
         <div className={classes.techInfo}><h2>The system did not find a clan with this tag :( <br />
-          If you are sure you entered the tag correctly, please add players manually</h2></div>}
+          If you are sure you entered the tag correctly, please add players manually</h2></div>)}
           <div  className={classes.addPlayerButton}>
             <Button7x onClick={
               () => {
