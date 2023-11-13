@@ -6,11 +6,14 @@ import { IUserCreate } from 'models/IUserCreate';
 import { UsersApi } from 'services/UserService';
 import { useCookies } from 'react-cookie';
 import Input7x from 'components/UI/Input7x/Input7x';
+import { useNavigate } from 'react-router-dom';
+
 
 const Login: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [isError, setIsError] = useState<string | null>(null);
   const [Cookie, setСookie] = useCookies(['token', 'userId', 'have_account']);
+  const navigate = useNavigate();
 
   const [data, setData] = useState<IUserCreate>({
     username: '',
@@ -50,6 +53,7 @@ const Login: React.FC = () => {
         setСookie('token', responce.data.auth_token, { expires: exp_date });
         setСookie('userId', responce.data.user_id, { expires: exp_date });
         setIsError(null);
+        navigate('/account');
       }
       else if (responce.error) {
         if ("status" in responce.error) {
@@ -76,11 +80,11 @@ const Login: React.FC = () => {
       {isLogin
       ?
         <form className={classes.form} onSubmit={verify_registration}>
-          <Input7x type="text" placeholder="Username" onChange={
+          <Input7x className={classes.input} type="text" placeholder="Username" onChange={
             (e) => setData({...data, username: e.target.value})}/>
-          <Input7x type="email" placeholder="Email"  onChange={(e) => setData({...data, email: e.target.value})}/>
-          <Input7x type="password" placeholder="Password" onChange={(e) => setData({...data, password: e.target.value})}/>
-          <Input7x type="password" placeholder='Repeat password' onChange={(e) => setData({...data, re_password: e.target.value})}/>
+          <Input7x className={classes.input} type="email" placeholder="Email"  onChange={(e) => setData({...data, email: e.target.value})}/>
+          <Input7x className={classes.input} type="password" placeholder="Password" onChange={(e) => setData({...data, password: e.target.value})}/>
+          <Input7x className={classes.input} type="password" placeholder='Repeat password' onChange={(e) => setData({...data, re_password: e.target.value})}/>
           <Button7x className={classes.sub_btn} type="submit">Sign up</Button7x>
           <div className={classes.important}>
             <img src={important_svg} className={classes.important_img} alt="important" />
@@ -89,8 +93,8 @@ const Login: React.FC = () => {
         </form>
         : 
         <form className={classes.form} onSubmit={verify_login}>
-          <Input7x type="text" placeholder="Username" onChange={(e) => setData({...data, username: e.target.value})}/>
-          <Input7x type="password" placeholder="Password" onChange={(e) => setData({...data, password: e.target.value})}/>
+          <Input7x className={classes.input} type="text" placeholder="Username" onChange={(e) => setData({...data, username: e.target.value})}/>
+          <Input7x className={classes.input} type="password" placeholder="Password" onChange={(e) => setData({...data, password: e.target.value})}/>
           {isError && <p className={classes.error}>{isError}</p>}
           <Button7x className={classes.sub_btn} type="submit">Sign in</Button7x>
       </form>}
