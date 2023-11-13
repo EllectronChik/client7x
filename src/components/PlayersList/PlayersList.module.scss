@@ -141,6 +141,11 @@
     margin-top: 30px;
     display: flex;
     justify-content: center;
+}
 
-
+.select {
+    color: $clr_dark;
+    .option {
+        color: $clr_dark;
+    }
 }
