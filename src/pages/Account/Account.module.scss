@@ -14,9 +14,22 @@
 
 .tag_form {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    .input_container {
+        display: flex;
+        align-items: center;
+    }
     .search_btn {
         margin-left: 50px;
+    }
+    .link {
+        display: inline-block;
+        margin-top: 5px;
+        &:hover {
+            .inLink {
+                color: $clr_red;
+            }
+        }
     }
 }
 
