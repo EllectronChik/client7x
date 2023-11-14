@@ -10,6 +10,9 @@ import Input7x from 'components/UI/Input7x/Input7x';
 import PlayersList from 'components/PlayersList/PlayersList';
 import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
 import { setPageManager, selectManagerPage } from 'store/reducers/pageManagerSlice';
+import important from '@assets/images/techImages/important.svg'
+import { Tooltip } from 'react-tooltip';
+import axios from 'axios';
 
 const Account: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -18,7 +21,7 @@ const Account: React.FC = () => {
     const [isStaff, setIsStaff] = useState<boolean | null>(null);
     const [clanTag, setClanTag] = useState<string>('');
     const [renderList, setRenderList] = useState<boolean>(false);
-    const [cookie, setCookie] = useCookies(['token']);
+    const [cookie, setCookie] = useCookies(['token', 'userId']);
     const navigate = useNavigate();
     const logout = useLogoutUser();
 
@@ -62,15 +65,43 @@ const Account: React.FC = () => {
                 </div>}
                 {isLoading && <Loader7x />}
                 {pageManager === 0 && !isLoading && 
-                <div>
+                <div className={classes.clan}>
                     {!renderList && <form className={classes.tag_form} onSubmit={
                     (e: React.FormEvent<HTMLFormElement>) => {
                         e.preventDefault();
                         setRenderList(true);
                     }
                     }>
-                        <Input7x type="text" placeholder="ClanTag" onChange={(e) => setClanTag(e.target.value)}/>
+                         <Tooltip border='1px solid red' id="tooltip-important-content">
+                            <div>
+                            <p>
+                            Enter a clan tag and the system will try to find your clan. <br /> Please make sure you follow the case and layout when entering the tag
+                            </p>
+                            </div>
+                         </Tooltip>
+                         <div className={classes.input_container}>
+                        <Input7x
+                            data-tooltip-id='tooltip-important-content'
+                            data-tooltip-place='left'
+                            type="text" placeholder="ClanTag" onChange={(e) => setClanTag(e.target.value)}/>
                     <Button7x className={classes.search_btn}>Search</Button7x>
+                    </div>
+                    <a className={classes.link} href="https://sc2pulse.nephest.com">We use the <span className={classes.inLink}>SC2 PULSE</span> API</a>
+                    <p onClick={() => {
+                        axios.post(`${import.meta.env.VITE_SERVER_URL}api/v1/ask_for_staff/`, {
+                            user: cookie.userId,
+                        }, {
+                            headers: {
+                                'Authorization': `Token ${cookie.token}`
+                            }
+                        }).then(response => {
+                            console.log(response.data);
+                            
+                        }).catch(error => {
+                            console.log(error);
+                            
+                        })
+                    }}>Click here to submit a request for referee status and it will be reviewed by administration</p>
                     </form>}
                     {renderList && <div className={classes.players_list}>
                         <PlayersList tag={clanTag} />
