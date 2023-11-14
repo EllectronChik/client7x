@@ -28,7 +28,7 @@
 .techInfo {
     display: flex;
     justify-content: center;
-    
+    text-align: center;
 }
 
 .techInfo_bottom {
@@ -41,6 +41,7 @@
     align-items: center;
     justify-content: space-around;
     margin-bottom: 50px;
+    width: 800px;
 
     .clanInfoBox {
         width: 100%;
@@ -143,9 +144,48 @@
     justify-content: center;
 }
 
-.select {
-    color: $clr_dark;
-    .option {
-        color: $clr_dark;
+.playerForm {
+    padding: 15px;
+    border: 1px solid $clr_red;
+    border-radius: 15px;
+    margin-top: 10px;
+
+
+
+    .playerFormBox {
+        .playerFormBoxElement {
+            display: flex;
+            justify-content: space-between;
+            .playerFormLabel {
+                display: inline-flex;
+                font-size: 20px;
+                margin-bottom: 5px;
+                width: 120px;
+            }
+            .playerFormInput {
+                margin-top: 10px;
+                padding-left: 5px;
+                background-color: $clr_dark;
+                color: $clr_light;
+                border: none;
+                border-bottom: $clr_red 1px solid;
+        
+                &:focus-visible {
+                    outline: none;
+                    border: none;
+                    border-bottom: $clr_red 1px solid;
+                }
+            }
+            .select {
+                color: $clr_dark;
+                width: 220px;
+                .option {
+                    color: $clr_dark;
+                }
+            }
+        }
+
     }
+
+
 }

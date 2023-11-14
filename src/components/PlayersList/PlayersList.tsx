@@ -53,7 +53,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
   const {data: players, isLoading, error: ClanFetchError } = ClanApi.useFetchClanMembersQuery(tag);
   const {data: regions} = regionApi.useFetchAllRegionsQuery();
   const [createClan, {error: createClanError, isLoading: createClanLoading}] = ClanApi.usePostClanMutation();
-  const [postPlayer, {error: postPlayerError}] = PlayerApi.usePostPlayerMutation();
+  const [postPlayer, {}] = PlayerApi.usePostPlayerMutation();
   const [postResource, {}] = ClanResourcesApi.usePostClanResourceMutation();
   const [postManager, {}] = ManagerApi.usePostManagerMutation(); 
   let mmr_timeout: NodeJS.Timeout;
@@ -68,10 +68,6 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
       user: cookies.userId,
     }));    
   }, [])
-
-  useEffect(() => {
-    if (postPlayerError) console.error(postPlayerError);
-  }, [postPlayerError])
 
   useEffect(() => {
     if (players) dispatch(updatePlayerList(
@@ -94,33 +90,55 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
     
   }, [players]);
 
-  useEffect(() => {    
-    if (manualPlayers)
-     dispatch(updatePlayerList(
-      manualPlayers.map((player: IPlayer) => ({
-        id: player.id,
-        username: player.username,
-        race: player.race,
-        league: playersSliceList[player.id] ? playersSliceList[player.id].league : 0,
-        region: player.region,
-        avatar: '',
-        mmr: player.mmr,
-        wins: 0,
-        total_games: 0,
-        realm: player.realm,
-        team: player.team,
-        user: cookies.userId,
-        selected: true
-      }))
-    ))   
-    console.log(manualPlayers);
-         
-  }, [manualPlayers]);
 
-  // useEffect(() => {
-  //   console.log(playersSliceList);
-    
-  // }, [playersSliceList]);
+  useEffect(() => {    
+    if (manualPlayers && players && players.length > 0) {
+      dispatch(updatePlayerList(
+        manualPlayers.map((player: IPlayer) => {
+          const mappedPlayer = {
+            id: player.id + players.length,
+            username: player.username,
+            race: player.race,
+            league: playersSliceList[player.id + players.length] ? playersSliceList[player.id + players.length].league : 0,
+            region: player.region,
+            avatar: '',
+            mmr: player.mmr,
+            wins: 0,
+            total_games: 0,
+            realm: player.realm,
+            team: player.team,
+            user: cookies.userId,
+            selected: true
+          };
+  
+          return mappedPlayer;
+        })
+      ));
+    } else {
+      dispatch(updatePlayerList(
+        manualPlayers.map((player: IPlayer) => {
+          const mappedPlayer = {
+            id: player.id,
+            username: player.username,
+            race: player.race,
+            league: playersSliceList[player.id] ? playersSliceList[player.id].league : 0,
+            region: player.region,
+            avatar: '',
+            mmr: player.mmr,
+            wins: 0,
+            total_games: 0,
+            realm: player.realm,
+            team: player.team,
+            user: cookies.userId,
+            selected: true
+          };
+
+          return mappedPlayer;
+        })
+      ));
+    }   
+  }, [manualPlayers]);
+  
 
   const handleCreateClan = async () => {    
     if (!clan) {
@@ -243,63 +261,52 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
     
     if (manualPlayers) {
     const newId = playerForms.length;
+    setManualPlayers((manualPlayers) => {
+      const updatedPlayers = [...manualPlayers];
+      if (!updatedPlayers[newId]) {            
+        updatedPlayers[newId] = {
+          id: newId,
+          username: '',
+          selected: true,
+          race: 0,
+          league: 0,
+          region: 0,
+          avatar: '',
+          mmr: 0,
+          wins: 0,
+          total_games: 0,
+          realm: 0,
+          team: 0,
+          user: cookies.userId,
+        }
+        
+      }
+        return updatedPlayers;
+      });
     const newPlayerForm = 
     <div className={classes.playerForm} key={newId}>
-      <h1>Player {playerForms.length + 1}</h1>
+      <h2>Player {playerForms.length + 1}</h2>
       <div className={classes.playerFormBox}>
-      <label>Username:</label>
-        <Input7x placeholder='Username' type="text" onChange={(e) => {
+      <div className={classes.playerFormBoxElement}>
+      <div>
+      <label className={classes.playerFormLabel}>Username:</label>
+        <input className={classes.playerFormInput} placeholder='Username' type="text" onChange={(e) => {
           const newUsername = e.target.value;        
           setManualPlayers((manualPlayers) => {
             const updatedPlayers = [...manualPlayers];
-            if (!updatedPlayers[newId]) {            
-              updatedPlayers[newId] = {
-                id: newId,
-                username: newUsername,
-                selected: true,
-                race: 0,
-                league: 0,
-                region: 0,
-                avatar: '',
-                mmr: 0,
-                wins: 0,
-                total_games: 0,
-                realm: 0,
-                team: 0,
-                user: cookies.userId,
-              }
-              
-            } else {
-                updatedPlayers[newId].username = newUsername;
-              }
-              return updatedPlayers;
+            updatedPlayers[newId].username = newUsername;
+            return updatedPlayers;
             })
         }}/>
+        </div>
+
         <select defaultValue='0' onClick={
           (e) => e.stopPropagation()} 
           onChange={(e) => {
             const newRace = Number(e.target.value);
             setManualPlayers((manualPlayers) => {
               const updatedPlayers = [...manualPlayers];
-              if (!updatedPlayers[newId]) {
-                updatedPlayers[newId] = {
-                  id: newId,
-                  username: '',
-                  selected: true,
-                  race: newRace,
-                  league: 0,
-                  region: 0,
-                  avatar: '',
-                  mmr: 0,
-                  wins: 0,
-                  total_games: 0,
-                  realm: 0,
-                  team: 0,
-                  user: cookies.userId,
-                }
-              } else {
-                updatedPlayers[newId].race = newRace;
-              }
+              updatedPlayers[newId].race = newRace;
               return updatedPlayers;
             })
           }}
@@ -311,58 +318,44 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
           <option className={classes.option} value="3">Protoss</option>
           <option className={classes.option} value="4">Random</option>
         </select>
-        <label>Mmr:</label>
-        <Input7x type="number" onChange={(e) => {
+        </div>
+        <div className={classes.playerFormBoxElement}>
+        <div>
+        <label className={classes.playerFormLabel}>Mmr:</label>
+        <input type="number" className={classes.playerFormInput} placeholder='Mmr' onChange={(e) => {
           const newMmr = parseInt(e.target.value);
           setManualPlayers((manualPlayers) => {
             const updatedPlayers = [...manualPlayers];
-            if (!updatedPlayers[newId]) {
-              updatedPlayers[newId] = {
-                id: newId,
-                username: '',
-                selected: true,
-                race: 0,
-                league: 0,
-                region: 0,
-                avatar: '',
-                mmr: newMmr,
-                wins: 0,
-                total_games: 0,
-                realm: 0,
-                team: 0,
-                user: cookies.userId,
-              }
-            } else {
-              updatedPlayers[newId].mmr = newMmr;
-              if (mmr_timeout) {
-                clearTimeout(mmr_timeout);
-              }
-              mmr_timeout = setTimeout(async () => {
-                let region;
-                switch (updatedPlayers[newId].region) {
-                  case 1:
-                    region = 'US';
-                    break;
-                  case 2:
-                    region = 'EU';
-                    break;
-                  case 3:
-                    region = 'KR';
-                    break;
-                  default:
-                    region = 'EU';
-                    break;
-                }
-                const league = await axios.get(`${import.meta.env.VITE_API_URL}get_league_by_mmr/?mmr=${updatedPlayers[newId].mmr}&region=${region}`);
-                if (league.status === 200) {
-                  dispatch(updatePlayerField({playerId: updatedPlayers[newId].id, field: 'league', value: league.data.league}));
-                }
-              }, 1000);
+            updatedPlayers[newId].mmr = newMmr;
+            if (mmr_timeout) {
+              clearTimeout(mmr_timeout);
             }
+            mmr_timeout = setTimeout(async () => {
+              let region;
+              switch (updatedPlayers[newId].region) {
+                case 1:
+                  region = 'US';
+                  break;
+                case 2:
+                  region = 'EU';
+                  break;
+                case 3:
+                  region = 'KR';
+                  break;
+                default:
+                  region = 'EU';
+                  break;
+              }
+              const league = await axios.get(`${import.meta.env.VITE_API_URL}get_league_by_mmr/?mmr=${updatedPlayers[newId].mmr}&region=${region}`);
+              if (league.status === 200) {
+                if (players) dispatch(updatePlayerField({playerId: updatedPlayers[newId].id + players.length, field: 'league', value: league.data.league}));
+                else dispatch(updatePlayerField({playerId: updatedPlayers[newId].id, field: 'league', value: league.data.league}));
+              }
+            }, 1000);
             return updatedPlayers;
           })
         }}/>
-        <label>Region:</label>
+        </div>
         <select className={classes.select}
          defaultValue='0' onClick={
           (e) => e.stopPropagation()}
@@ -370,25 +363,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
             const newRegion = Number(e.target.value);
             setManualPlayers((manualPlayers) => {
               const updatedPlayers = [...manualPlayers];
-              if (!updatedPlayers[newId]) {
-                updatedPlayers[newId] = {
-                  id: newId,
-                  username: '',
-                  selected: true,
-                  race: 0,
-                  league: 0,
-                  region: newRegion,
-                  avatar: '',
-                  mmr: 0,
-                  wins: 0,
-                  total_games: 0,
-                  realm: 0,
-                  team: 0,
-                  user: cookies.userId,
-                }
-              } else {
-                updatedPlayers[newId].region = newRegion;
-              }
+              updatedPlayers[newId].region = newRegion;
               return updatedPlayers;
           })}}>
             <option className={classes.option} value="0" disabled>Select Account Region</option>
@@ -396,6 +371,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
             <option className={classes.option} value="2">EU</option>
             <option className={classes.option} value="3">KR</option>
           </select>
+          </div>
       </div>
     </div>
 
@@ -526,8 +502,8 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
         {!isLoading && (players ? 
         <div className={`${classes.techInfo} ${classes.techInfo_bottom}`}><h2>If any of your players are not on the list, you can add them manually</h2></div>
         :
-        <div className={classes.techInfo}><h2>The system did not find a clan with this tag :( <br />
-          If you are sure you entered the tag correctly, please add players manually</h2></div>)}
+        <div className={classes.techInfo}><h3>The system did not find a clan with this tag :( <br />
+          If you are sure you entered the tag correctly, <br /> please add players manually</h3></div>)}
           <div  className={classes.addPlayerButton}>
             <Button7x onClick={
               () => {
