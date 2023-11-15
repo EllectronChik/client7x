@@ -28,6 +28,8 @@ import {
   updatePlayerField
 } from 'store/reducers/PlayerListSlice';
 import { setPageManager } from 'store/reducers/pageManagerSlice';
+import { handleAddPlayerForm } from 'components/PlayerUtils/ManualPlayer';
+import { handleAddMediaForm } from 'components/ClanUtils/MediaForm';
 
 interface PlayersListProps {
     tag: string;
@@ -54,10 +56,13 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
   const {data: regions} = regionApi.useFetchAllRegionsQuery();
   const [createClan, {error: createClanError, isLoading: createClanLoading}] = ClanApi.usePostClanMutation();
   const [postPlayer, {}] = PlayerApi.usePostPlayerMutation();
-  const [postResource, {}] = ClanResourcesApi.usePostClanResourceMutation();
+  const [postResource, {error: postResourceError}] = ClanResourcesApi.usePostClanResourceMutation();
   const [postManager, {}] = ManagerApi.usePostManagerMutation(); 
-  let mmr_timeout: NodeJS.Timeout;
 
+  useEffect(() => {
+    console.log(postResourceError);
+    
+  }, [postResourceError])
 
   useEffect(() => {
     dispatch(setClan({
@@ -230,163 +235,12 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
     value: region.id
   }))
 
-  const handleAddMediaForm = () => {
-    const newId = resForms.length;
-    const newMediaForm = <div className={classes.mediaForm} key={newId}>
-      <div className={classes.mediaFormBox}>
-      <label>Media {resForms.length + 1} url:</label>
-        <Input7x type="text" onChange={(e) => {
-        const newValue = e.target.value;
-
-    setResorces((resorces) => {
-      const updatedResources = [...resorces];
-      if (!updatedResources[newId]) {
-        updatedResources[newId] = {
-          id: newId,
-          url: newValue,
-        }
-        
-      } else {
-        updatedResources[newId].url = newValue;
-      }
-      return updatedResources
-    })
-  }}/>
-      </div>
-    </div>
-    setResForms([...resForms, newMediaForm]);
-  }
-
-  const handleAddPlayerForm = () => {
-    
-    if (manualPlayers) {
-    const newId = playerForms.length;
-    setManualPlayers((manualPlayers) => {
-      const updatedPlayers = [...manualPlayers];
-      if (!updatedPlayers[newId]) {            
-        updatedPlayers[newId] = {
-          id: newId,
-          username: '',
-          selected: true,
-          race: 0,
-          league: 0,
-          region: 0,
-          avatar: '',
-          mmr: 0,
-          wins: 0,
-          total_games: 0,
-          realm: 0,
-          team: 0,
-          user: cookies.userId,
-        }
-        
-      }
-        return updatedPlayers;
-      });
-    const newPlayerForm = 
-    <div className={classes.playerForm} key={newId}>
-      <h2>Player {playerForms.length + 1}</h2>
-      <div className={classes.playerFormBox}>
-      <div className={classes.playerFormBoxElement}>
-      <div>
-      <label className={classes.playerFormLabel}>Username:</label>
-        <input className={classes.playerFormInput} placeholder='Username' type="text" onChange={(e) => {
-          const newUsername = e.target.value;        
-          setManualPlayers((manualPlayers) => {
-            const updatedPlayers = [...manualPlayers];
-            updatedPlayers[newId].username = newUsername;
-            return updatedPlayers;
-            })
-        }}/>
-        </div>
-
-        <select defaultValue='0' onClick={
-          (e) => e.stopPropagation()} 
-          onChange={(e) => {
-            const newRace = Number(e.target.value);
-            setManualPlayers((manualPlayers) => {
-              const updatedPlayers = [...manualPlayers];
-              updatedPlayers[newId].race = newRace;
-              return updatedPlayers;
-            })
-          }}
-          className={classes.select} 
-          name="race" id={`race_${newId}`}>
-          <option className={classes.option} value="0" disabled>Select Race</option>
-          <option className={classes.option} value="1">Zerg</option>
-          <option className={classes.option} value="2">Terran</option>
-          <option className={classes.option} value="3">Protoss</option>
-          <option className={classes.option} value="4">Random</option>
-        </select>
-        </div>
-        <div className={classes.playerFormBoxElement}>
-        <div>
-        <label className={classes.playerFormLabel}>Mmr:</label>
-        <input type="number" className={classes.playerFormInput} placeholder='Mmr' onChange={(e) => {
-          const newMmr = parseInt(e.target.value);
-          setManualPlayers((manualPlayers) => {
-            const updatedPlayers = [...manualPlayers];
-            updatedPlayers[newId].mmr = newMmr;
-            if (mmr_timeout) {
-              clearTimeout(mmr_timeout);
-            }
-            mmr_timeout = setTimeout(async () => {
-              let region;
-              switch (updatedPlayers[newId].region) {
-                case 1:
-                  region = 'US';
-                  break;
-                case 2:
-                  region = 'EU';
-                  break;
-                case 3:
-                  region = 'KR';
-                  break;
-                default:
-                  region = 'EU';
-                  break;
-              }
-              const league = await axios.get(`${import.meta.env.VITE_API_URL}get_league_by_mmr/?mmr=${updatedPlayers[newId].mmr}&region=${region}`);
-              if (league.status === 200) {
-                if (players) dispatch(updatePlayerField({playerId: updatedPlayers[newId].id + players.length, field: 'league', value: league.data.league}));
-                else dispatch(updatePlayerField({playerId: updatedPlayers[newId].id, field: 'league', value: league.data.league}));
-              }
-            }, 1000);
-            return updatedPlayers;
-          })
-        }}/>
-        </div>
-        <select className={classes.select}
-         defaultValue='0' onClick={
-          (e) => e.stopPropagation()}
-          onChange={(e) => {
-            const newRegion = Number(e.target.value);
-            setManualPlayers((manualPlayers) => {
-              const updatedPlayers = [...manualPlayers];
-              updatedPlayers[newId].region = newRegion;
-              return updatedPlayers;
-          })}}>
-            <option className={classes.option} value="0" disabled>Select Account Region</option>
-            <option className={classes.option} value="1">US</option>
-            <option className={classes.option} value="2">EU</option>
-            <option className={classes.option} value="3">KR</option>
-          </select>
-          </div>
-      </div>
-    </div>
-
-    setPlayerForms([...playerForms, newPlayerForm]);
-    }
-  }
-
-
   return (
     <div className={classes.container}>
       {!isClanCreating ?
       <div>
         <form className={classes.clanInfo}>
           <h2 className={classes.clanInfoTitle}>Enter clan data:</h2>
-          {clan && clanExists && <div className={classes.error}><img className={classes.errorIcon} src={important} alt="ERROR: " />Clan with tag {clan.tag} already exists</div>}
           <div className={classes.clanInfoBox}>
             <div className={classes.clanInput}>
               <label htmlFor="tag">Tag:</label>
@@ -453,7 +307,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
                 <label>
                   You can also add links to your clan's media:
                 </label>
-                <div onClick={handleAddMediaForm} className={classes.AddTeamBox}>
+                <div onClick={() => handleAddMediaForm(resForms, setResForms, setResorces)} className={classes.AddTeamBox}>
                   Add media
                 </div>
                 {resForms.map((form) => (
@@ -473,6 +327,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
                 dispatch(updatePlayerField({playerId: player.id, field: 'selected', value: false}));
               }} key={player.id} player={player}/>
             ))}
+            {clan && clanExists && <div className={classes.error}><img className={classes.errorIcon} src={important} alt="ERROR: " />Clan with tag {clan.tag} already exists</div>}
             {!createClanLoading &&
             <div className={classes.selectedListButtons}>
               <Button7x onClick={() => {
@@ -507,7 +362,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
           <div  className={classes.addPlayerButton}>
             <Button7x onClick={
               () => {
-                handleAddPlayerForm();
+                handleAddPlayerForm(playerForms, setPlayerForms, manualPlayers, setManualPlayers, players ? players : [], dispatch, cookies);
               }
             }>Add player</Button7x>
           </div>

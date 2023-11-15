@@ -1,0 +1,13 @@
+.mediaForm {
+    display: inline-block;
+    justify-content: start;
+    .mediaFormBox {
+        display: flex;
+        flex-direction: column;
+        margin-top: 10px;
+    }
+    input {
+        font-size: 25px;
+        padding: 0 10px;
+    }
+}
