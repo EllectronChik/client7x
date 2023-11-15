@@ -10,9 +10,9 @@ import Input7x from 'components/UI/Input7x/Input7x';
 import PlayersList from 'components/PlayersList/PlayersList';
 import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
 import { setPageManager, selectManagerPage } from 'store/reducers/pageManagerSlice';
-import important from '@assets/images/techImages/important.svg'
 import { Tooltip } from 'react-tooltip';
 import axios from 'axios';
+import TeamManage from 'components/TeamManage/TeamManage';
 
 const Account: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -20,18 +20,37 @@ const Account: React.FC = () => {
     const [isManager, setIsManager] = useState<boolean | null>(null);
     const [isStaff, setIsStaff] = useState<boolean | null>(null);
     const [clanTag, setClanTag] = useState<string>('');
+    const [isAsked, setIsAsked] = useState<boolean>(false);
     const [renderList, setRenderList] = useState<boolean>(false);
     const [cookie, setCookie] = useCookies(['token', 'userId']);
     const navigate = useNavigate();
     const logout = useLogoutUser();
 
-
+    const askClanTag = async () => {
+        try {
+            const isAskStaffSend = await axios({
+                url: `${import.meta.env.VITE_API_URL}ask_for_staff/?user=${cookie.userId}`,
+                method: 'GET',
+                headers: {
+                    Authorization: `Token ${cookie.token}`
+                }
+            });       
+            if (isAskStaffSend.data.length === 1) {
+                console.log(isAskStaffSend.data);
+                setIsAsked(true);
+            }
+            
+        } catch (error) {
+            console.error("Error when asking for the clan tag:", error);
+        }
+    }
 
     if (cookie.token) {
         const {data: status, error, isLoading} = StatusApi.useFetchUserStatusQuery(cookie.token);
 
         useEffect(() => {
             document.title = 'Account';
+            askClanTag();
         }, []);
 
         useEffect(() => {
@@ -87,8 +106,9 @@ const Account: React.FC = () => {
                     <Button7x className={classes.search_btn}>Search</Button7x>
                     </div>
                     <a className={classes.link} href="https://sc2pulse.nephest.com">We use the <span className={classes.inLink}>SC2 PULSE</span> API</a>
-                    <p onClick={() => {
-                        axios.post(`${import.meta.env.VITE_SERVER_URL}api/v1/ask_for_staff/`, {
+                    {!isAsked && <div className={classes.request_btn}
+                        onClick={() => {
+                        axios.post(`${import.meta.env.VITE_API_URL}ask_for_staff/`, {
                             user: cookie.userId,
                         }, {
                             headers: {
@@ -100,8 +120,9 @@ const Account: React.FC = () => {
                         }).catch(error => {
                             console.log(error);
                             
-                        })
-                    }}>Click here to submit a request for referee status and it will be reviewed by administration</p>
+                        });
+                        setIsAsked(true);
+                    }}>Click here to submit a request for referee status and it will be reviewed by administration</div>}
                     </form>}
                     {renderList && <div className={classes.players_list}>
                         <PlayersList tag={clanTag} />
@@ -110,7 +131,7 @@ const Account: React.FC = () => {
                 </div>
                 }
                 {pageManager === 1 && !isLoading &&
-                <div>Team</div>
+                <TeamManage />
                 }
                 {pageManager === 2 && !isLoading &&
                 <div>Staff</div>
