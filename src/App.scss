@@ -1,17 +1,16 @@
 @import 'settings.scss';
 
 @font-face {
-  font-family: 'RidleyGrotesk';
-  src: local('Ridley Grotesk Regular'), local('Ridley-Grotesk-Regular'),
-      url('/fonts/RidleyGrotesk-Regular.woff2') format('woff2'),
-      url('/fonts/RidleyGrotesk-Regular.woff') format('woff'),
-      url('/fonts/RidleyGrotesk-Regular.ttf') format('truetype');
-  font-weight: 400;
+  font-display: swap;
+  font-family: 'Nunito Sans';
   font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/nunito-sans-v15-cyrillic_cyrillic-ext_latin_latin-ext-regular.woff2') format('woff2'),
+       url('/fonts/nunito-sans-v15-cyrillic_cyrillic-ext_latin_latin-ext-regular.ttf') format('truetype');
 }
 
 * {
-  font-family: 'RidleyGrotesk';
+  font-family: 'Nunito Sans';
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -26,4 +25,3 @@ body {
 a {
   text-decoration: none;
 }
-
