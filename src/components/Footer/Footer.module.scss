@@ -1,0 +1,13 @@
+@import '../../settings.scss';
+
+.footer {
+    padding: 15px;
+    background-color: $clr_dark;
+    color: $clr_light;
+    font-size: 20px;
+    text-align: center;
+
+    .select {
+        background-color: $clr_dark;
+    }
+}
