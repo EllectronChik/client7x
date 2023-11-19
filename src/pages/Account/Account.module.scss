@@ -42,6 +42,12 @@
     align-self: center;
     border: 1px solid $clr_red;
     border-radius: 15px;
+    transition: padding .3s, width .3s;
+
+    &:hover {
+        width: 310px;
+        padding: 15px;
+    }
 }
 
 .players_list {
