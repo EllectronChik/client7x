@@ -30,6 +30,7 @@ import {
 import { setPageManager } from 'store/reducers/pageManagerSlice';
 import { handleAddPlayerForm } from 'components/PlayerUtils/ManualPlayer';
 import { handleAddMediaForm } from 'components/ClanUtils/MediaForm';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 interface PlayersListProps {
     tag: string;
@@ -58,6 +59,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
   const [postPlayer, {}] = PlayerApi.usePostPlayerMutation();
   const [postResource, {error: postResourceError}] = ClanResourcesApi.usePostClanResourceMutation();
   const [postManager, {}] = ManagerApi.usePostManagerMutation(); 
+  const intl = useIntl();
 
   useEffect(() => {
     console.log(postResourceError);
@@ -240,20 +242,20 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
       {!isClanCreating ?
       <div>
         <form className={classes.clanInfo}>
-          <h2 className={classes.clanInfoTitle}>Enter clan data:</h2>
+          <h2 className={classes.clanInfoTitle}><FormattedMessage id='enter_clan_data'/></h2>
           <div className={classes.clanInfoBox}>
             <div className={classes.clanInput}>
-              <label htmlFor="tag">Tag:</label>
+              <label htmlFor="tag"><FormattedMessage id='tag'/></label>
               <Input7x className={classes.clanTag} id='tag' defaultValue={tag} onChange={(e) => dispatch(updateClanField({field: 'tag', value: e.target.value}))} placeholder='Enter clan tag'/>
             </div>
             <div className={classes.clanInput}>
-              <label htmlFor="name">Name:</label>
+              <label htmlFor="name"><FormattedMessage id='name'/></label>
               <Input7x className={classes.clanTag} id='name' defaultValue={tag} onChange={(e) => dispatch(updateClanField({field: 'name', value: e.target.value}))} placeholder='Enter clan name'/>
             </div>
           </div>
           <div className={classes.clanInfoBox}>
             <div className={`${classes.clanInputLogo} ${classes.clanInput}`}>
-              <label htmlFor="logo">Logo:</label>
+              <label htmlFor="logo"><FormattedMessage id='logo'/></label>
               <input ref={fileInputRef} type="file" id="logo" className={classes.logoInput}  onChange={(e) => {
                 if (e.target.files) setClanLogo(e.target.files[0])}} />
               <div
@@ -262,15 +264,15 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
                 onDragOver={handleLogoDivDragOver} 
                 onDrop={handleLogoDivDrop} 
                 className={classes.logoDiv}>
-                  {!clanLogo ? (drag ? 'Drop logo here' : 'Add logo') : null}
+                  {!clanLogo ? (drag ? `${intl.formatMessage({id: 'drop_logo'})}` : `${intl.formatMessage({id: 'add_logo'})}`) : null}
                   {clanLogo && <img src={URL.createObjectURL(clanLogo)} alt="logo" />}
                   </div>
-                {createClanError && !clanLogo && <div className={classes.error}><img className={classes.errorIcon} src={important} alt="ERROR: " />This field is required</div>}
+                {createClanError && !clanLogo && <div className={classes.error}><img className={classes.errorIcon} src={important} alt="ERROR: " /><FormattedMessage id='required_field' /></div>}
             </div>
           </div>
           <div className={classes.clanInfoBox}>
             <div className={`${classes.clanInput} ${classes.clanInputRegion}`}>
-            <label>Region:</label>
+            <label><FormattedMessage id='region'/></label>
             <Select 
               styles={{
                 container: (baseStyles, ) => ({
@@ -295,20 +297,20 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
                 })
               }}
             options={regionOptions} 
-            defaultValue={{label: 'Select region', value: 0}}
+            defaultValue={{label: `${intl.formatMessage({id: 'select_region'})}`, value: 0}}
             onChange={(selectedOption) => {
               if (selectedOption) dispatch(updateClanField({field: 'region', value: selectedOption.value}))
               }}/>
-              {clan && createClanError && !clan.region && <div className={classes.error}><img className={classes.errorIcon} src={important} alt="ERROR: " />This field is required</div>}
+              {clan && createClanError && !clan.region && <div className={classes.error}><img className={classes.errorIcon} src={important} alt="ERROR: " /><FormattedMessage id='required_field'/></div>}
             </div>
           </div>
           <div className={classes.clanInfoBox}>
               <div className={`${classes.clanInput} ${classes.clanInputMedia}`}>
                 <label>
-                  You can also add links to your clan's media:
+                  <FormattedMessage id='clan_media'/>
                 </label>
                 <div onClick={() => handleAddMediaForm(resForms, setResForms, setResorces)} className={classes.AddTeamBox}>
-                  Add media
+                  <FormattedMessage id='add_media'/>
                 </div>
                 {resForms.map((form) => (
                   form
@@ -318,7 +320,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
         </form>
         <ReloadinWarning />
         <div className={classes.selectedList}>
-          {playersSliceList.filter((player) => player.selected).length === 0 && !ClanFetchError && <h2>Select only the players who will participate in the leagues </h2>}
+          {playersSliceList.filter((player) => player.selected).length === 0 && !ClanFetchError && <h2><FormattedMessage id='select_only_active_players'/></h2>}
           {playersSliceList.filter((player) => player.selected).length > 0 && 
           <div>
             <h2 className={classes.selectedListTitle}>Selected players</h2>
@@ -327,7 +329,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
                 dispatch(updatePlayerField({playerId: player.id, field: 'selected', value: false}));
               }} key={player.id} player={player}/>
             ))}
-            {clan && clanExists && <div className={classes.error}><img className={classes.errorIcon} src={important} alt="ERROR: " />Clan with tag {clan.tag} already exists</div>}
+            {clan && clanExists && <div className={classes.error}><img className={classes.errorIcon} src={important} alt="ERROR: " /><FormattedMessage id='clan_exists' values={{tag: clan.tag}}/></div>}
             {!createClanLoading &&
             <div className={classes.selectedListButtons}>
               <Button7x onClick={() => {
@@ -343,8 +345,8 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
         </div>
           <div className={classes.techInfo}>
             {(isLoading || createClanLoading) && <Loader7x />}
-            {ClanFetchError && 'status' in ClanFetchError && ClanFetchError.status === 'FETCH_ERROR' && <h1> Server do not response </h1>}
-            {!isLoading && ClanFetchError && 'status' in ClanFetchError && ClanFetchError.status === 404 && <h1> There is no clan with that tag </h1>}
+            {ClanFetchError && 'status' in ClanFetchError && ClanFetchError.status === 'FETCH_ERROR' && <h1> <FormattedMessage id='server_do_not_respond' /> </h1>}
+            {/* {!isLoading && ClanFetchError && 'status' in ClanFetchError && ClanFetchError.status === 404 && <h1> There is no clan with that tag </h1>} */}
           </div>
           <div>
             {!createClanLoading && playersSliceList.filter((player) => player.selected === false)?.map((player) => (
@@ -355,16 +357,15 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
             ))}
         </div>
         {!isLoading && (players ? 
-        <div className={`${classes.techInfo} ${classes.techInfo_bottom}`}><h2>If any of your players are not on the list, you can add them manually</h2></div>
+        <div className={`${classes.techInfo} ${classes.techInfo_bottom}`}><h2><FormattedMessage id='add_player_manually' /></h2></div>
         :
-        <div className={classes.techInfo}><h3>The system did not find a clan with this tag :( <br />
-          If you are sure you entered the tag correctly, <br /> please add players manually</h3></div>)}
+        <div className={classes.techInfo}><h3><FormattedMessage id='did_not_find_clan' /></h3></div>)}
           <div  className={classes.addPlayerButton}>
             <Button7x onClick={
               () => {
-                handleAddPlayerForm(playerForms, setPlayerForms, manualPlayers, setManualPlayers, players ? players : [], dispatch, cookies);
+                handleAddPlayerForm(playerForms, setPlayerForms, manualPlayers, setManualPlayers, players ? players : [], dispatch, cookies, intl);
               }
-            }>Add player</Button7x>
+            }><FormattedMessage id='add_player' /></Button7x>
           </div>
           {playerForms.map((form) => (
               form

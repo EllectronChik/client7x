@@ -16,6 +16,7 @@ import platinum_league_mark from 'assets/images/league_marks/4.png';
 import diamond_league_mark from 'assets/images/league_marks/5.png';
 import master_league_mark from 'assets/images/league_marks/6.png';
 import grandmaster_league_mark from 'assets/images/league_marks/7.png';
+import { FormattedMessage } from 'react-intl';
 
 
 interface PlayerItemProps {
@@ -135,11 +136,11 @@ const PlayerItem: React.FC<PlayerItemProps> = ({player, onClick, title}) => {
           dispatch(updatePlayerField({playerId: player.id, field: 'race', value: Number(e.target.value)}));
           }}
         className={classes.select} name="race" id={`race_${player.id}`}>
-          <option className={classes.option} value="0" disabled>Select Race</option>
-          <option className={classes.option} value="1">Zerg</option>
-          <option className={classes.option} value="2">Terran</option>
-          <option className={classes.option} value="3">Protoss</option>
-          <option className={classes.option} value="4">Random</option>
+          <option className={classes.option} value="0" disabled><FormattedMessage id="select_race" /></option>
+          <option className={classes.option} value="1"><FormattedMessage id="zerg" /></option>
+          <option className={classes.option} value="2"><FormattedMessage id="terran" /></option>
+          <option className={classes.option} value="3"><FormattedMessage id="protoss" /></option>
+          <option className={classes.option} value="4"><FormattedMessage id="random" /></option>
         </select>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import Input7x from "components/UI/Input7x/Input7x";
 import classes from './MediaForm.module.scss';
 import { IResorce } from "models/IResorce";
+import { FormattedMessage } from "react-intl";
 
 
 export const handleAddMediaForm = (
@@ -11,7 +12,7 @@ export const handleAddMediaForm = (
     const newId = resForms.length;
     const newMediaForm = <div className={classes.mediaForm} key={newId}>
       <div className={classes.mediaFormBox}>
-      <label>Media {resForms.length + 1} url:</label>
+      <label><FormattedMessage id="media" /> {resForms.length + 1} url:</label>
         <Input7x type="text" onChange={(e) => {
         const newValue = e.target.value;
 

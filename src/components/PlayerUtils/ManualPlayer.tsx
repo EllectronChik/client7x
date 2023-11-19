@@ -3,6 +3,7 @@ import { IPlayer } from 'models/IPlayer';
 import axios from 'axios';
 import { updatePlayerField } from 'store/reducers/PlayerListSlice';
 import classes from './ManualPlayer.module.scss';
+import { FormattedMessage, IntlShape } from 'react-intl';
 
 export const handleAddPlayerForm = (
     playerForms: React.JSX.Element[],
@@ -11,7 +12,8 @@ export const handleAddPlayerForm = (
     setManualPlayers: React.Dispatch<React.SetStateAction<IPlayer[]>>,
     players: IPlayer[],
     dispatch: React.Dispatch<any>,
-    cookies: any
+    cookies: any,
+    intl: IntlShape
 ) => {
     let mmr_timeout: NodeJS.Timeout;
     // const dispatch = useAppDispatch();
@@ -44,12 +46,12 @@ export const handleAddPlayerForm = (
       });
     const newPlayerForm = 
     <div className={classes.playerForm} key={newId}>
-      <h2>Player {playerForms.length + 1}</h2>
+      <h2><FormattedMessage id="player" /> {playerForms.length + 1}</h2>
       <div className={classes.playerFormBox}>
       <div className={classes.playerFormBoxElement}>
       <div>
-      <label className={classes.playerFormLabel}>Username:</label>
-        <input className={classes.playerFormInput} placeholder='Username' type="text" onChange={(e) => {
+      <label className={classes.playerFormLabel}><FormattedMessage id="username" />:</label>
+        <input className={classes.playerFormInput} placeholder={intl.formatMessage({id: 'username' })} type="text" onChange={(e) => {
           const newUsername = e.target.value;        
           setManualPlayers((manualPlayers) => {
             const updatedPlayers = [...manualPlayers];
@@ -71,11 +73,11 @@ export const handleAddPlayerForm = (
           }}
           className={classes.select} 
           name="race" id={`race_${newId}`}>
-          <option className={classes.option} value="0" disabled>Select Race</option>
-          <option className={classes.option} value="1">Zerg</option>
-          <option className={classes.option} value="2">Terran</option>
-          <option className={classes.option} value="3">Protoss</option>
-          <option className={classes.option} value="4">Random</option>
+          <option className={classes.option} value="0" disabled><FormattedMessage id='select_race' /></option>
+          <option className={classes.option} value="1"><FormattedMessage id='zerg' /></option>
+          <option className={classes.option} value="2"><FormattedMessage id='terran' /></option>
+          <option className={classes.option} value="3"><FormattedMessage id='protoss' /></option>
+          <option className={classes.option} value="4"><FormattedMessage id='random' /></option>
         </select>
         </div>
         <div className={classes.playerFormBoxElement}>
@@ -125,7 +127,7 @@ export const handleAddPlayerForm = (
               updatedPlayers[newId].region = newRegion;
               return updatedPlayers;
           })}}>
-            <option className={classes.option} value="0" disabled>Select Account Region</option>
+            <option className={classes.option} value="0" disabled><FormattedMessage id='select_acc_region' /></option>
             <option className={classes.option} value="1">US</option>
             <option className={classes.option} value="2">EU</option>
             <option className={classes.option} value="3">KR</option>

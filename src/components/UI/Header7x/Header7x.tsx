@@ -9,6 +9,7 @@ import axios from 'axios';
 import { useLogoutUser } from 'hooks/useLogoutUser';
 import Button7x from 'components/UI/Button7x/Button7x';
 import { useNavigate } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 
 
 const Header7x: React.FC = () => {
@@ -41,8 +42,8 @@ const Header7x: React.FC = () => {
         <DoubleText className={classes.title} text='Team-League'/>
         <nav>
           <ul className={`${classes.nav} ${cookie.token ? classes.nav_after_log : ''}`}>
-            <li className={classes.nav_item}><Link7x to='/statistics'>Statistic</Link7x></li>
-            <li className={classes.nav_item}><Link7x to='/arhive'>Arhive</Link7x></li>
+            <li className={classes.nav_item}><Link7x to='/statistics'><FormattedMessage id='header_statistic' /></Link7x></li>
+            <li className={classes.nav_item}><Link7x to='/arhive'><FormattedMessage id='header_archive' /></Link7x></li>
             {cookie.token ?
             <div onMouseEnter={() => {
               if (timeoutId) {
@@ -58,7 +59,7 @@ const Header7x: React.FC = () => {
                 }, 500);
               }}
               className={classes.nav_item}>
-            <li><Link7x to='/account'>My account</Link7x></li>
+            <li><Link7x to='/account'><FormattedMessage id='header_account' /></Link7x></li>
             <li onMouseEnter={() => {
               if (timeoutId) {
                 clearTimeout(timeoutId);
@@ -74,10 +75,10 @@ const Header7x: React.FC = () => {
               logout();
               navigate('/login');
               }}>
-                Logout</Button7x></li>
+                <FormattedMessage id='logout' /></Button7x></li>
             </div>
             :
-            <li className={classes.nav_item}><Link7x to='/login'>Join</Link7x></li>
+            <li className={classes.nav_item}><Link7x to='/login'><FormattedMessage id='header_login' /></Link7x></li>
             }
           </ul>
         </nav>

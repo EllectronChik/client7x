@@ -7,6 +7,7 @@ import { UsersApi } from 'services/UserService';
 import { useCookies } from 'react-cookie';
 import Input7x from 'components/UI/Input7x/Input7x';
 import { useNavigate } from 'react-router-dom';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 
 const Login: React.FC = () => {
@@ -14,6 +15,7 @@ const Login: React.FC = () => {
   const [isError, setIsError] = useState<string | null>(null);
   const [Cookie, setСookie] = useCookies(['token', 'userId', 'have_account']);
   const navigate = useNavigate();
+  const intl = useIntl();
 
   const [data, setData] = useState<IUserCreate>({
     username: '',
@@ -27,7 +29,7 @@ const Login: React.FC = () => {
 
 
   useEffect(() => {
-    document.title = isLogin ? 'Sign up' : 'Sign in'
+    document.title = isLogin ? `${intl.formatMessage({id: 'sign_up'})}` : `${intl.formatMessage({id: 'sign_in'})}`
   }, [isLogin])
 
   useEffect(() => {
@@ -72,31 +74,31 @@ const Login: React.FC = () => {
       <div className={classes.bttns}>
         <button 
           onClick={() => setIsLogin(true)}
-          className={`${isLogin ? classes.active : ''} ${classes.btn}`}>SIGN UP</button>
+          className={`${isLogin ? classes.active : ''} ${classes.btn}`}><FormattedMessage id="sign_up"/></button>
         <button 
           onClick={() => setIsLogin(false)}
-          className={`${isLogin ? '' : classes.active} ${classes.btn}`}>SIGN IN</button>
+          className={`${isLogin ? '' : classes.active} ${classes.btn}`}><FormattedMessage id="sign_in"/></button>
       </div>
       {isLogin
       ?
         <form className={classes.form} onSubmit={verify_registration}>
-          <Input7x className={classes.input} type="text" placeholder="Username" onChange={
+          <Input7x className={classes.input} type="text" placeholder={intl.formatMessage({id: 'username'})} onChange={
             (e) => setData({...data, username: e.target.value})}/>
-          <Input7x className={classes.input} type="email" placeholder="Email"  onChange={(e) => setData({...data, email: e.target.value})}/>
-          <Input7x className={classes.input} type="password" placeholder="Password" onChange={(e) => setData({...data, password: e.target.value})}/>
-          <Input7x className={classes.input} type="password" placeholder='Repeat password' onChange={(e) => setData({...data, re_password: e.target.value})}/>
-          <Button7x className={classes.sub_btn} type="submit">Sign up</Button7x>
+          <Input7x className={classes.input} type="email" placeholder={intl.formatMessage({id: 'email'})}  onChange={(e) => setData({...data, email: e.target.value})}/>
+          <Input7x className={classes.input} type="password" placeholder={intl.formatMessage({id: 'password'})} onChange={(e) => setData({...data, password: e.target.value})}/>
+          <Input7x className={classes.input} type="password" placeholder={intl.formatMessage({id: 're_password'})} onChange={(e) => setData({...data, re_password: e.target.value})}/>
+          <Button7x className={classes.sub_btn} type="submit"><FormattedMessage id="sign_up"/></Button7x>
           <div className={classes.important}>
             <img src={important_svg} className={classes.important_img} alt="important" />
-            <p>Important: ONLY the team manager or a member of the administration should register</p>
+            <FormattedMessage id="perform_register_message" />
           </div>
         </form>
         : 
         <form className={classes.form} onSubmit={verify_login}>
-          <Input7x className={classes.input} type="text" placeholder="Username" onChange={(e) => setData({...data, username: e.target.value})}/>
-          <Input7x className={classes.input} type="password" placeholder="Password" onChange={(e) => setData({...data, password: e.target.value})}/>
+          <Input7x className={classes.input} type="text" placeholder={intl.formatMessage({id: 'username'})} onChange={(e) => setData({...data, username: e.target.value})}/>
+          <Input7x className={classes.input} type="password" placeholder={intl.formatMessage({id: 'password'})} onChange={(e) => setData({...data, password: e.target.value})}/>
           {isError && <p className={classes.error}>{isError}</p>}
-          <Button7x className={classes.sub_btn} type="submit">Sign in</Button7x>
+          <Button7x className={classes.sub_btn} type="submit"><FormattedMessage id="sign_in"/></Button7x>
       </form>}
       </div>
     </div>
