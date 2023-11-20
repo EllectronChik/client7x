@@ -8,12 +8,13 @@ import { useCookies } from 'react-cookie';
 import Input7x from 'components/UI/Input7x/Input7x';
 import { useNavigate } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { DeviceCntApi } from 'services/DeviceCntService';
 
 
 const Login: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [isError, setIsError] = useState<string | null>(null);
-  const [Cookie, setСookie] = useCookies(['token', 'userId', 'have_account']);
+  const [Cookie, setCookie] = useCookies(['token', 'userId', 'have_account']);
   const navigate = useNavigate();
   const intl = useIntl();
 
@@ -26,6 +27,7 @@ const Login: React.FC = () => {
 
   const [createUser,  {}] = UsersApi.useRegisterUserMutation();
   const [loginUser, {}] = UsersApi.useLoginUserMutation();
+  const [increaseDevices, {}] = DeviceCntApi.usePatchDeviceCntMutation();
 
 
   useEffect(() => {
@@ -50,10 +52,11 @@ const Login: React.FC = () => {
       const responce = await loginUser({username: data.username, password: data.password});
       if('data' in responce) {
         if (!Cookie.have_account) {
-          setСookie('have_account', 1, { maxAge: 60 * 365 * 24 * 60 * 60 });
+          setCookie('have_account', 1, { maxAge: 60 * 365 * 24 * 60 * 60 });
         }
-        setСookie('token', responce.data.auth_token, { expires: exp_date });
-        setСookie('userId', responce.data.user_id, { expires: exp_date });
+        setCookie('token', responce.data.auth_token, { expires: exp_date });
+        setCookie('userId', responce.data.user_id, { expires: exp_date });
+        await increaseDevices({token: responce.data.auth_token, action: 'increase'});
         setIsError(null);
         navigate('/account');
       }
@@ -65,7 +68,7 @@ const Login: React.FC = () => {
         }
       }
     } catch(err) {
-      console.log(err);
+      console.error(err);
     }
   }
   return (
