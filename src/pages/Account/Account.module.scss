@@ -59,3 +59,15 @@
         align-self: center;
     }
 }
+
+.btn {
+    padding: 15px 40px; 
+    border: 2px solid $clr_red;
+    font-size: 20px;
+    text-transform: uppercase;
+    transition: background-color .3s;
+}
+
+.active {
+    background-color: $clr_red;
+}
