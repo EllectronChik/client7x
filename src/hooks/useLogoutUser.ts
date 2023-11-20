@@ -1,16 +1,16 @@
 import { useCookies } from "react-cookie";
-import { UsersApi } from "services/UserService";
+import { DeviceCntApi } from "services/DeviceCntService";
 
 
 export const useLogoutUser = () => {
-    const [cookie, setСookie] = useCookies(['token', 'userId']);
-    const [logoutUser, {}] = UsersApi.useLogoutUserMutation();
+    const [cookie, setCookie] = useCookies(['token', 'userId']);
+    const [decreaseDevices, {}] = DeviceCntApi.usePatchDeviceCntMutation();
   
     const logout = async () => {
       try {
-        await logoutUser(cookie.token);
-        setСookie('token', '', { expires: new Date(0) });
-        setСookie('userId', '', { expires: new Date(0) });
+        await decreaseDevices({token: cookie.token, action: 'decrease'});
+        setCookie('token', '', { expires: new Date(0) });
+        setCookie('userId', '', { expires: new Date(0) });
       } catch (error) {
         console.error("Error when logging out of the system:", error);
       }
