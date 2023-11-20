@@ -57,14 +57,9 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
   const {data: regions} = regionApi.useFetchAllRegionsQuery();
   const [createClan, {error: createClanError, isLoading: createClanLoading}] = ClanApi.usePostClanMutation();
   const [postPlayer, {}] = PlayerApi.usePostPlayerMutation();
-  const [postResource, {error: postResourceError}] = ClanResourcesApi.usePostClanResourceMutation();
+  const [postResource, {}] = ClanResourcesApi.usePostClanResourceMutation();
   const [postManager, {}] = ManagerApi.usePostManagerMutation(); 
   const intl = useIntl();
-
-  useEffect(() => {
-    console.log(postResourceError);
-    
-  }, [postResourceError])
 
   useEffect(() => {
     dispatch(setClan({
@@ -323,7 +318,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
           {playersSliceList.filter((player) => player.selected).length === 0 && !ClanFetchError && <h2><FormattedMessage id='select_only_active_players'/></h2>}
           {playersSliceList.filter((player) => player.selected).length > 0 && 
           <div>
-            <h2 className={classes.selectedListTitle}>Selected players</h2>
+            <h2 className={classes.selectedListTitle}><FormattedMessage id='selected_players'/></h2>
             {playersSliceList.filter((player) => player.selected).map((player) => (
               <PlayerItem title='Click to remove a player' onClick={() => {
                 dispatch(updatePlayerField({playerId: player.id, field: 'selected', value: false}));
@@ -337,8 +332,8 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
                   () => dispatch(updatePlayerField({playerId: player.id, field: 'selected', value: false}))
                   
                 })
-              }}>Clear selected</Button7x>
-              <Button7x className={classes.submitButton} onClick={handleCreateClan}>Submit</Button7x>
+              }}><FormattedMessage id='clear_selected' /></Button7x>
+              <Button7x className={classes.submitButton} onClick={handleCreateClan}><FormattedMessage id='submit' /></Button7x>
             </div>
             }
             </div>}
