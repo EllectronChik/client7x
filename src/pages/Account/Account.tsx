@@ -14,6 +14,7 @@ import { Tooltip } from 'react-tooltip';
 import axios from 'axios';
 import TeamManage from 'components/TeamManage/TeamManage';
 import { FormattedMessage } from 'react-intl';
+import StaffPanel from 'components/StaffPanel/StaffPanel';
 
 const Account: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -23,7 +24,7 @@ const Account: React.FC = () => {
     const [clanTag, setClanTag] = useState<string>('');
     const [isAsked, setIsAsked] = useState<boolean>(false);
     const [renderList, setRenderList] = useState<boolean>(false);
-    const [cookie, setCookie] = useCookies(['token', 'userId']);
+    const [cookie, ] = useCookies(['token', 'userId']);
     const navigate = useNavigate();
     const logout = useLogoutUser();
 
@@ -37,7 +38,6 @@ const Account: React.FC = () => {
                 }
             });       
             if (isAskStaffSend.data.length === 1) {
-                console.log(isAskStaffSend.data);
                 setIsAsked(true);
             }
             
@@ -47,7 +47,7 @@ const Account: React.FC = () => {
     }
 
     if (cookie.token) {
-        const {data: status, error, isLoading} = StatusApi.useFetchUserStatusQuery(cookie.token);
+        const {data: status, isLoading} = StatusApi.useFetchUserStatusQuery(cookie.token);
 
         useEffect(() => {
             document.title = 'Account';
@@ -69,7 +69,7 @@ const Account: React.FC = () => {
                 } else if (!isManager && isStaff) {
                     dispatch(setPageManager(2));
                 } else if (isManager && isStaff) {
-                    dispatch(setPageManager(3));
+                    dispatch(setPageManager(1));
                 }         
         }, [isManager, isStaff]);
         return (
@@ -77,11 +77,11 @@ const Account: React.FC = () => {
                 {isManager && isStaff && 
                 <div className={classes.bttns}>
                     <button 
-                        onClick={() => dispatch(setPageManager(0))}
-                        className={`${pageManager ? classes.active : ''} ${classes.btn}`}>TEAM</button>
-                    <button 
                         onClick={() => dispatch(setPageManager(1))}
-                        className={`${pageManager ? '' : classes.active} ${classes.btn}`}>STAFF</button>
+                        className={`${(pageManager === 1) ? classes.active : ''} ${classes.btn}`}><FormattedMessage id="team" /></button>
+                    <button 
+                        onClick={() => dispatch(setPageManager(2))}
+                        className={`${(pageManager === 2) ? classes.active : ''} ${classes.btn}`}><FormattedMessage id="staff" /></button>
                 </div>}
                 {isLoading && <Loader7x />}
                 {pageManager === 0 && !isLoading && 
@@ -107,23 +107,6 @@ const Account: React.FC = () => {
                     <Button7x className={classes.search_btn}><FormattedMessage id="search" /></Button7x>
                     </div>
                     <a className={classes.link} href="https://sc2pulse.nephest.com"><FormattedMessage id="API_mention" values={{inLink:<span className={classes.inLink}>SC2 PULSE</span>}} /></a>
-                    {!isAsked && <div className={classes.request_btn}
-                        onClick={() => {
-                        axios.post(`${import.meta.env.VITE_API_URL}ask_for_staff/`, {
-                            user: cookie.userId,
-                        }, {
-                            headers: {
-                                'Authorization': `Token ${cookie.token}`
-                            }
-                        }).then(response => {
-                            console.log(response.data);
-                            
-                        }).catch(error => {
-                            console.log(error);
-                            
-                        });
-                        setIsAsked(true);
-                    }}><FormattedMessage id="referee_ask" /></div>}
                     </form>}
                     {renderList && <div className={classes.players_list}>
                         <PlayersList tag={clanTag} />
@@ -135,8 +118,19 @@ const Account: React.FC = () => {
                 <TeamManage />
                 }
                 {pageManager === 2 && !isLoading &&
-                <div>Staff</div>
+                <StaffPanel />
                 }
+                {/* {!isAsked && !isStaff && <div className={classes.request_btn}
+                    onClick={() => {
+                    axios.post(`${import.meta.env.VITE_API_URL}ask_for_staff/`, {
+                        user: cookie.userId,
+                        }, {
+                            headers: {
+                                'Authorization': `Token ${cookie.token}`
+                            }
+                        })
+                    setIsAsked(true);
+                    }}><FormattedMessage id="referee_ask" /></div>} */}
                 <Button7x className={classes.logout_btn} onClick={() => {
                     logout();
                     navigate('/login');
