@@ -15,7 +15,6 @@
         border: 2px solid $clr_red;
         border-radius: 20px;
         padding: 30px;
-
         .bttns {
             display: flex;
             align-items: center;
@@ -27,6 +26,7 @@
                 border: 2px solid $clr_red;
                 font-size: 20px;
                 text-transform: uppercase;
+                transition: background-color 0.3s;
             }
 
             .active {
