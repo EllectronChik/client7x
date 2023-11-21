@@ -341,7 +341,6 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
           <div className={classes.techInfo}>
             {(isLoading || createClanLoading) && <Loader7x />}
             {ClanFetchError && 'status' in ClanFetchError && ClanFetchError.status === 'FETCH_ERROR' && <h1> <FormattedMessage id='server_do_not_respond' /> </h1>}
-            {/* {!isLoading && ClanFetchError && 'status' in ClanFetchError && ClanFetchError.status === 404 && <h1> There is no clan with that tag </h1>} */}
           </div>
           <div>
             {!createClanLoading && playersSliceList.filter((player) => player.selected === false)?.map((player) => (
@@ -354,7 +353,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
         {!isLoading && (players ? 
         <div className={`${classes.techInfo} ${classes.techInfo_bottom}`}><h2><FormattedMessage id='add_player_manually' /></h2></div>
         :
-        <div className={classes.techInfo}><h3><FormattedMessage id='did_not_find_clan' /></h3></div>)}
+        <div className={classes.techInfo}><h3><FormattedMessage id='did_not_find_clan' values={{br: <br />}} /></h3></div>)}
           <div  className={classes.addPlayerButton}>
             <Button7x onClick={
               () => {
