@@ -11,10 +11,10 @@ import PlayersList from 'components/PlayersList/PlayersList';
 import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
 import { setPageManager, selectManagerPage } from 'store/reducers/pageManagerSlice';
 import { Tooltip } from 'react-tooltip';
-import axios from 'axios';
 import TeamManage from 'components/TeamManage/TeamManage';
 import { FormattedMessage } from 'react-intl';
 import StaffPanel from 'components/StaffPanel/StaffPanel';
+import { setPlayerList } from 'store/reducers/PlayerListSlice';
 
 const Account: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -22,36 +22,16 @@ const Account: React.FC = () => {
     const [isManager, setIsManager] = useState<boolean | null>(null);
     const [isStaff, setIsStaff] = useState<boolean | null>(null);
     const [clanTag, setClanTag] = useState<string>('');
-    const [isAsked, setIsAsked] = useState<boolean>(false);
     const [renderList, setRenderList] = useState<boolean>(false);
     const [cookie, ] = useCookies(['token', 'userId']);
     const navigate = useNavigate();
     const logout = useLogoutUser();
-
-    const askClanTag = async () => {
-        try {
-            const isAskStaffSend = await axios({
-                url: `${import.meta.env.VITE_API_URL}ask_for_staff/?user=${cookie.userId}`,
-                method: 'GET',
-                headers: {
-                    Authorization: `Token ${cookie.token}`
-                }
-            });       
-            if (isAskStaffSend.data.length === 1) {
-                setIsAsked(true);
-            }
-            
-        } catch (error) {
-            console.error("Error when asking for the clan tag:", error);
-        }
-    }
 
     if (cookie.token) {
         const {data: status, isLoading} = StatusApi.useFetchUserStatusQuery(cookie.token);
 
         useEffect(() => {
             document.title = 'Account';
-            askClanTag();
         }, []);
 
         useEffect(() => {
@@ -110,7 +90,10 @@ const Account: React.FC = () => {
                     </form>}
                     {renderList && <div className={classes.players_list}>
                         <PlayersList tag={clanTag} />
-                        <Button7x className={classes.return_btn} onClick={() => setRenderList(false)} ><FormattedMessage id="return" /></Button7x>
+                        <Button7x className={classes.return_btn} onClick={() => {
+                            setRenderList(false);
+                            dispatch(setPlayerList([]));
+                            }} ><FormattedMessage id="return" /></Button7x>
                     </div>}
                 </div>
                 }
@@ -120,17 +103,6 @@ const Account: React.FC = () => {
                 {pageManager === 2 && !isLoading &&
                 <StaffPanel />
                 }
-                {/* {!isAsked && !isStaff && <div className={classes.request_btn}
-                    onClick={() => {
-                    axios.post(`${import.meta.env.VITE_API_URL}ask_for_staff/`, {
-                        user: cookie.userId,
-                        }, {
-                            headers: {
-                                'Authorization': `Token ${cookie.token}`
-                            }
-                        })
-                    setIsAsked(true);
-                    }}><FormattedMessage id="referee_ask" /></div>} */}
                 <Button7x className={classes.logout_btn} onClick={() => {
                     logout();
                     navigate('/login');
