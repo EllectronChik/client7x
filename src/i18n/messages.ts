@@ -50,6 +50,9 @@ export const MESSAGES = {
         staff: "Staff panel",
         accept: "Accept",
         decline: "Decline",
+        no_seasons: "There's no season going on right now. You can start a new one by specifying its start time and clicking the button below.",
+        start_time: "Start time",
+        start_season: "Start season",
     },
     [LOCALES.RUSSIAN]: {
         header_statistic: 'Статистика',
@@ -100,6 +103,9 @@ export const MESSAGES = {
         staff: "Панель администратора",
         accept: "Принять",
         decline: "Отклонить",
+        no_seasons: "В данный момент сезон не проводится. Вы можете начать новый, указав время его начала и нажав кнопку ниже.",
+        start_time: "Время начала",
+        start_season: "Начать сезон",
     },
     [LOCALES.UKRAINIAN]: {
         header_statistic: 'Статистика',
@@ -150,5 +156,8 @@ export const MESSAGES = {
         staff: "Панель адміністратора",
         accept: "Прийняти",
         decline: "Відхилити",
+        no_seasons: "Наразі сезон не проводиться. Ви можете почати новий, вказавши час початку і натиснувши на кнопку нижче",
+        start_time: "Час початку",
+        start_season: "Почати сезон",
     }
 }
