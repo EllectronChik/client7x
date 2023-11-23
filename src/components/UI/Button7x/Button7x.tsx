@@ -1,6 +1,5 @@
 import React from 'react';
 import classes from './Button7x.module.scss';
-import { ButtonHTMLAttributes, DetailedHTMLProps } from 'react';
 
 interface Button7xProps {
     className?: string;
