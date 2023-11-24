@@ -1,11 +1,11 @@
 import React from 'react';
-import StartSeason from './TournamentManagement/StartSeason/StartSeason';
+import TourManage from './TournamentManagement/TourManage';
 
 
 const StaffPanel: React.FC = () => {
   return (
     <div>
-      <StartSeason />
+      <TourManage />
     </div>
   )
 }
