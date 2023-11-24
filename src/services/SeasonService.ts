@@ -41,5 +41,46 @@ export const SeasonApi = createApi({
                 }
             })
         }),
+        changeDatetime: builder.mutation<void, {token: string, datetime: string, season: number}>({
+            query: ({token, datetime, season}) => ({
+                url: `/seasons/${season}/`,
+                method: "PATCH",
+                headers: {
+                    Authorization: `Token ${token}`
+                },
+                body: {
+                    start_datetime: datetime,
+                }
+            })
+        }),
+        changeCanRegister: builder.mutation<void, {token: string, can_register: boolean, season: number}>({
+            query: ({token, can_register, season}) => ({
+                url: `/seasons/${season}/`,
+                method: "PATCH",
+                headers: {
+                    Authorization: `Token ${token}`
+                },
+                body: {
+                    can_register: can_register,
+                }
+            })
+        }),
+        changeIsFinished: builder.mutation<void, {token: string, is_finished: boolean, season: number}>({
+            query: ({token, is_finished, season}) => {
+                const body: {is_finished: boolean, can_register?: boolean} = {
+                    is_finished: is_finished,
+                }
+                if (is_finished) {
+                    body.can_register = false
+                }
+                return {
+                url: `/seasons/${season}/`,
+                method: "PATCH",
+                headers: {
+                    Authorization: `Token ${token}`
+                },
+                body: body}
+            }
+        })
     })
 })
