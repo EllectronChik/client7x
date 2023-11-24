@@ -52,7 +52,7 @@ export const MESSAGES = {
         decline: "Decline",
         no_seasons: "There's no season going on right now. You can start a new one by specifying its start time and clicking the button below.",
         start_time: "Start time",
-        start_season: "Start season",
+        start_season: "Оpen registration",
     },
     [LOCALES.RUSSIAN]: {
         header_statistic: 'Статистика',
@@ -105,7 +105,7 @@ export const MESSAGES = {
         decline: "Отклонить",
         no_seasons: "В данный момент сезон не проводится. Вы можете начать новый, указав время его начала и нажав кнопку ниже.",
         start_time: "Время начала",
-        start_season: "Начать сезон",
+        start_season: "Открыть регистрацию",
     },
     [LOCALES.UKRAINIAN]: {
         header_statistic: 'Статистика',
@@ -158,6 +158,6 @@ export const MESSAGES = {
         decline: "Відхилити",
         no_seasons: "Наразі сезон не проводиться. Ви можете почати новий, вказавши час початку і натиснувши на кнопку нижче",
         start_time: "Час початку",
-        start_season: "Почати сезон",
+        start_season: "Відкрити реєстрацію",
     }
 }
