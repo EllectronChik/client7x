@@ -16,9 +16,6 @@ export const handleAddPlayerForm = (
     intl: IntlShape
 ) => {
     let mmr_timeout: NodeJS.Timeout;
-    // const dispatch = useAppDispatch();
-    // const [cookies, ] = useCookies(['token', 'userId']);
-
 
     if (manualPlayers) {
     const newId = playerForms.length;
