@@ -8,9 +8,15 @@
     gap: 10px;
     padding: 25px 50px;
     color: $clr_dark;
+    font-size: 20px;
     background-color: $clr_notice; 
     border: 2px solid $clr_red;
     border-radius: 25px;
+    max-width: 1000px;
+
+    .title {
+        text-align: center;
+    }
 
     .error {
         display: flex;
@@ -28,5 +34,12 @@
         display: flex;
         align-items: center;
         gap: 10px;
+    }
+
+    .input {
+        background-color: $clr_notice;
+        border: 0;
+        font-size: 20px;
+        border-bottom: 1px solid $clr_dark;
     }
 }
