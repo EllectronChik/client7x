@@ -6,6 +6,7 @@
     align-items: center;
     flex-direction: column;
     justify-content: space-around;
+    color: $clr_light;
 }
 
 .logout_btn {
@@ -21,9 +22,11 @@
         align-items: center;
     }
     .search_btn {
+        color: $clr_light;
         margin-left: 50px;
     }
     .link {
+        color: $clr_light;
         display: inline-block;
         margin-top: 5px;
         &:hover {
@@ -58,6 +61,7 @@
     .return_btn {
         margin-top: 30px;
         align-self: center;
+        color: $clr_light;
     }
 }
 
