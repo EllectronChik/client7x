@@ -6,12 +6,24 @@ import StartedSeasonManage from './StartedSeasonManage/StartedSeasonManage';
 
 const TourManage: React.FC = () => {
   const {data: currentSeason, isLoading: currentSeasonLoading} = SeasonApi.useFetchCurrentSeasonQuery();
-  const [seasonStarted, setSeasonStarted] = useState<boolean>(false);
+  const [seasonStarted, setSeasonStarted] = useState<boolean | undefined>(undefined);
+  const [timeZoneOffset, ] = useState<number>(- new Date().getTimezoneOffset() / 60);
+  const [timeZoneOffsetString, setTimeZoneOffsetString] = useState<string>(String(timeZoneOffset));
+
+  useEffect(() => {
+      if (timeZoneOffset < 0) {
+          setTimeZoneOffsetString(`- ${timeZoneOffset}`);
+      } else {
+          setTimeZoneOffsetString(`+ ${timeZoneOffset}`);
+      }
+  }, [timeZoneOffset])
 
 
   useEffect(() => {
     if(currentSeason) {
         setSeasonStarted(true);
+    } else {
+        setSeasonStarted(false);
     }
 }, [currentSeason])
 
@@ -19,10 +31,10 @@ const TourManage: React.FC = () => {
     <div>
       {currentSeasonLoading ?
        <Loader7x />
-      : (!seasonStarted && !currentSeason) ? <div>
-        <StartSeason setSeasonStarted={setSeasonStarted} /> 
+      : (seasonStarted === false) ? <div>
+        <StartSeason setSeasonStarted={setSeasonStarted} timeZoneOffsetString={timeZoneOffsetString} /> 
       </div>
-      : <StartedSeasonManage />
+      : <StartedSeasonManage setSeasonStarted={setSeasonStarted} timeZoneOffsetString={timeZoneOffsetString} />
       }
     </div>
   )
