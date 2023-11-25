@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { SeasonApi } from 'services/SeasonService'
 import { useCookies } from 'react-cookie';
 import important from 'assets/images/techImages/important.svg';
 import classes from './StartSeason.module.scss'
 import { FormattedMessage } from 'react-intl';
-import Input7x from 'components/UI/Input7x/Input7x';
 import Button7x from 'components/UI/Button7x/Button7x';
 
 interface StartSeasonProps extends React.HTMLProps<HTMLFormElement> {
-    setSeasonStarted: React.Dispatch<React.SetStateAction<boolean>>
+    setSeasonStarted: React.Dispatch<React.SetStateAction<boolean | undefined>>;
+    timeZoneOffsetString: string;
 }
 
 const StartSeason: React.FC<StartSeasonProps> = ({...props}) => {
@@ -16,16 +16,7 @@ const StartSeason: React.FC<StartSeasonProps> = ({...props}) => {
     const {data: lastSeasonNumber, } = SeasonApi.useFetchLastSeasonNumberQuery();
     const [cookies] = useCookies(['token']);
     const [seasonStartErrorState, setSeasonStartErrorState] = useState<boolean>(false);
-    const [timeZoneOffset, ] = useState<number>(- new Date().getTimezoneOffset() / 60);
-    const [timeZoneOffsetString, setTimeZoneOffsetString] = useState<string>(String(timeZoneOffset));
 
-    useEffect(() => {
-        if (timeZoneOffset < 0) {
-            setTimeZoneOffsetString(`- ${timeZoneOffsetString}`);
-        } else {
-            setTimeZoneOffsetString(`+ ${timeZoneOffsetString}`);
-        }
-    }, [timeZoneOffset])    
     
   return (
     <form className={classes.form} onSubmit={(e) => {
@@ -47,15 +38,15 @@ const StartSeason: React.FC<StartSeasonProps> = ({...props}) => {
         
         props.setSeasonStarted(true);
     }}>
-        <FormattedMessage id='no_seasons' />
+        <p className={classes.title}><FormattedMessage id='no_seasons' /></p>
         {(seasonStartError || seasonStartErrorState) && <div className={classes.error}><img className={classes.errorIcon} src={important} alt="ERROR: " />
         <FormattedMessage id='required_field' /></div>}
         <div className={classes.form_content}>
-            <label htmlFor='start_time'><FormattedMessage id='start_time' /> (UTC {timeZoneOffsetString}) </label>
-            <Input7x id='start_time' type='datetime-local' />
+            <label htmlFor='start_time'><FormattedMessage id='start_time' /> (UTC {props.timeZoneOffsetString}) </label>
+            <input className={classes.input} id='start_time' type='datetime-local' />
         </div>
         <div>
-            <Button7x type='submit'><FormattedMessage id='start_season' /></Button7x>
+            <Button7x type='submit'><FormattedMessage id='open_registration' /></Button7x>
         </div>
     </form>
   )
