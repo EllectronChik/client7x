@@ -10,22 +10,28 @@ import { useNavigate } from 'react-router-dom';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { DeviceCntApi } from 'services/DeviceCntService';
 
+interface IErrorData {
+  username: string[];
+  password: string[];
+  re_password: string[];
+}
 
 const Login: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [isError, setIsError] = useState<string | null>(null);
+  const [errorData, setErrorData] = useState<IErrorData | null>(null);
+  const [creationStarted, setCreationStarted] = useState<boolean>(false);
   const [Cookie, setCookie] = useCookies(['token', 'userId', 'have_account']);
   const navigate = useNavigate();
   const intl = useIntl();
 
   const [data, setData] = useState<IUserCreate>({
     username: '',
-    email: '',
     password: '',
     re_password: ''
   })
 
-  const [createUser,  {}] = UsersApi.useRegisterUserMutation();
+  const [createUser,  {isError: isErrorCreate, error: errorCreate}] = UsersApi.useRegisterUserMutation();
   const [loginUser, {}] = UsersApi.useLoginUserMutation();
   const [increaseDevices, {}] = DeviceCntApi.usePatchDeviceCntMutation();
 
@@ -38,10 +44,22 @@ const Login: React.FC = () => {
     setIsLogin(Cookie.have_account ? false : true);
   }, [])
 
+  useEffect(() => {
+    if (errorCreate && 'data' in errorCreate && typeof errorCreate.data === 'object' && errorCreate.data !== null) {
+        setErrorData(errorCreate.data as IErrorData);
+    }
+  }, [errorCreate])
+
+  useEffect(() => {
+    if (creationStarted && !isErrorCreate) {
+      verify_login;
+    }
+  }, [creationStarted, isErrorCreate])
+
   const verify_registration = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await createUser(data);
-    verify_login(e);
+    setCreationStarted(true);
   }
 
   const verify_login = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -84,24 +102,26 @@ const Login: React.FC = () => {
       </div>
       {isLogin
       ?
-        <form className={classes.form} onSubmit={verify_registration}>
+        <form className={`${classes.form} ${classes.signUp} ${errorData ? classes.errorForm : ''}`} onSubmit={verify_registration}>
           <Input7x className={classes.input} type="text" placeholder={intl.formatMessage({id: 'username'})} onChange={
             (e) => setData({...data, username: e.target.value})}/>
-          <Input7x className={classes.input} type="email" placeholder={intl.formatMessage({id: 'email'})}  onChange={(e) => setData({...data, email: e.target.value})}/>
+          {errorData && errorData.username && <div className={classes.error}>{errorData?.username}</div>}
           <Input7x className={classes.input} type="password" placeholder={intl.formatMessage({id: 'password'})} onChange={(e) => setData({...data, password: e.target.value})}/>
-          <Input7x className={classes.input} type="password" placeholder={intl.formatMessage({id: 're_password'})} onChange={(e) => setData({...data, re_password: e.target.value})}/>
-          <Button7x className={classes.sub_btn} type="submit"><FormattedMessage id="sign_up"/></Button7x>
-          <div className={classes.important}>
+          {errorData && errorData.password && <div className={classes.error}>{errorData?.password}</div>}
+          <Input7x className={`${classes.input} ${classes.re_password}`} type="password" placeholder={intl.formatMessage({id: 're_password'})} onChange={(e) => setData({...data, re_password: e.target.value})}/>
+          {errorData && errorData.re_password && <div className={classes.error}>{errorData?.re_password}</div>}
+          <Button7x className={`${classes.sub_btn} ${classes.re_password}`} type="submit"><FormattedMessage id="sign_up"/></Button7x>
+          <div className={`${classes.important} ${classes.re_password}`}>
             <img src={important_svg} className={classes.important_img} alt="important" />
             <FormattedMessage id="perform_register_message" />
           </div>
         </form>
         : 
-        <form className={classes.form} onSubmit={verify_login}>
+        <form className={`${classes.form} }`} onSubmit={verify_login}>
           <Input7x className={classes.input} type="text" placeholder={intl.formatMessage({id: 'username'})} onChange={(e) => setData({...data, username: e.target.value})}/>
           <Input7x className={classes.input} type="password" placeholder={intl.formatMessage({id: 'password'})} onChange={(e) => setData({...data, password: e.target.value})}/>
           {isError && <p className={classes.error}>{isError}</p>}
-          <Button7x className={classes.sub_btn} type="submit"><FormattedMessage id="sign_in"/></Button7x>
+          <Button7x className={` ${classes.sub_btn} ${classes.re_password}`} type="submit"><FormattedMessage id="sign_in"/></Button7x>
       </form>}
       </div>
     </div>
