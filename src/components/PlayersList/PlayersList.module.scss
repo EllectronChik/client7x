@@ -128,5 +128,9 @@
     margin-top: 30px;
     display: flex;
     justify-content: center;
+
+    .lightBtn {
+        color: $clr_light;
+    }
 }
 
