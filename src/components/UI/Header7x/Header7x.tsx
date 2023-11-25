@@ -71,7 +71,7 @@ const Header7x: React.FC = () => {
                 logout?.classList.remove(classes.active);
               }, 500);
             }} 
-            className={classes.logout} id='logout'><Button7x type='button' onClick={() => {
+            className={classes.logout} id='logout'><Button7x className={classes.logout_btn} type='button' onClick={() => {
               logout();
               navigate('/login');
               }}>
