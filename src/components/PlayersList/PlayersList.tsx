@@ -355,7 +355,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
         :
         <div className={classes.techInfo}><h3><FormattedMessage id='did_not_find_clan' values={{br: <br />}} /></h3></div>)}
           <div  className={classes.addPlayerButton}>
-            <Button7x onClick={
+            <Button7x className={classes.lightBtn} onClick={
               () => {
                 handleAddPlayerForm(playerForms, setPlayerForms, manualPlayers, setManualPlayers, players ? players : [], dispatch, cookies, intl);
               }
