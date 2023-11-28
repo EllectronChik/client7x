@@ -2,7 +2,12 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 import { IClan } from "models/IClan";
 import { IPlayer } from "models/IPlayer";
 
-
+interface IClanByManager {
+    team_name: string,
+    team_logo_url: string,
+    players: IPlayer[],
+    team_resources?: string[]
+}
 
 export const ClanApi = createApi({
     reducerPath: "clanApi",
@@ -20,6 +25,12 @@ export const ClanApi = createApi({
         fetchClan: builder.query<IClan, string>({
             query: (tag) => ({
                 url: `/teams?${tag}/`,
+                method: "GET",
+            })
+        }),
+        fetchClanByManager: builder.query<IClanByManager, string>({
+            query: (id) => ({
+                url: `/manager/team/?user=${id}`,
                 method: "GET",
             })
         }),
