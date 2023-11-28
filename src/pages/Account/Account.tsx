@@ -12,7 +12,7 @@ import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
 import { setPageManager, selectManagerPage } from 'store/reducers/pageManagerSlice';
 import { Tooltip } from 'react-tooltip';
 import TeamManage from 'components/TeamManage/TeamManage';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import StaffPanel from 'components/StaffPanel/StaffPanel';
 import { setPlayerList } from 'store/reducers/PlayerListSlice';
 
@@ -26,6 +26,7 @@ const Account: React.FC = () => {
     const [cookie, ] = useCookies(['token', 'userId']);
     const navigate = useNavigate();
     const logout = useLogoutUser();
+    const intl = useIntl();
 
     if (cookie.token) {
         const {data: status, isLoading} = StatusApi.useFetchUserStatusQuery(cookie.token);
@@ -66,7 +67,8 @@ const Account: React.FC = () => {
                 {isLoading && <Loader7x />}
                 {pageManager === 0 && !isLoading && 
                 <div className={classes.clan}>
-                    {!renderList && <form className={classes.tag_form} onSubmit={
+                    {!renderList && <div>
+                        <form className={classes.tag_form} onSubmit={
                     (e: React.FormEvent<HTMLFormElement>) => {
                         e.preventDefault();
                         setRenderList(true);
@@ -87,7 +89,9 @@ const Account: React.FC = () => {
                     <Button7x className={classes.search_btn}><FormattedMessage id="search" /></Button7x>
                     </div>
                     <a className={classes.link} href="https://sc2pulse.nephest.com"><FormattedMessage id="API_mention" values={{inLink:<span className={classes.inLink}>SC2 PULSE</span>}} /></a>
-                    </form>}
+                    </form>
+                    </div>
+                    }
                     {renderList && <div className={classes.players_list}>
                         <PlayersList tag={clanTag} />
                         <Button7x className={classes.return_btn} onClick={() => {
@@ -103,6 +107,13 @@ const Account: React.FC = () => {
                 {pageManager === 2 && !isLoading &&
                 <StaffPanel />
                 }
+                {isStaff && !isManager && pageManager === 0 && <Button7x className={classes.staff_btn} onClick={() => {
+                    dispatch(setPageManager(2));
+                }}><FormattedMessage id="return_to_staff_page" /></Button7x>}
+                {isStaff && !isManager && pageManager === 2 && <Button7x className={classes.staff_btn} onClick={() => {
+                    dispatch(setPageManager(0));
+                    document.title = intl.formatMessage({id: 'team_manage'});
+                    }}><FormattedMessage id='create_team' /></Button7x>}
                 <Button7x className={classes.logout_btn} onClick={() => {
                     logout();
                     navigate('/login');
