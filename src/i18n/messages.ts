@@ -58,7 +58,12 @@ export const MESSAGES = {
         yes: "Yes",
         no: "No",
         confirm_finish: "Are you sure you want to finish the tournament?",
-        manage_started_season: "Season {season}"
+        manage_started_season: "Season {season}",
+        create_team: "Create team",
+        return_to_staff_page: "Return to administration panel",
+        account: "Account",
+        team_manage: "Team Manage",
+        tournamentStartMessage: "The {number} tournament starts on {date} at {time}. You can apply for participation in it.",
     },
     [LOCALES.RUSSIAN]: {
         header_statistic: 'Статистика',
@@ -118,6 +123,11 @@ export const MESSAGES = {
         no: "Нет",
         confirm_finish: "Вы уверены, что хотите завершить турнир?",
         manage_started_season: "Сезон {season}",
+        create_team: "Создать команду",
+        return_to_staff_page: "Вернуться в панель администратора",
+        account: "Аккаунт",
+        team_manage: "Управление командой",
+        tournamentStartMessage:"{date} в {time} стартует турнир {number}. Вы можете подать заявку на участие в нем.",
     },
     [LOCALES.UKRAINIAN]: {
         header_statistic: 'Статистика',
@@ -177,5 +187,10 @@ export const MESSAGES = {
         no: "Ні",
         confirm_finish: "Ви впевнені, що хочете завершити турнір?",
         manage_started_season: "Сезон {season}",
+        create_team: "Створити команду",
+        return_to_staff_page: "Повернутися до панелі адміністратора",
+        account: "Аккаунт",
+        team_manage: "Управління командою",
+        tournamentStartMessage:"{date} у {time} стартує турнір {number}. Ви можете подати заявку на участь у ньому.",
     }
 }
