@@ -4,6 +4,7 @@ import StartSeason from './StartSeason/StartSeason';
 import { SeasonApi } from 'services/SeasonService';
 import StartedSeasonManage from './StartedSeasonManage/StartedSeasonManage';
 
+
 const TourManage: React.FC = () => {
   const {data: currentSeason, isLoading: currentSeasonLoading} = SeasonApi.useFetchCurrentSeasonQuery();
   const [seasonStarted, setSeasonStarted] = useState<boolean | undefined>(undefined);
@@ -20,10 +21,12 @@ const TourManage: React.FC = () => {
 
 
   useEffect(() => {
-    if(currentSeason) {
-        setSeasonStarted(true);
-    } else {
-        setSeasonStarted(false);
+    if (!currentSeasonLoading) {
+      if(currentSeason) {
+          setSeasonStarted(true);
+      } else {
+          setSeasonStarted(false);
+      }
     }
 }, [currentSeason])
 
