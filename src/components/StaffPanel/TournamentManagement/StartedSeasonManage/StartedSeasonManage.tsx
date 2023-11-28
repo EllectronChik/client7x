@@ -20,7 +20,6 @@ const StartedSeasonManage: React.FC<StartedSeasonManageProps> = ({...props}) => 
     const [localTime, setLocalTime] = useState<string>('');
     const [askForFinished, setAskForFinished] = useState<boolean>(false);
     let setDateTimeout: NodeJS.Timeout | null = null;
-    let setCanRegisterTimeout: NodeJS.Timeout | null = null;
 
     useEffect(() => {
         if (currentSeason) {
@@ -48,16 +47,12 @@ const StartedSeasonManage: React.FC<StartedSeasonManageProps> = ({...props}) => 
         <div className={classes.form_content}>
             <label className={classes.label} htmlFor="can_register"><FormattedMessage id='open_registration' /></label>
             <input className={classes.input} id="can_register" type="checkbox" defaultChecked={currentSeason?.can_register} onChange={(e) => {
-                if (setCanRegisterTimeout) {
-                    clearTimeout(setCanRegisterTimeout);
-                }
-                setCanRegisterTimeout = setTimeout(() => {
                     changeCanRegister({
                         token: cookies.token,
                         can_register: e.target.checked,
                         season: currentSeason ? currentSeason.number : 0 
                     });
-            }, 3000)}} />
+                }} />
         </div>
         <Button7x className={classes.button} onClick={() => {
             setAskForFinished(true);
