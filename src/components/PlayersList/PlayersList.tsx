@@ -140,6 +140,10 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
       ));
     }   
   }, [manualPlayers]);
+
+  useEffect(() => {
+    document.title = intl.formatMessage({id: 'team_manage'})
+  }, [intl])
   
 
   const handleCreateClan = async () => {    
@@ -327,13 +331,13 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
             {clan && clanExists && <div className={classes.error}><img className={classes.errorIcon} src={important} alt="ERROR: " /><FormattedMessage id='clan_exists' values={{tag: clan.tag}}/></div>}
             {!createClanLoading &&
             <div className={classes.selectedListButtons}>
-              <Button7x onClick={() => {
+              <Button7x className={classes.lightBtn} onClick={() => {
                 playersSliceList.map((player) => {
                   () => dispatch(updatePlayerField({playerId: player.id, field: 'selected', value: false}))
                   
                 })
               }}><FormattedMessage id='clear_selected' /></Button7x>
-              <Button7x className={classes.submitButton} onClick={handleCreateClan}><FormattedMessage id='submit' /></Button7x>
+              <Button7x className={`${classes.submitButton} ${classes.lightBtn}`} onClick={handleCreateClan}><FormattedMessage id='submit' /></Button7x>
             </div>
             }
             </div>}
