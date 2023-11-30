@@ -12,6 +12,8 @@ import { SeasonApi } from 'services/SeasonService';
 import clanSlice from 'store/reducers/ClanSlice';
 import playerListSlice from './reducers/PlayerListSlice';
 import pageManagerSlice from './reducers/pageManagerSlice';
+import accountSlice from './reducers/AccountSlice';
+
 
 const rootReducer = combineReducers({
     [MatchesApi.reducerPath]: MatchesApi.reducer,
@@ -27,6 +29,7 @@ const rootReducer = combineReducers({
     clan: clanSlice,
     players: playerListSlice,
     pageManager: pageManagerSlice,
+    account: accountSlice,
 })
 
 export const setupStore = () => {
