@@ -32,10 +32,6 @@ const Account: React.FC = () => {
         const {data: status, isLoading} = StatusApi.useFetchUserStatusQuery(cookie.token);
 
         useEffect(() => {
-            document.title = 'Account';
-        }, []);
-
-        useEffect(() => {
             if (status) {
                 setIsManager(status.is_manager),
                 setIsStaff(status.is_staff)                
