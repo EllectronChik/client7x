@@ -1,12 +1,14 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 import { IClan } from "models/IClan";
+import { IClanByManager } from "models/IClanByManager";
 import { IPlayer } from "models/IPlayer";
 
-interface IClanByManager {
-    team_name: string,
-    team_logo_url: string,
-    players: IPlayer[],
-    team_resources?: string[]
+
+interface IRegistrationData {
+    token: string,
+    season: number,
+    user: number,
+    team: number,
 }
 
 export const ClanApi = createApi({
@@ -51,6 +53,20 @@ export const ClanApi = createApi({
                     }         
                 }
             }
+        }),
+        participateInSeason: builder.mutation<void, IRegistrationData>({
+            query: ({token, season, user, team}) => ({
+                url: '/tournament_registration/',
+                method: 'POST',
+                headers: {
+                    Authorization: `Token ${token}`,
+                },
+                body: {
+                    season: season,
+                    user: user,
+                    team: team
+                }
+            })
         })
     })
 })
