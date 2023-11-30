@@ -5,6 +5,15 @@ import { useCookies } from 'react-cookie';
 import { SeasonApi } from 'services/SeasonService';
 import classes from './StartedSeasonManage.module.scss';
 import { FormattedMessage } from 'react-intl';
+import {    setLocalTime, 
+            selectLocalTime,
+            setCanRegister,
+            selectCanRegister,
+            setIsInitialLoadFirst,
+            selectIsInitialLoad
+             } from 'store/reducers/AccountSlice';
+import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
+
 
 interface StartedSeasonManageProps {
     setSeasonStarted: React.Dispatch<React.SetStateAction<boolean | undefined>>;
@@ -17,22 +26,27 @@ const StartedSeasonManage: React.FC<StartedSeasonManageProps> = ({...props}) => 
     const [changeTime, {}] = SeasonApi.useChangeDatetimeMutation();
     const [changeIsFinished, {}] = SeasonApi.useChangeIsFinishedMutation();
     const [changeCanRegister, {}] = SeasonApi.useChangeCanRegisterMutation();
-    const [localTime, setLocalTime] = useState<string>('');
     const [askForFinished, setAskForFinished] = useState<boolean>(false);
+    const localTime = useAppSelector(selectLocalTime);
+    const canRegister = useAppSelector(selectCanRegister);
+    const isInitialLoad = useAppSelector(selectIsInitialLoad);
+    const dispatch = useAppDispatch();
     let setDateTimeout: NodeJS.Timeout | null = null;
 
     useEffect(() => {
-        if (currentSeason) {
-            setLocalTime(moment.utc(currentSeason.start_datetime).local().format('YYYY-MM-DDTHH:mm'));
+        if (currentSeason && isInitialLoad[0]) {
+            dispatch(setLocalTime(moment.utc(currentSeason.start_datetime).local().format('YYYY-MM-DDTHH:mm')));
+            dispatch(setCanRegister(currentSeason.can_register));
+            dispatch(setIsInitialLoadFirst(false));       
         }
-    }, [currentSeason])
+    }, [currentSeason, isInitialLoad]);
 
   return (
     <div className={`${classes.form} ${askForFinished ? classes.formAskForFinished : ''}`}>
         <h2><FormattedMessage id='manage_started_season' values={{season: currentSeason?.number}} /></h2>
         <div>
             <label className={classes.label} htmlFor="datetime"><FormattedMessage id='tournament_start' />(UTC {props.timeZoneOffsetString}): </label>
-            <input id="datetime" className={classes.input} type="datetime-local" defaultValue={localTime} onChange={(e) => {
+            <input id="datetime" className={classes.input} type="datetime-local" defaultValue={localTime ? localTime : ''} onChange={(e) => {
                 if (setDateTimeout) {
                     clearTimeout(setDateTimeout);
                 }
@@ -42,17 +56,19 @@ const StartedSeasonManage: React.FC<StartedSeasonManageProps> = ({...props}) => 
                         datetime: new Date(e.target.value).toISOString(),
                         season: currentSeason ? currentSeason.number : 0 
                 });
+                    dispatch(setLocalTime(e.target.value));
             }, 3000)}} />
         </div>
         <div className={classes.form_content}>
             <label className={classes.label} htmlFor="can_register"><FormattedMessage id='open_registration' /></label>
-            <input className={classes.input} id="can_register" type="checkbox" defaultChecked={currentSeason?.can_register} onChange={(e) => {
+                {canRegister !== null && <input className={classes.input} id="can_register" type="checkbox" checked={canRegister ? canRegister : false} onChange={(e) => {
+                dispatch(setCanRegister(e.target.checked));
                     changeCanRegister({
                         token: cookies.token,
                         can_register: e.target.checked,
                         season: currentSeason ? currentSeason.number : 0 
                     });
-                }} />
+                }} />}
         </div>
         <Button7x className={classes.button} onClick={() => {
             setAskForFinished(true);
