@@ -1,12 +1,11 @@
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
-import { FormattedPlural, useIntl, FormattedMessage } from 'react-intl';
+import { FormattedPlural, useIntl } from 'react-intl';
 import classes from './Timer.module.scss';
 
 
 interface TimerProps extends React.HTMLAttributes<HTMLDivElement> {
     datetime: string,
-    season: number
 }
 
 interface ITimeLeft {
@@ -43,29 +42,30 @@ const Timer: React.FC<TimerProps> = ({...props}) => {
 
   return (
     <div className={classes.timer}>
-        <FormattedMessage id='tourStartMessage' values={{time: <div>
-            <span>{timeLeft.days}<span> </span>
+        {timeLeft.days > 0 &&
+        <span>{timeLeft.days}<span> </span>
         <FormattedPlural value={timeLeft.days}
         one={intl.formatMessage({id: 'day_single'})} 
         few={intl.formatMessage({id: 'day_few'})}
-        other={intl.formatMessage({id: 'day_plural'})}/> </span>
+        other={intl.formatMessage({id: 'day_plural'})}/> </span>}
+        {timeLeft.hours > 0 &&
         <span>{timeLeft.hours}<span> </span>
         <FormattedPlural value={timeLeft.hours}
         one={intl.formatMessage({id: 'hour_single'})}
         few={intl.formatMessage({id: 'hour_few'})}
-        other={intl.formatMessage({id: 'hour_plural'})}/> </span>
+        other={intl.formatMessage({id: 'hour_plural'})}/> </span>}
+        {timeLeft.minutes > 0 &&
         <span>{timeLeft.minutes}<span> </span>
         <FormattedPlural value={timeLeft.minutes}
         one={intl.formatMessage({id: 'minute_single'})}
         few={intl.formatMessage({id: 'minute_few'})}
-        other={intl.formatMessage({id: 'minute_plural'})}/> </span>
+        other={intl.formatMessage({id: 'minute_plural'})}/> </span>}
+        {timeLeft.seconds > 0 &&
         <span>{timeLeft.seconds}<span> </span>
         <FormattedPlural value={timeLeft.seconds}
         one={intl.formatMessage({id: 'second_single'})}
         few={intl.formatMessage({id: 'second_few'})}
-        other={intl.formatMessage({id: 'second_plural'})}/> </span>
-        </div>, season: props.season}} />
-
+        other={intl.formatMessage({id: 'second_plural'})}/> </span>}
     </div>
   )
 }
