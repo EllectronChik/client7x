@@ -21,16 +21,19 @@ const Footer: React.FC<FooterProps> = ({...props}) => {
     }
   return (
     <footer className={propsClassName}>
-        <select className={classes.select} value={cookie?.locale || language} onChange={(e) => 
-            setCookie('locale', e.target.value, {expires: new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 365))})}>
-            {languages.map((language) => (
-                <option className={classes.option} key={language.value} value={language.value}>
-                    {language.name}
-                </option>
-            ))}
-        </select>
+        <div className={classes.line}></div>
+        <div className={classes.container}>
+            <select className={classes.select} value={cookie?.locale || language} onChange={(e) => 
+                setCookie('locale', e.target.value, {expires: new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 365))})}>
+                {languages.map((language) => (
+                    <option className={classes.option} key={language.value} value={language.value}>
+                        {language.name}
+                    </option>
+                ))}
+            </select>
+        </div>
     </footer>
   )
 }
 
-export default Footer
+export default Footer 
