@@ -77,7 +77,9 @@ export const MESSAGES = {
         second_single: "second",
         second_few: "seconds",
         second_plural: "seconds",
-        tourStartMessage: "There are {time} left until the start of season {season}"
+        tourStartMessage: "There are {time} left until the start of season {season}",
+        totalGames: "Total games",
+        wins: "Wins",
 
     },
     [LOCALES.RUSSIAN]: {
@@ -157,6 +159,8 @@ export const MESSAGES = {
         second_few: "секунды",
         second_plural: "секунд",
         tourStartMessage: "До начала турнира {season} осталось {time}",
+        totalGames: "Всего игр",
+        wins: "Побед",
 
     },
     [LOCALES.UKRAINIAN]: {
@@ -236,5 +240,7 @@ export const MESSAGES = {
         second_few: "секунди",
         second_plural: "секунд",
         tourStartMessage: "Залишилося {time} до початку сезону {season}",
+        totalGames: "Всього ігор",
+        wins: "Перемог"
     }
 }
