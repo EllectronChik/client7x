@@ -2,7 +2,7 @@
 
 .team_manage {
     display: flex;
-    max-width: 800px;
+    width: 600px;
     text-align: center;
     flex-direction: column;
     align-items: center;
@@ -16,4 +16,16 @@
 
 .button {
     color: $clr_light;
+}
+
+.timer {
+    font-size: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    width: 600px;
+    border: 2px solid $clr_red;
+    border-radius: 20px;
 }
