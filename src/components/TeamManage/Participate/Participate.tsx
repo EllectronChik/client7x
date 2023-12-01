@@ -11,16 +11,11 @@ import {    selectIsInitialLoad,
             setIsInitialLoadSecond 
 } from 'store/reducers/AccountSlice';
 import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
-import { ISeason } from 'models/ISeason';
-import { IClanByManager } from 'models/IClanByManager';
 import Timer from 'components/Timer/Timer';
+import { SeasonApi } from 'services/SeasonService';
 
-interface IParticipateProps {
-    currentTournament: ISeason | undefined;
-    myTeam: IClanByManager | undefined;
-}
 
-const Participate: React.FC<IParticipateProps> = ({...props}) => {
+const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
     const intl = useIntl();
     const [cookies, ] = useCookies(['token', 'userId', 'locale']);
     const [canRegister, setCanRegister] = useState<boolean | null>(null);
@@ -30,27 +25,29 @@ const Participate: React.FC<IParticipateProps> = ({...props}) => {
     const dispatch = useAppDispatch();
     const isInitialLoad = useAppSelector(selectIsInitialLoad);
     const teamRegistred = useAppSelector(selectTeamRegistred);
+    const {data: currentTournament} = SeasonApi.useFetchCurrentSeasonQuery();
+    const {data: myTeam} = ClanApi.useFetchClanByManagerQuery(cookies.userId);
   
   
     const handleChangeDateFormat = () => {
-      if (props.currentTournament) {
-        if (props.currentTournament.start_datetime) {
+      if (currentTournament) {
+        if (currentTournament.start_datetime) {
           if (!cookies.locale) {
             if (navigator.language === 'ru' || navigator.language === 'uk') {
-              setParsedDate(moment(props.currentTournament.start_datetime).format('DD.MM.YYYY'));
-              setParsedTime(moment(props.currentTournament.start_datetime).format('HH:mm'));
+              setParsedDate(moment(currentTournament.start_datetime).format('DD.MM.YYYY'));
+              setParsedTime(moment(currentTournament.start_datetime).format('HH:mm'));
             } else {
-              setParsedDate(moment(props.currentTournament.start_datetime).locale('en').format('LL'));
-              setParsedTime(moment(props.currentTournament.start_datetime).locale('en').format('LT'));
+              setParsedDate(moment(currentTournament.start_datetime).locale('en').format('LL'));
+              setParsedTime(moment(currentTournament.start_datetime).locale('en').format('LT'));
               
             }
           } else {
             if (cookies.locale === 'ru' || cookies.locale === 'uk') {
-              setParsedDate(moment(props.currentTournament.start_datetime).format('DD.MM.YYYY'));
-              setParsedTime(moment(props.currentTournament.start_datetime).format('HH:mm'));
+              setParsedDate(moment(currentTournament.start_datetime).format('DD.MM.YYYY'));
+              setParsedTime(moment(currentTournament.start_datetime).format('HH:mm'));
             } else {
-              setParsedDate(moment(props.currentTournament.start_datetime).locale('en').format('LL'));
-              setParsedTime(moment(props.currentTournament.start_datetime).locale('en').format('LT'));
+              setParsedDate(moment(currentTournament.start_datetime).locale('en').format('LL'));
+              setParsedTime(moment(currentTournament.start_datetime).locale('en').format('LT'));
             }
           }
           }}
@@ -63,41 +60,41 @@ const Participate: React.FC<IParticipateProps> = ({...props}) => {
     }, [intl])
   
     useEffect(() => {
-      if (props.currentTournament) {        
-        if (props.currentTournament.can_register) {
-        setCanRegister(props.currentTournament.can_register);
+      if (currentTournament) {        
+        if (currentTournament.can_register) {
+        setCanRegister(currentTournament.can_register);
       }
     }
       handleChangeDateFormat();
-    }, [props.currentTournament])
+    }, [currentTournament])
   
   
     useEffect(() => {
-      if (props.myTeam && isInitialLoad[1] === true) {
-        if (props.myTeam.is_reg_to_current_season !== undefined) {
-          dispatch(setTeamRegistred(props.myTeam.is_reg_to_current_season));
+      if (myTeam && isInitialLoad[1] === true) {
+        if (myTeam.is_reg_to_current_season !== undefined) {
+          dispatch(setTeamRegistred(myTeam.is_reg_to_current_season));
           dispatch(setIsInitialLoadSecond(false));
         }
       }
-    }, [props.myTeam, isInitialLoad]);
+    }, [myTeam, isInitialLoad]);
     
   
     return (
-      <div>
-        {props.currentTournament && props.myTeam && canRegister && teamRegistred === false &&
+      <div className={props.className}>
+        {currentTournament && myTeam && canRegister && teamRegistred === false &&
         <div className={classes.team_manage}>
           <h2>
-            <FormattedMessage id='tournamentStartMessage' values={{number: props.currentTournament.number, date: parsedDate, time: parsedTime}} />
+            <FormattedMessage id='tournamentStartMessage' values={{number: currentTournament.number, date: parsedDate, time: parsedTime}} />
           </h2>
           <Button7x
             className={classes.button}
             onClick={() => {
-              if (props.currentTournament && props.myTeam) {
+              if (currentTournament && myTeam) {
                 participate({
                   token: cookies.token,
                   user: cookies.userId,
-                  season: props.currentTournament.number,
-                  team: props.myTeam.team_id
+                  season: currentTournament.number,
+                  team: myTeam.team_id
                 })
               dispatch(setTeamRegistred(true));
               }}}
@@ -105,8 +102,15 @@ const Participate: React.FC<IParticipateProps> = ({...props}) => {
             <FormattedMessage id='participate' />
           </Button7x>
         </div>}
-        {props.currentTournament && props.myTeam && teamRegistred === true &&
-        <Timer datetime={props.currentTournament.start_datetime} season={props.currentTournament.number} />}
+        {currentTournament && myTeam && teamRegistred === true &&
+        <div className={classes.timer}>
+          <FormattedMessage id='tourStartMessage' 
+          values={{
+            time: <Timer datetime={currentTournament.start_datetime} />, 
+            season: currentTournament.number
+            }}/>
+        </div>
+        }
       </div>
     )
 }
