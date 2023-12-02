@@ -67,6 +67,44 @@ export const ClanApi = createApi({
                     team: team
                 }
             })
+        }),
+        changeLogo: builder.mutation<void, {teamId: number, logo: File, token: string}>({
+            query: ({teamId, logo, token}) => {
+                const formData = new FormData();
+                formData.append("logo", logo);
+                return {
+                    url: `/teams/${teamId}/`,
+                    method: "PATCH",
+                    body: formData,
+                    headers: {
+                        Authorization: `Token ${token}`
+                    }         
+                }
+            }
+        }),
+        changeName: builder.mutation<void, {teamId: number, name: string, token: string}>({
+            query: ({teamId, name, token}) => ({
+                url: `/teams/${teamId}/`,
+                method: "PATCH",
+                body: {
+                    name: name
+                },
+                headers: {
+                    Authorization: `Token ${token}`
+                }         
+            })
+        }),
+        changeTag: builder.mutation<void, {teamId: number, tag: string, token: string}>({
+            query: ({teamId, tag, token}) => ({
+                url: `/teams/${teamId}/`,
+                method: "PATCH",
+                body: {
+                    tag: tag
+                },
+                headers: {
+                    Authorization: `Token ${token}`
+                }         
+            })
         })
     })
 })
