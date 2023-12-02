@@ -15,15 +15,53 @@
         border-radius: 20px 20px 0 0;
         padding: 15px;
         gap: 20px;  
-        .teamLogo {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border: 1px solid $clr_red;
-            border-radius: 50%;
+        .teamLogoBox {
+            position: relative;
+            cursor: pointer;
+            .teamLogo {
+                width: 100px;
+                height: 100px;
+                object-fit: cover;
+                border: 1px solid $clr_red;
+                border-radius: 50%;
+            }
+            &::before {
+                content: '';
+                position: absolute;
+                top: 10%;
+                left: 10%;
+                width: 80%;
+                height: 80%;
+                background: url('../../../assets/images/techImages/load_img.svg') center center no-repeat;
+                background-size: cover;
+                opacity: 0;
+                transition: opacity 0.3s ease-in-out;
+            }
+            &:hover::before {
+                opacity: .7;
+            }
+            .editLogo {
+                display: none;
+            }
         }
-        .edit {
+        .teamName {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid $clr_light;
+            color: $clr_light;
+            font-size: 30px;
+        }
+        .teamTag {
+            margin-top: 10px;
+            background: transparent;
+            border: none;
+            color: $clr_light;
+            font-size: 20px;
+            width: auto;
+        }
+        .regionFlag {
             height: 40px;
+            width: 60px;
         }
     }
 
