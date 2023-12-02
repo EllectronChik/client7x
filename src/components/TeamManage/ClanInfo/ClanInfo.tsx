@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useCookies } from 'react-cookie';
 import { ClanApi } from 'services/ClanService';
 import teamDefault from '../../../assets/images/team/teamDefault.png';
@@ -16,22 +16,27 @@ import master from '../../../assets/images/league_marks/6.png';
 import grandmaster from '../../../assets/images/league_marks/7.png';
 import leagueDefault from '../../../assets/images/league_marks/0.svg';
 import playerDefault from '../../../assets/images/player/default.svg';
-import edit from '../../../assets/images/techImages/edit.svg';
 import { FormattedMessage } from 'react-intl';
 
 
 const ClanInfo: React.FC = () => {
-    const [cookies,] = useCookies(['userId']);
+    const [cookies,] = useCookies(['userId', 'token']);
     const {data: myTeam} = ClanApi.useFetchClanByManagerQuery(cookies.userId);
     const [race, setRace] = useState< JSX.Element[]>([]);
     const [leagues, setLeagues] = useState<JSX.Element[]>([]);
+    const logoInputRef = useRef<HTMLInputElement>(null);
+    const tagInputRef = useRef<HTMLInputElement>(null);
+    const [changeLogo, {}] = ClanApi.useChangeLogoMutation();
+    const [changeName, {}] = ClanApi.useChangeNameMutation();
+    const [changeTag, {}] = ClanApi.useChangeTagMutation();
+    const [teamLogoUrl, setTeamLogoUrl] = useState<string | null>(null);
+    let changeNameTimeout: NodeJS.Timeout;
+    let changeTagTimeout: NodeJS.Timeout;
 
     useEffect(() => {
         if (myTeam) {
             setRace(() => {
                 return myTeam.players.map((player) => {
-                    console.log(player);
-                    
                     if (player.race === 1) {
                         return <img key={player.id} draggable={false} src={zerg} alt='zerg' className={classes.race} />;
                     } else if (player.race === 2) {
@@ -66,25 +71,72 @@ const ClanInfo: React.FC = () => {
                     }
                 });
             })
-        }
-        console.log(myTeam?.team_id);
+            setTeamLogoUrl(`${import.meta.env.VITE_SERVER_URL}${myTeam.team_logo_url}`);
+            if (tagInputRef.current) {
+                const textWidth = getTextWidth(myTeam.team_tag);
+                tagInputRef.current.style.width = `${textWidth}px`;
+            }
+        }        
         
     }, [myTeam]);
-    
+
+    const getTextWidth = (text: string) => {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        context!.font = window.getComputedStyle(tagInputRef.current!).font;
+        const width = context!.measureText(text).width;
+        return width;
+    }
 
 
   return (
     <div className={classes.teamManage}>
         {myTeam && 
         <div className={classes.teamInfo}>
-            <img src={teamDefault} alt={myTeam.team_name} 
-            className={classes.teamLogo}
-            onLoad={(e) => {
-                e.currentTarget.src = `${import.meta.env.VITE_SERVER_URL}${myTeam.team_logo_url}`
-            }}/>
-            <h2 className={classes.teamName}>{myTeam.team_name}</h2>
+            <div className={classes.teamLogoBox}
+            onClick={() => logoInputRef.current?.click()}>
+                <img src={teamDefault} alt={myTeam.team_name} 
+                className={classes.teamLogo}
+                onLoad={(e) => {
+                    e.currentTarget.src = teamLogoUrl ? teamLogoUrl : teamDefault;
+                }}/>
+                <input  ref={logoInputRef} type="file" className={classes.editLogo}
+                        onChange={(e) => {
+                            changeLogo({teamId: myTeam.team_id, logo: e.target.files![0], token: cookies.token});
+                            setTeamLogoUrl(URL.createObjectURL(e.target.files![0]));
+                            }}/>
+            </div>
             <div>
-                <img className={classes.edit} src={edit} alt="" />
+                <input className={classes.teamName} defaultValue={myTeam.team_name} 
+                onChange={(e) => {
+                    if (changeNameTimeout) {
+                        clearTimeout(changeNameTimeout);
+                    }
+                    changeNameTimeout = setTimeout(() => {
+                        changeName({teamId: myTeam.team_id, name: e.target.value, token: cookies.token});
+                    }, 1000);
+                }}/>
+                <div>
+                    <span>&lt;</span>
+                    <input ref={tagInputRef} className={classes.teamTag} defaultValue={myTeam.team_tag} 
+                    onChange={(e) => {
+                        if (changeTagTimeout) {
+                            clearTimeout(changeTagTimeout);
+                        }
+                        changeTagTimeout = setTimeout(() => {
+                            changeTag({teamId: myTeam.team_id, tag: e.target.value, token: cookies.token});
+                        }, 1000);
+                        if (tagInputRef.current) {
+                            const textWidth = getTextWidth(e.target.value);
+                            tagInputRef.current.style.width = `${textWidth}px`;
+                        }
+                    }}
+                    />
+                    <span>&gt;</span>
+                </div>
+            </div>
+            <div className={classes.regionFlag}>
+                <img src={`${import.meta.env.VITE_SERVER_URL}${myTeam.team_region_flag}`} alt={myTeam.team_region_name} />
             </div>
         </div>}
         <div className={classes.teamContent}>
