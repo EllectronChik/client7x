@@ -17,6 +17,7 @@ import grandmaster from '../../../assets/images/league_marks/7.png';
 import leagueDefault from '../../../assets/images/league_marks/0.svg';
 import playerDefault from '../../../assets/images/player/default.svg';
 import { FormattedMessage } from 'react-intl';
+import { PlayerApi } from 'services/PlayerService';
 
 
 const ClanInfo: React.FC = () => {
@@ -24,11 +25,14 @@ const ClanInfo: React.FC = () => {
     const {data: myTeam} = ClanApi.useFetchClanByManagerQuery(cookies.userId);
     const [race, setRace] = useState< JSX.Element[]>([]);
     const [leagues, setLeagues] = useState<JSX.Element[]>([]);
+    const [draggable, setDraggable] = useState<boolean[]>([]);
     const logoInputRef = useRef<HTMLInputElement>(null);
     const tagInputRef = useRef<HTMLInputElement>(null);
     const [changeLogo, {}] = ClanApi.useChangeLogoMutation();
     const [changeName, {}] = ClanApi.useChangeNameMutation();
     const [changeTag, {}] = ClanApi.useChangeTagMutation();
+    const [setPlayerToSeason, {}] = PlayerApi.usePostPlayerToSeasonMutation();
+    const [deletePlayerFromSeason, {}] = PlayerApi.useDeletePlayerFromSeasonMutation();
     const [teamLogoUrl, setTeamLogoUrl] = useState<string | null>(null);
     let changeNameTimeout: NodeJS.Timeout;
     let changeTagTimeout: NodeJS.Timeout;
@@ -71,12 +75,18 @@ const ClanInfo: React.FC = () => {
                     }
                 });
             })
+            setDraggable(() => {
+                return myTeam.players.map(() => {
+                    return true;
+                });
+            })
             setTeamLogoUrl(`${import.meta.env.VITE_SERVER_URL}${myTeam.team_logo_url}`);
             if (tagInputRef.current) {
                 const textWidth = getTextWidth(myTeam.team_tag);
                 tagInputRef.current.style.width = `${textWidth}px`;
             }
         }        
+        console.log(myTeam);
         
     }, [myTeam]);
 
@@ -86,6 +96,23 @@ const ClanInfo: React.FC = () => {
         context!.font = window.getComputedStyle(tagInputRef.current!).font;
         const width = context!.measureText(text).width;
         return width;
+    }
+
+
+    const handleDragStartPlayer = (e: React.DragEvent<HTMLDivElement>) => {
+        e.currentTarget.classList.add(classes.drag);
+    }
+
+    const handleDragOverPlayer = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+    }
+
+    const handleDragEndPlayer = (e: React.DragEvent<HTMLDivElement>) => {
+        e.currentTarget.classList.remove(classes.drag);
+    }
+
+    const handleDropPlayer = (e: React.DragEvent<HTMLDivElement>) => {
+        e.currentTarget.classList.remove(classes.drag);
     }
 
 
@@ -136,19 +163,22 @@ const ClanInfo: React.FC = () => {
                 </div>
             </div>
             <div className={classes.regionFlag}>
-                <img src={`${import.meta.env.VITE_SERVER_URL}${myTeam.team_region_flag}`} alt={myTeam.team_region_name} />
+                <img draggable={false} src={`${import.meta.env.VITE_SERVER_URL}${myTeam.team_region_flag}`} alt={myTeam.team_region_name} />
             </div>
         </div>}
         <div className={classes.teamContent}>
             <div className={classes.playersInfo}>
                 {myTeam && myTeam.players.map((player, index) => (
-                    <div className={classes.playerInfo} key={index}>
+                    <div draggable={draggable[index]}
+                    onDragStart={(e) => {handleDragStartPlayer(e)}}
+                    onDragEnd={(e) => {handleDragEndPlayer(e)}}
+                    className={classes.playerInfo} key={index}>
                         <div className={classes.playerInfoBox}>
                             <div className={classes.infoImages}>
                                 <div>{leagues[index]}</div>
                                 <div>{race[index]}</div>
                             </div>
-                            <img src={playerDefault} alt={player.username} 
+                            <img draggable={false} src={playerDefault} alt={player.username} 
                             className={classes.playerLogo}
                             onLoad={(e) => {
                                 if (!e.currentTarget.classList.contains('error')) {
