@@ -62,6 +62,8 @@
         .regionFlag {
             height: 40px;
             width: 60px;
+            border: 1px solid #FFD700;
+            box-shadow: 0 0 10px #FFD700;
         }
     }
 
@@ -85,6 +87,10 @@
             }
             &:not(:last-child) {
                 border-bottom: 1px solid $clr_red;
+            }
+            &.drag {
+                background-color: $clr_dark;
+                border: 1px solid $clr_red;
             }
             .playerStats {
                 display: flex;
