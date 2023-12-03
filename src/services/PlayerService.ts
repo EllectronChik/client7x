@@ -31,6 +31,28 @@ export const PlayerApi = createApi({
                     Authorization: `Token ${token}`
                 }
             })
+        }),
+        postPlayerToSeason: builder.mutation<void, {player: IPlayer, token: string, season: number}>({
+            query: ({player, token, season}) => ({
+                url: `/player_to_tournament/`,
+                method: "POST",
+                body: {
+                    player: player,
+                    season: season
+                },
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            })
+        }),
+        deletePlayerFromSeason: builder.mutation<void, {player_id: number, token: string}>({
+            query: ({player_id, token}) => ({
+                url: `/player_to_tournament/${player_id}/`,
+                method: "DELETE",
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            })
         })
     })
 })
