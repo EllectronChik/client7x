@@ -8,7 +8,7 @@ export const handleAddMediaForm = (
     resForms: React.JSX.Element[],
     setResForms: React.Dispatch<React.SetStateAction<React.JSX.Element[]>>,
     setResorces: React.Dispatch<React.SetStateAction<IResorce[]>>,
-) => {
+    ) => {
     const newId = resForms.length;
     const newMediaForm = <div className={classes.mediaForm} key={newId}>
       <div className={classes.mediaFormBox}>
