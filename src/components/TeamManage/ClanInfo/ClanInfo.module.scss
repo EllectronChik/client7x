@@ -50,6 +50,7 @@
             border-bottom: 1px solid $clr_light;
             color: $clr_light;
             font-size: 30px;
+            width: 370px;
         }
         .teamTag {
             margin-top: 10px;
@@ -57,7 +58,6 @@
             border: none;
             color: $clr_light;
             font-size: 20px;
-            width: auto;
         }
         .regionFlag {
             height: 40px;
@@ -91,6 +91,7 @@
             &.drag {
                 background-color: $clr_dark;
                 border: 1px solid $clr_red;
+                opacity: .5;
             }
             .playerStats {
                 display: flex;
