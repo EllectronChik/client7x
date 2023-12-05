@@ -8,11 +8,20 @@ import classes from './Participate.module.scss';
 import {    selectIsInitialLoad, 
             selectTeamRegistred, 
             setTeamRegistred, 
-            setIsInitialLoadSecond 
+            setIsInitialLoadSecond
 } from 'store/reducers/AccountSlice';
+import {  setDroppedPlayer, 
+          selectDroppedPlayer, 
+          selectDragPlayer,
+          setDraggable,
+          deleteDroppedPlayer,
+        } from 'store/reducers/DragPlayerSlice';
 import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
 import Timer from 'components/Timer/Timer';
 import { SeasonApi } from 'services/SeasonService';
+import playerDefault from '@assets/images/player/default.svg';
+import { PlayerApi } from 'services/PlayerService';
+import { IPlayer } from 'models/IPlayer';
 
 
 const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
@@ -21,13 +30,21 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
     const [canRegister, setCanRegister] = useState<boolean | null>(null);
     const [parsedDate, setParsedDate] = useState<String | null>(null);
     const [parsedTime, setParsedTime] = useState<String | null>(null);
+    const [dragZoneText, setDragZoneText] = useState<React.JSX.Element>();
+    const [dragZonePlayers, setDragZonePlayers] = useState<React.JSX.Element[]>([]);
+    const [deletePlayer, setDeletePlayer] = useState<number>(-1);
     const [participate, {}] = ClanApi.useParticipateInSeasonMutation();
     const dispatch = useAppDispatch();
     const isInitialLoad = useAppSelector(selectIsInitialLoad);
     const teamRegistred = useAppSelector(selectTeamRegistred);
+    const dragPlayer = useAppSelector(selectDragPlayer);
+    const droppedPlayer = useAppSelector(selectDroppedPlayer);
     const {data: currentTournament} = SeasonApi.useFetchCurrentSeasonQuery();
     const {data: myTeam} = ClanApi.useFetchClanByManagerQuery(cookies.userId);
-  
+    const [setPlayerToSeason, {}] = PlayerApi.usePostPlayerToSeasonMutation();
+    const [deletePlayerFromSeason, {}] = PlayerApi.useDeletePlayerFromSeasonMutation();
+    const {data: playerToSeason} = PlayerApi.useGetRegForSeasonPlayersQuery({season: currentTournament?.number, user: cookies.userId});
+
   
     const handleChangeDateFormat = () => {
       if (currentTournament) {
@@ -58,6 +75,18 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
       document.title = intl.formatMessage({id: 'team_manage'});
       handleChangeDateFormat();
     }, [intl])
+
+    useEffect(() => {
+      if (dragZonePlayers.length > 0) {
+        setDragZoneText(
+          <FormattedMessage id='onDragPlayerNotEmpty' />
+        )
+      } else {
+        setDragZoneText(
+          <FormattedMessage id='dropZoneMessage' />
+        )
+      }
+    }, [dragZonePlayers])
   
     useEffect(() => {
       if (currentTournament) {        
@@ -77,7 +106,97 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
         }
       }
     }, [myTeam, isInitialLoad]);
+
     
+    useEffect(() => {
+      if (droppedPlayer) {
+        setDragZonePlayers(() => {          
+          const newDragZonePlayers: React.JSX.Element[] = [];
+          droppedPlayer.map((player) => {           
+            if (player) {
+              const index = dragZonePlayers.findIndex((item) => item.key === String(player.id));
+              if (index !== -1) {
+                return;
+              }
+              newDragZonePlayers.push(                
+              <div draggable={false}
+              onClick={() => {
+                deletePlayerFromSeason({player_id: player.id, token: cookies.token});
+                setDeletePlayer(player.id);
+                dispatch(setDraggable([player.id, true]));
+                dispatch(deleteDroppedPlayer(player.id));
+              }}
+              className={`${classes.playerInfo} alreadyRegistered`} key={player.id}>
+                  <div className={classes.playerInfoBox}>
+                      <div className={classes.infoImages}>
+                          <div>{player.league}</div>
+                          <div>{player.race}</div>
+                      </div>
+                      <img draggable={false} src={playerDefault} alt={player.username} 
+                      className={classes.playerLogo}
+                      onLoad={(e) => {
+                          if (!e.currentTarget.classList.contains('error')) {
+                              (player.avatar) ? e.currentTarget.src = player.avatar : e.currentTarget.src = playerDefault;
+                          }
+                      }}
+                      onError={(e) => {
+                          if (!e.currentTarget.classList.contains('error')) {
+                              e.currentTarget.classList.add('error');
+                              e.currentTarget.src = playerDefault;
+                          }
+                      }}/>
+                      <div>
+                          <h2 className={classes.playerName}>{player.username}</h2>
+                          <h3 className={classes.playerMMR}>MMR: {player.mmr}</h3>
+                      </div>
+                  </div>
+                  <div className={classes.playerStats}>
+                      <div className={classes.playerStat}>
+                          <h4><FormattedMessage id='totalGames' />: </h4>
+                          <h4 className={classes.playerWins}>{player.total_games}</h4>
+                      </div>
+                      <div className={classes.playerStat}>
+                          <h4><FormattedMessage id='wins' />: </h4>
+                          <h4 className={classes.playerWins}>{player.wins}</h4>
+                      </div>
+                  </div>
+              </div>
+              )
+            } 
+          })
+          newDragZonePlayers.push(...dragZonePlayers)
+          return newDragZonePlayers;
+        })
+      }
+      // console.log(droppedPlayer);
+      
+    }, [droppedPlayer])
+
+    useEffect(() => {
+      if (playerToSeason && myTeam) {
+        const newPlayers: IPlayer[] = [];
+        playerToSeason.map((player) => {
+          const newPlayer = myTeam.players.find((p) => p.id === player.player);
+          if (newPlayer) {
+            if (droppedPlayer.some((player) => player?.id === newPlayer.id)) {
+              return;
+            }
+            newPlayers.push(newPlayer);
+          }          
+        })        
+        dispatch(setDroppedPlayer(newPlayers));
+      }
+    }, [playerToSeason])
+
+    useEffect(() => {
+      if (deletePlayer !== -1) {
+        setDragZonePlayers((oldDragZonePlayers) => {
+          const newDragZonePlayers = oldDragZonePlayers.filter((player) => player.key !== String(deletePlayer));
+          return newDragZonePlayers;
+        })
+        setDeletePlayer(-1);
+      }
+    },[deletePlayer])
   
     return (
       <div className={props.className}>
@@ -103,12 +222,63 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
           </Button7x>
         </div>}
         {currentTournament && myTeam && teamRegistred === true &&
-        <div className={classes.timer}>
-          <FormattedMessage id='tourStartMessage' 
-          values={{
-            time: <Timer datetime={currentTournament.start_datetime} />, 
-            season: currentTournament.number
-            }}/>
+        <div>
+          <div className={classes.timer}>
+            <FormattedMessage id='tourStartMessage' 
+            values={{
+              time: <Timer datetime={currentTournament.start_datetime} />, 
+              season: currentTournament.number
+              }}/>
+          </div>
+          <div className={classes.dropZone}
+            onDragEnter={(e) => {
+              e.preventDefault();
+              if (dragZonePlayers.length > 0) {
+                setDragZoneText(
+                  <FormattedMessage id='onDragPlayerNotEmpty' />
+                )
+              } else {
+                setDragZoneText(
+                  <FormattedMessage id='onDragPlayerOver' />
+                )
+              }
+            }}
+            onDragOver={(e) => {
+              e.preventDefault();              
+            }}
+            onDragLeave={(e) => {
+              e.preventDefault();
+              setDragZoneText(
+                <FormattedMessage id='dropZoneMessage' />
+              )
+            }}
+            onDrop={(e) => {
+              e.preventDefault();   
+              if (droppedPlayer.length > 0 && dragPlayer) {
+                if (droppedPlayer.some((player) => player?.id === dragPlayer.id)) {
+                  return;
+                }
+              }
+              dispatch(setDroppedPlayer([dragPlayer]));
+              if (dragPlayer && dragPlayer.id) {
+                setPlayerToSeason({player_id: dragPlayer?.id, token: cookies.token, season: currentTournament.number});
+                dispatch(setDraggable([dragPlayer.id, false]));
+              };
+              if (dragZonePlayers.length > 0) {
+                setDragZoneText(
+                  <FormattedMessage id='onDragPlayerNotEmpty' />
+                )
+              } else {
+                setDragZoneText(
+                  <FormattedMessage id='dropZoneMessage' />
+                )
+              }
+            }}>
+              {dragZoneText}
+              {dragZonePlayers.map((player) => (
+                player
+              ))}
+          </div>
         </div>
         }
       </div>

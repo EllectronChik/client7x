@@ -1,23 +1,26 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useCookies } from 'react-cookie';
 import { ClanApi } from 'services/ClanService';
-import teamDefault from '../../../assets/images/team/teamDefault.png';
+import teamDefault from '@assets/images/team/teamDefault.png';
 import classes from './ClanInfo.module.scss';
-import zerg from '../../../assets/images/races/zerg.svg';
-import terran from '../../../assets/images/races/terran.svg';
-import protoss from '../../../assets/images/races/protoss.svg';
-import random from '../../../assets/images/races/random.svg';
-import bronze from '../../../assets/images/league_marks/1.png';
-import silver from '../../../assets/images/league_marks/2.png';
-import gold from '../../../assets/images/league_marks/3.png';
-import platinum from '../../../assets/images/league_marks/4.png';
-import diamond from '../../../assets/images/league_marks/5.png';
-import master from '../../../assets/images/league_marks/6.png';
-import grandmaster from '../../../assets/images/league_marks/7.png';
-import leagueDefault from '../../../assets/images/league_marks/0.svg';
-import playerDefault from '../../../assets/images/player/default.svg';
-import { FormattedMessage } from 'react-intl';
+import zerg from '@assets/images/races/zerg.svg';
+import terran from '@assets/images/races/terran.svg';
+import protoss from '@assets/images/races/protoss.svg';
+import random from '@assets/images/races/random.svg';
+import bronze from '@assets/images/league_marks/1.png';
+import silver from '@assets/images/league_marks/2.png';
+import gold from '@assets/images/league_marks/3.png';
+import platinum from '@assets/images/league_marks/4.png';
+import diamond from '@assets/images/league_marks/5.png';
+import master from '@assets/images/league_marks/6.png';
+import grandmaster from '@assets/images/league_marks/7.png';
+import leagueDefault from '@assets/images/league_marks/0.svg';
+import playerDefault from '@assets/images/player/default.svg';
+import { setDragPlayer, selectDraggable, setDraggable } from 'store/reducers/DragPlayerSlice';
+import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
+import { FormattedMessage } from 'react-intl'
 import { PlayerApi } from 'services/PlayerService';
+import { SeasonApi } from 'services/SeasonService';
 
 
 const ClanInfo: React.FC = () => {
@@ -25,15 +28,16 @@ const ClanInfo: React.FC = () => {
     const {data: myTeam} = ClanApi.useFetchClanByManagerQuery(cookies.userId);
     const [race, setRace] = useState< JSX.Element[]>([]);
     const [leagues, setLeagues] = useState<JSX.Element[]>([]);
-    const [draggable, setDraggable] = useState<boolean[]>([]);
     const logoInputRef = useRef<HTMLInputElement>(null);
     const tagInputRef = useRef<HTMLInputElement>(null);
     const [changeLogo, {}] = ClanApi.useChangeLogoMutation();
     const [changeName, {}] = ClanApi.useChangeNameMutation();
     const [changeTag, {}] = ClanApi.useChangeTagMutation();
-    const [setPlayerToSeason, {}] = PlayerApi.usePostPlayerToSeasonMutation();
-    const [deletePlayerFromSeason, {}] = PlayerApi.useDeletePlayerFromSeasonMutation();
+    const {data: currentTournament} = SeasonApi.useFetchCurrentSeasonQuery();
+    const {data: playerToSeason} = PlayerApi.useGetRegForSeasonPlayersQuery({season: currentTournament?.number, user: cookies.userId});
+    const draggable = useAppSelector(selectDraggable);
     const [teamLogoUrl, setTeamLogoUrl] = useState<string | null>(null);
+    const dispatch = useAppDispatch();
     let changeNameTimeout: NodeJS.Timeout;
     let changeTagTimeout: NodeJS.Timeout;
 
@@ -75,20 +79,29 @@ const ClanInfo: React.FC = () => {
                     }
                 });
             })
-            setDraggable(() => {
-                return myTeam.players.map(() => {
-                    return true;
-                });
-            })
             setTeamLogoUrl(`${import.meta.env.VITE_SERVER_URL}${myTeam.team_logo_url}`);
             if (tagInputRef.current) {
                 const textWidth = getTextWidth(myTeam.team_tag);
                 tagInputRef.current.style.width = `${textWidth}px`;
             }
         }        
-        console.log(myTeam);
         
     }, [myTeam]);
+
+
+    useEffect(() => {
+        if (myTeam) {         
+            myTeam.players.forEach((player) => {
+                if (playerToSeason?.some((p) => p.player === player.id)) {
+                    dispatch(setDraggable([player.id, false]));
+                } else {
+                    dispatch(setDraggable([player.id, true]));
+                }
+            })   
+        }
+        
+    }, [playerToSeason, myTeam]);
+
 
     const getTextWidth = (text: string) => {
         const canvas = document.createElement('canvas');
@@ -99,21 +112,15 @@ const ClanInfo: React.FC = () => {
     }
 
 
-    const handleDragStartPlayer = (e: React.DragEvent<HTMLDivElement>) => {
+    const handleDragStartPlayer = (e: React.DragEvent<HTMLDivElement>, index: number) => {
         e.currentTarget.classList.add(classes.drag);
-    }
-
-    const handleDragOverPlayer = (e: React.DragEvent<HTMLDivElement>) => {
-        e.preventDefault();
+        dispatch(setDragPlayer(myTeam ? myTeam.players[index] : null));
     }
 
     const handleDragEndPlayer = (e: React.DragEvent<HTMLDivElement>) => {
         e.currentTarget.classList.remove(classes.drag);
     }
 
-    const handleDropPlayer = (e: React.DragEvent<HTMLDivElement>) => {
-        e.currentTarget.classList.remove(classes.drag);
-    }
 
 
   return (
@@ -168,9 +175,9 @@ const ClanInfo: React.FC = () => {
         </div>}
         <div className={classes.teamContent}>
             <div className={classes.playersInfo}>
-                {myTeam && myTeam.players.map((player, index) => (
-                    <div draggable={draggable[index]}
-                    onDragStart={(e) => {handleDragStartPlayer(e)}}
+                {myTeam && draggable && myTeam.players.map((player, index) => (
+                    <div draggable={draggable[index] && draggable[index][1]}
+                    onDragStart={(e) => {handleDragStartPlayer(e, index)}}
                     onDragEnd={(e) => {handleDragEndPlayer(e)}}
                     className={classes.playerInfo} key={index}>
                         <div className={classes.playerInfoBox}>

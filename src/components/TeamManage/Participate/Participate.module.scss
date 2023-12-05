@@ -29,3 +29,75 @@
     border: 2px solid $clr_red;
     border-radius: 20px;
 }
+
+.dropZone {
+    min-height: 138px;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px;
+    width: 600px;
+    border: 2px dashed $clr_red;
+    border-radius: 20px;
+    font-size: 20px;
+}
+
+.playerInfo {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 10px;
+    align-items: center;
+    font-size: 24px;
+    cursor: pointer;
+    .playerInfoBox  {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    &:not(:last-child) {
+        border-bottom: 1px solid $clr_red;
+    }
+    &.drag {
+        background-color: $clr_dark;
+        border: 1px solid $clr_red;
+        opacity: .5;
+    }
+    .playerStats {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        .playerStat {
+            display: flex;
+        }
+    }
+}
+.infoImages  {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .league {
+        height: 40px;
+    }
+    .race {
+        height: 40px;
+    }
+}
+.playerLogo {
+    height: 80px;
+    border: 1px solid $clr_red;
+    border-radius: 20px;
+}
+
+.playerName {
+    font-size: 1em;
+    text-align: left;
+}
+
+.playerMMR {
+    font-size: 18.72px;
+    text-align: left;
+}
