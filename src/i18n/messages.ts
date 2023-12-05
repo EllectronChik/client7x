@@ -80,6 +80,9 @@ export const MESSAGES = {
         tourStartMessage: "There are {time} left until the start of season {season}",
         totalGames: "Total games",
         wins: "Wins",
+        dropZoneMessage: "Drag a player here to add him as a season participant",
+        onDragPlayerOver: "Drop player here", 
+        onDragPlayerNotEmpty: "Click on a player to delete him",
 
     },
     [LOCALES.RUSSIAN]: {
@@ -161,6 +164,9 @@ export const MESSAGES = {
         tourStartMessage: "До начала турнира {season} осталось {time}",
         totalGames: "Всего игр",
         wins: "Побед",
+        dropZoneMessage: "Перетащите игрока сюда чтобы добавить его как участника сезона",
+        onDragPlayerOver: "Отпустите игрока",
+        onDragPlayerNotEmpty: "Нажмите на игрока чтобы удалить его",
 
     },
     [LOCALES.UKRAINIAN]: {
@@ -241,6 +247,9 @@ export const MESSAGES = {
         second_plural: "секунд",
         tourStartMessage: "Залишилося {time} до початку сезону {season}",
         totalGames: "Всього ігор",
-        wins: "Перемог"
+        wins: "Перемог",
+        dropZoneMessage: "Перетягніть гравця сюди, щоб додати його як учасника сезону",
+        onDragPlayerOver: "Відпустіть гравця",
+        onDragPlayerNotEmpty: "Натисніть на гравця, щоб видалити його",
     }
 }
