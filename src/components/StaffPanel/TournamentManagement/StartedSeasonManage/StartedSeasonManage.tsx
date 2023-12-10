@@ -7,12 +7,15 @@ import classes from './StartedSeasonManage.module.scss';
 import { FormattedMessage } from 'react-intl';
 import {    setLocalTime, 
             selectLocalTime,
+            setGlobalTime,
+            selectGlobalTime,
             setCanRegister,
             selectCanRegister,
             setIsInitialLoadFirst,
             selectIsInitialLoad
              } from 'store/reducers/AccountSlice';
 import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
+import Timer from 'components/Timer/Timer';
 
 
 interface StartedSeasonManageProps {
@@ -28,6 +31,7 @@ const StartedSeasonManage: React.FC<StartedSeasonManageProps> = ({...props}) => 
     const [changeCanRegister, {}] = SeasonApi.useChangeCanRegisterMutation();
     const [askForFinished, setAskForFinished] = useState<boolean>(false);
     const localTime = useAppSelector(selectLocalTime);
+    const globalTime = useAppSelector(selectGlobalTime);
     const canRegister = useAppSelector(selectCanRegister);
     const isInitialLoad = useAppSelector(selectIsInitialLoad);
     const dispatch = useAppDispatch();
@@ -36,6 +40,7 @@ const StartedSeasonManage: React.FC<StartedSeasonManageProps> = ({...props}) => 
     useEffect(() => {
         if (currentSeason && isInitialLoad[0]) {
             dispatch(setLocalTime(moment.utc(currentSeason.start_datetime).local().format('YYYY-MM-DDTHH:mm')));
+            dispatch(setGlobalTime(currentSeason.start_datetime));
             dispatch(setCanRegister(currentSeason.can_register));
             dispatch(setIsInitialLoadFirst(false));       
         }
@@ -57,7 +62,9 @@ const StartedSeasonManage: React.FC<StartedSeasonManageProps> = ({...props}) => 
                         season: currentSeason ? currentSeason.number : 0 
                 });
                     dispatch(setLocalTime(e.target.value));
+                    dispatch(setGlobalTime(new Date(e.target.value).toISOString()));
             }, 3000)}} />
+            {globalTime && <Timer datetime={globalTime} />}
         </div>
         <div className={classes.form_content}>
             <label className={classes.label} htmlFor="can_register"><FormattedMessage id='open_registration' /></label>
