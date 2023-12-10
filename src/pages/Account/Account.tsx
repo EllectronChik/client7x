@@ -116,10 +116,8 @@ const Account: React.FC = () => {
                 }}><FormattedMessage id="logout" /></Button7x>
             </div>
           )
-        } else { 
-            useEffect(() => {
-                navigate('/login');
-            }, [])
+        } else {
+            navigate('/login');
         }
 
 }
