@@ -38,7 +38,7 @@ const Timer: React.FC<TimerProps> = ({...props}) => {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [])
+    }, [props.datetime])
 
   return (
     <div className={classes.timer}>
