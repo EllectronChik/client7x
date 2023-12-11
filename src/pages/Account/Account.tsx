@@ -15,15 +15,16 @@ import TeamManage from 'components/TeamManage/TeamManage';
 import { FormattedMessage, useIntl } from 'react-intl';
 import StaffPanel from 'components/StaffPanel/StaffPanel';
 import { setPlayerList } from 'store/reducers/PlayerListSlice';
+import { setIsManager, setIsStaff, selectIsManager, selectIsStaff } from 'store/reducers/AccountSlice';
 
 const Account: React.FC = () => {
     const dispatch = useAppDispatch();
     const pageManager = useAppSelector(selectManagerPage);
-    const [isManager, setIsManager] = useState<boolean | null>(null);
-    const [isStaff, setIsStaff] = useState<boolean | null>(null);
     const [clanTag, setClanTag] = useState<string>('');
     const [renderList, setRenderList] = useState<boolean>(false);
     const [cookie, ] = useCookies(['token', 'userId']);
+    const isManager = useAppSelector(selectIsManager);
+    const isStaff = useAppSelector(selectIsStaff);
     const navigate = useNavigate();
     const logout = useLogoutUser();
     const intl = useIntl();
@@ -33,8 +34,8 @@ const Account: React.FC = () => {
 
         useEffect(() => {
             if (status) {
-                setIsManager(status.is_manager),
-                setIsStaff(status.is_staff)                
+                dispatch(setIsManager(status.is_manager)),
+                dispatch(setIsStaff(status.is_staff))                
             };
         }, [status]);
 
