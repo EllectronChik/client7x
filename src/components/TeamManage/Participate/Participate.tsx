@@ -46,14 +46,16 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
     const {data: myTeam} = ClanApi.useFetchClanByManagerQuery(cookies.userId);
     const [setPlayerToSeason, {}] = PlayerApi.usePostPlayerToSeasonMutation();
     const [deletePlayerFromSeason, {}] = PlayerApi.useDeletePlayerFromSeasonMutation();
-    const {data: playerToSeason} = PlayerApi.useGetRegForSeasonPlayersQuery({season: currentTournament?.number, user: cookies.userId});
+    const {data: playerToSeason} = PlayerApi.useGetRegForSeasonPlayersQuery({token: cookies.token});
 
   
     const handleChangeDateFormat = () => {
       if (currentTournament) {
         if (currentTournament.start_datetime) {
           if (!cookies.locale) {
-            if (navigator.language === 'ru' || navigator.language === 'uk') {
+            if (navigator.language === 'ru' || navigator.language === 'uk' || 
+                navigator.language === 'ru-UA' || navigator.language === 'ru-RU' || 
+                navigator.language === 'uk-UA') {
               setParsedDate(moment(currentTournament.start_datetime).format('DD.MM.YYYY'));
               setParsedTime(moment(currentTournament.start_datetime).format('HH:mm'));
             } else {
@@ -184,6 +186,7 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
 
     useEffect(() => {
       if (playerToSeason && myTeam) {
+        
         const newPlayers: IPlayer[] = [];
         playerToSeason.map((player) => {
           const newPlayer = myTeam.players.find((p) => p.id === player.player);
@@ -196,7 +199,7 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
         })        
         dispatch(setDroppedPlayer(newPlayers));
       }
-    }, [playerToSeason])
+    }, [playerToSeason, myTeam])
 
     useEffect(() => {
       if (deletePlayer !== -1) {
@@ -241,8 +244,11 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
               }}/>
           </div>
           <div className={classes.dropZone}
-            onDragEnter={(e) => {
+            onDragEnter={(e) => {              
               e.preventDefault();
+              if (dragPlayer === null) {
+                return;
+              }
               if (dragZonePlayers.length > 0) {
                 setDragZoneText(
                   <FormattedMessage id='onDragPlayerNotEmpty' />
