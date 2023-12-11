@@ -54,10 +54,13 @@ export const PlayerApi = createApi({
                 }
             })
         }),
-        getRegForSeasonPlayers: builder.query<{player: number, season: number, user: number}[], {user: number, season: number | undefined}>({
-            query: ({user, season}) => ({
-                url: `/player_to_tournament/?season${season}&user=${user}`,
+        getRegForSeasonPlayers: builder.query<{player: number, season: number, user: number}[], {token: string}>({
+            query: ({token}) => ({
+                url: `/getPlayerToCurrentTournament/`,
                 method: "GET",
+                headers: {
+                    Authorization: `Token ${token}`
+                }
             })
         })
     })

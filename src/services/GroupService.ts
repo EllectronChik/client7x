@@ -7,15 +7,18 @@ export const GroupApi = createApi({
     reducerPath: 'GroupService',
     baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_URL }),
     endpoints: (builder) => ({
-        fetchGroups: builder.query<IGroup[], number | undefined>({
-            query: (season) => ({
-                url: `groupStages/?season=${season}`,
+        fetchRegistredTeams: builder.query<IClan[], string>({
+            query: (token) => ({
+                url: `registredToCurrentSeasonTeams/`,
                 method: "GET",
+                headers: {
+                    Authorization: `Token ${token}`
+                }
             }),
         }),
-        randomizeGroups: builder.query<IGroup[], {Season: number, groupCnt: number, token: string}>({
-            query: ({Season, groupCnt, token}) => ({
-                url: `randomizeGroups/?season=${Season}&groupCnt=${groupCnt}`,
+        randomizeGroups: builder.query<IGroup[], {groupCnt: number, token: string}>({
+            query: ({groupCnt, token}) => ({
+                url: `randomizeGroups/?groupCnt=${groupCnt}`,
                 method: "GET",
                 headers: {
                     Authorization: `Token ${token}`
@@ -23,10 +26,13 @@ export const GroupApi = createApi({
 
             }),
         }),
-        registredTeams: builder.query<{team: IClan}[], number | undefined>({
-            query: (season) => ({
-                url: `getRegistred/?Season=${season}`,
+        fetchGroups: builder.query<{groupMark: string, teams: IClan[]}[], string>({
+            query: (token) => ({
+                url: `groupsToCurrentSeason/`,
                 method: "GET",
+                headers: {
+                    Authorization: `Token ${token}`
+                }
             }),
         })
     }),
