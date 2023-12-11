@@ -17,10 +17,10 @@ import grandmaster from '@assets/images/league_marks/7.png';
 import leagueDefault from '@assets/images/league_marks/0.svg';
 import playerDefault from '@assets/images/player/default.svg';
 import { setDragPlayer, selectDraggable, setDraggable } from 'store/reducers/DragPlayerSlice';
+import { selectTeamRegistred } from 'store/reducers/AccountSlice';
 import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
 import { FormattedMessage } from 'react-intl'
 import { PlayerApi } from 'services/PlayerService';
-import { SeasonApi } from 'services/SeasonService';
 
 
 const ClanInfo: React.FC = () => {
@@ -33,8 +33,8 @@ const ClanInfo: React.FC = () => {
     const [changeLogo, {}] = ClanApi.useChangeLogoMutation();
     const [changeName, {}] = ClanApi.useChangeNameMutation();
     const [changeTag, {}] = ClanApi.useChangeTagMutation();
-    const {data: currentTournament} = SeasonApi.useFetchCurrentSeasonQuery();
-    const {data: playerToSeason} = PlayerApi.useGetRegForSeasonPlayersQuery({season: currentTournament?.number, user: cookies.userId});
+    const teamRegistred = useAppSelector(selectTeamRegistred);
+    const {data: playerToSeason} = PlayerApi.useGetRegForSeasonPlayersQuery({token: cookies.token});
     const draggable = useAppSelector(selectDraggable);
     const [teamLogoUrl, setTeamLogoUrl] = useState<string | null>(null);
     const dispatch = useAppDispatch();
@@ -91,16 +91,22 @@ const ClanInfo: React.FC = () => {
 
     useEffect(() => {
         if (myTeam) {         
-            myTeam.players.forEach((player) => {
-                if (playerToSeason?.some((p) => p.player === player.id)) {
+            if (teamRegistred) {
+                myTeam.players.forEach((player) => {
+                    if (playerToSeason?.some((p) => p.player === player.id)) {
+                        dispatch(setDraggable([player.id, false]));
+                    } else {
+                        dispatch(setDraggable([player.id, true]));
+                    }
+                })  
+            }  else {
+                myTeam.players.forEach((player) => {
                     dispatch(setDraggable([player.id, false]));
-                } else {
-                    dispatch(setDraggable([player.id, true]));
-                }
-            })   
+                })
+            }
         }
         
-    }, [playerToSeason, myTeam]);
+    }, [playerToSeason, myTeam, teamRegistred]);
 
 
     const getTextWidth = (text: string) => {
@@ -113,12 +119,17 @@ const ClanInfo: React.FC = () => {
 
 
     const handleDragStartPlayer = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+        if (e.target !== e.currentTarget) {
+            e.stopPropagation();
+            return;
+        }
         e.currentTarget.classList.add(classes.drag);
         dispatch(setDragPlayer(myTeam ? myTeam.players[index] : null));
     }
 
     const handleDragEndPlayer = (e: React.DragEvent<HTMLDivElement>) => {
         e.currentTarget.classList.remove(classes.drag);
+        dispatch(setDragPlayer(null));
     }
 
 
