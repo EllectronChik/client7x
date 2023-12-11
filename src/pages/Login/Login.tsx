@@ -20,7 +20,6 @@ const Login: React.FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [isError, setIsError] = useState<string | null>(null);
   const [errorData, setErrorData] = useState<IErrorData | null>(null);
-  const [creationStarted, setCreationStarted] = useState<boolean>(false);
   const [Cookie, setCookie] = useCookies(['token', 'userId', 'have_account']);
   const navigate = useNavigate();
   const intl = useIntl();
@@ -31,7 +30,7 @@ const Login: React.FC = () => {
     re_password: ''
   })
 
-  const [createUser,  {isError: isErrorCreate, error: errorCreate}] = UsersApi.useRegisterUserMutation();
+  const [createUser,  {error: errorCreate}] = UsersApi.useRegisterUserMutation();
   const [loginUser, {}] = UsersApi.useLoginUserMutation();
   const [increaseDevices, {}] = DeviceCntApi.usePatchDeviceCntMutation();
 
@@ -50,16 +49,11 @@ const Login: React.FC = () => {
     }
   }, [errorCreate])
 
-  useEffect(() => {
-    if (creationStarted && !isErrorCreate) {
-      verify_login;
-    }
-  }, [creationStarted, isErrorCreate])
 
   const verify_registration = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await createUser(data);
-    setCreationStarted(true);
+    await verify_login(e);
   }
 
   const verify_login = async (e: React.FormEvent<HTMLFormElement>) => {
