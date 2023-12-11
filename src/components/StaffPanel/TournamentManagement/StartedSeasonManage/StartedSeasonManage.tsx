@@ -25,6 +25,7 @@ interface StartedSeasonManageProps {
 
 const StartedSeasonManage: React.FC<StartedSeasonManageProps> = ({...props}) => {
     const {data: currentSeason, } = SeasonApi.useFetchCurrentSeasonQuery();
+    const [seasonNumber, setSeasonNumber] = useState<number | undefined>(undefined);
     const [cookies, ] = useCookies(['token']);
     const [changeTime, {}] = SeasonApi.useChangeDatetimeMutation();
     const [changeIsFinished, {}] = SeasonApi.useChangeIsFinishedMutation();
@@ -46,9 +47,15 @@ const StartedSeasonManage: React.FC<StartedSeasonManageProps> = ({...props}) => 
         }
     }, [currentSeason, isInitialLoad]);
 
+    useEffect(() => {
+        if (currentSeason) {
+            setSeasonNumber(currentSeason.number);
+        }
+    }, [currentSeason])
+
   return (
     <div className={`${classes.form} ${askForFinished ? classes.formAskForFinished : ''}`}>
-        <h2><FormattedMessage id='manage_started_season' values={{season: currentSeason?.number}} /></h2>
+        <h2><FormattedMessage id='manage_started_season' values={{season: seasonNumber}} /></h2>
         <div>
             <label className={classes.label} htmlFor="datetime"><FormattedMessage id='tournament_start' />(UTC {props.timeZoneOffsetString}): </label>
             <input id="datetime" className={classes.input} type="datetime-local" defaultValue={localTime ? localTime : ''} onChange={(e) => {
@@ -59,7 +66,7 @@ const StartedSeasonManage: React.FC<StartedSeasonManageProps> = ({...props}) => 
                     changeTime({
                         token: cookies.token,
                         datetime: new Date(e.target.value).toISOString(),
-                        season: currentSeason ? currentSeason.number : 0 
+                        season: seasonNumber ? seasonNumber : 0 
                 });
                     dispatch(setLocalTime(e.target.value));
                     dispatch(setGlobalTime(new Date(e.target.value).toISOString()));
@@ -73,7 +80,7 @@ const StartedSeasonManage: React.FC<StartedSeasonManageProps> = ({...props}) => 
                     changeCanRegister({
                         token: cookies.token,
                         can_register: e.target.checked,
-                        season: currentSeason ? currentSeason.number : 0 
+                        season: seasonNumber ? seasonNumber : 0 
                     });
                 }} />}
         </div>
@@ -88,9 +95,10 @@ const StartedSeasonManage: React.FC<StartedSeasonManageProps> = ({...props}) => 
                     changeIsFinished({
                         token: cookies.token,
                         is_finished: true,
-                        season: currentSeason ? currentSeason.number : 0 
+                        season: seasonNumber ? seasonNumber : 0 
                     });
                     props.setSeasonStarted(false);
+                    if (seasonNumber) setSeasonNumber(seasonNumber + 1);
                 }}><FormattedMessage id='yes' /></Button7x>
                 <Button7x className={classes.button} onClick={() => {
                     setAskForFinished(false);
