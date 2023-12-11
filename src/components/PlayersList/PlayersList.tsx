@@ -31,6 +31,8 @@ import { setPageManager } from 'store/reducers/pageManagerSlice';
 import { handleAddPlayerForm } from 'components/PlayerUtils/ManualPlayer';
 import { handleAddMediaForm } from 'components/ClanUtils/MediaForm';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { setIsManager } from 'store/reducers/AccountSlice';
+
 
 interface PlayersListProps {
     tag: string;
@@ -201,6 +203,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
           })
         ),
         await postManager({manager: {team: createdClan.data.results[0].id, user: cookies.userId}, token: cookies.token});
+        dispatch(setIsManager(true));
         dispatch(setPageManager(1));
       }
     } catch (error) {
