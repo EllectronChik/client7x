@@ -17,6 +17,11 @@
   list-style-type: none;
 }
 
+::selection {
+  background-color: $clr_red;
+  color: $clr_light;
+}
+
 body {
   background-color: $clr_dark;
 }
