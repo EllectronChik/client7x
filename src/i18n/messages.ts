@@ -83,7 +83,15 @@ export const MESSAGES = {
         dropZoneMessage: "Drag a player here to add him as a season participant",
         onDragPlayerOver: "Drop player here", 
         onDragPlayerNotEmpty: "Click on a player to delete him",
-
+        undistributedTeams: "Undistributed teams",
+        groupStageDistribution: "Grouping of teams for the group stage",
+        group: "Group",
+        groupSingle: "group",
+        groupPlural: "groups",
+        addGroup: "Add group",
+        randomizeGroups: "Randomize groups",
+        randomizeMessage: "You can randomly assign teams to {count}",
+        groupsCount: "Groups count",
     },
     [LOCALES.RUSSIAN]: {
         header_statistic: 'Статистика',
@@ -167,6 +175,15 @@ export const MESSAGES = {
         dropZoneMessage: "Перетащите игрока сюда чтобы добавить его как участника сезона",
         onDragPlayerOver: "Отпустите игрока",
         onDragPlayerNotEmpty: "Нажмите на игрока чтобы удалить его",
+        undistributedTeams: "Нераспределенные команды",
+        groupStageDistribution: "Распределение команд для группового этапа",
+        group: "Группа",
+        groupSingle: "группe",
+        groupPlural: "группам",
+        addGroup: "Добавить группу",
+        randomizeGroups: "Рандомизировать группы",
+        randomizeMessage: "Вы можете случайно распределить команды по {count} ",
+        groupsCount: "Количество групп",
 
     },
     [LOCALES.UKRAINIAN]: {
@@ -251,5 +268,14 @@ export const MESSAGES = {
         dropZoneMessage: "Перетягніть гравця сюди, щоб додати його як учасника сезону",
         onDragPlayerOver: "Відпустіть гравця",
         onDragPlayerNotEmpty: "Натисніть на гравця, щоб видалити його",
+        undistributedTeams: "Нерозподілені команди",
+        groupStageDistribution: "Розподіл команд для групового етапу",
+        group: "Група",
+        groupSingle: "групою",
+        groupPlural: "групами",
+        addGroup: "Додати групу",
+        randomizeGroups: "Рандомізувати групи",
+        randomizeMessage: "Ви можете рандомізувати команди за {count}",
+        groupsCount: "Кількість груп",
     }
 }
