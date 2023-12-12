@@ -1,0 +1,80 @@
+@import '../../../../settings.scss';
+
+.groupDistribution {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 25px;
+    .randomizeBlock {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: $clr_notice;
+        border: 2px solid $clr_red;
+        border-radius: 25px;
+        padding: 25px;
+        color: $clr_dark;
+        margin-top: 15px;
+    }
+    .groupsList {
+        display: flex;  
+        justify-content: center;
+        margin-top: 25px;
+        flex-wrap: wrap;
+        gap: 25px;
+        .group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            min-height: 300px;
+            width: 390px;
+            padding: 20px;
+            border: 1px solid $clr_red;
+            border-radius: 25px;
+            background-color: #312f2f;
+
+            .groupTeams {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+        }
+        .team {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 350px;
+            padding: 10px;
+            border: 1px solid $clr_red;
+            border-radius: 25px;
+            background-color: $clr_dark;
+            color: $clr_light;
+            .teamLogo {
+                height: 80px;
+                width: 80px;
+                object-fit: cover;
+                border-radius: 50%;
+                border: 1px solid $clr_red;
+            }
+        }
+    }
+    .button {
+        color: $clr_light;
+    }
+    .addGroupButton {
+        margin-top: 25px;
+    }
+    .randomizeButton {
+        margin-top: 10px;
+    }
+    .input {
+        margin-left: 5px;
+        background-color: $clr_notice;
+        border: none;
+        border-bottom: 1px solid $clr_red;
+        color: $clr_dark;
+        color-scheme: dark;
+    }
+}
