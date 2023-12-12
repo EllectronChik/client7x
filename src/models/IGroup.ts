@@ -1,5 +1,7 @@
+import { IClan } from "./IClan";
+
 export interface IGroup {
-    id: number,
+    id?: number,
     groupMark: string,
-    teams: number[],
+    teams: IClan[],
 }
