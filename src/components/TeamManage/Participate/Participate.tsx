@@ -6,11 +6,15 @@ import { FormattedMessage, useIntl } from 'react-intl';
 import { ClanApi } from 'services/ClanService';
 import classes from './Participate.module.scss';
 import {    selectIsInitialLoad, 
+            selectInitLoadSum,
             selectTeamRegistred,
             selectCanRegister,
+            selectGlobalTime,
             setCanRegister, 
             setTeamRegistred, 
-            setIsInitialLoadSecond
+            setInitLoadSum,
+            setIsInitialLoadSecond,
+            setGlobalTime
 } from 'store/reducers/AccountSlice';
 import {  setDroppedPlayer, 
           selectDroppedPlayer, 
@@ -37,11 +41,12 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
     const [deletePlayer, setDeletePlayer] = useState<number>(-1);
     const [participate, {}] = ClanApi.useParticipateInSeasonMutation();
     const dispatch = useAppDispatch();
-    const [initLoadSum, setInitLoadSum] = useState<number>(0);
+    const initLoadSum = useAppSelector(selectInitLoadSum);
     const isInitialLoad = useAppSelector(selectIsInitialLoad);
     const teamRegistred = useAppSelector(selectTeamRegistred);
     const dragPlayer = useAppSelector(selectDragPlayer);
     const droppedPlayer = useAppSelector(selectDroppedPlayer);
+    const globalTime = useAppSelector(selectGlobalTime);
     const {data: currentTournament} = SeasonApi.useFetchCurrentSeasonQuery();
     const {data: myTeam} = ClanApi.useFetchClanByManagerQuery(cookies.userId);
     const [setPlayerToSeason, {}] = PlayerApi.usePostPlayerToSeasonMutation();
@@ -94,12 +99,15 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
     }, [dragZonePlayers])
   
     useEffect(() => {
-      if (currentTournament && isInitialLoad[1] === true) {       
+      if (currentTournament && isInitialLoad[1] === true) {   
         if (currentTournament.can_register) {
         dispatch(setCanRegister(currentTournament.can_register));
-        setInitLoadSum(initLoadSum + 1);
       }
-    }
+      if (currentTournament.start_datetime) {
+        dispatch(setGlobalTime(currentTournament.start_datetime));
+      }
+      dispatch(setInitLoadSum(initLoadSum + 1));
+      }
       handleChangeDateFormat();
     }, [currentTournament, isInitialLoad]);
   
@@ -108,12 +116,12 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
       if (myTeam && isInitialLoad[1] === true) {
         if (myTeam.is_reg_to_current_season !== undefined) {
           dispatch(setTeamRegistred(myTeam.is_reg_to_current_season));
-          setInitLoadSum(initLoadSum + 1);
+          dispatch(setInitLoadSum(initLoadSum + 1));
         }
       }
     }, [myTeam, isInitialLoad]);
 
-    useEffect(() => {
+    useEffect(() => {      
       if (initLoadSum === 2) {
         dispatch(setIsInitialLoadSecond(false));
       }
@@ -236,13 +244,13 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
         </div>}
         {currentTournament && myTeam && teamRegistred === true &&
         <div>
-          <div className={classes.timer}>
+          {globalTime && <div className={classes.timer}>
             <FormattedMessage id='tourStartMessage' 
             values={{
-              time: <Timer datetime={currentTournament.start_datetime} />, 
+              time: <Timer datetime={globalTime} />, 
               season: currentTournament.number
               }}/>
-          </div>
+          </div>}
           <div className={classes.dropZone}
             onDragEnter={(e) => {              
               e.preventDefault();
