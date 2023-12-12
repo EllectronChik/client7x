@@ -4,6 +4,7 @@ import StartSeason from './StartSeason/StartSeason';
 import { SeasonApi } from 'services/SeasonService';
 import StartedSeasonManage from './StartedSeasonManage/StartedSeasonManage';
 import GroupDistribution from './GroupDistribution/GroupDistribution';
+import classes from './TourManage.module.scss';
 
 
 const TourManage: React.FC = () => {
@@ -44,7 +45,7 @@ const TourManage: React.FC = () => {
       : (seasonStarted === false) ? <div>
         <StartSeason setSeasonStarted={setSeasonStarted} timeZoneOffsetString={timeZoneOffsetString} /> 
       </div>
-      : <div>
+      : <div className={classes.tournamentManage}>
           <StartedSeasonManage setSeasonStarted={setSeasonStarted} timeZoneOffsetString={timeZoneOffsetString} />
           <GroupDistribution />
         </div>
