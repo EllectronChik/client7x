@@ -16,17 +16,19 @@ export const GroupApi = createApi({
                 }
             }),
         }),
-        randomizeGroups: builder.query<IGroup[], {groupCnt: number, token: string}>({
+        randmizeGroups: builder.mutation<IGroup[], {groupCnt: number, token: string}>({
             query: ({groupCnt, token}) => ({
-                url: `randomizeGroups/?groupCnt=${groupCnt}`,
-                method: "GET",
+                url: `randomizeGroups/`,
+                method: "POST",
                 headers: {
                     Authorization: `Token ${token}`
                 },
-
-            }),
+                body: {
+                    groupCnt: groupCnt
+                }
+            })
         }),
-        fetchGroups: builder.query<{groupMark: string, teams: IClan[]}[], string>({
+        fetchGroups: builder.query<IGroup[], string>({
             query: (token) => ({
                 url: `groupsToCurrentSeason/`,
                 method: "GET",
@@ -34,6 +36,31 @@ export const GroupApi = createApi({
                     Authorization: `Token ${token}`
                 }
             }),
+        }),
+        postTeamToGroup: builder.mutation<IGroup, {teamId: number, groupStageMark: string, token: string}>({
+            query: ({teamId, groupStageMark, token}) => ({
+                url: `postTeamToGroup/`,
+                method: "POST",
+                body: {
+                    teamId: teamId,
+                    groupStageMark: groupStageMark
+                },
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            })
+        }),
+        deleteTeamFromGroup: builder.mutation<IGroup, {teamId: number, token: string}>({
+            query: ({teamId, token}) => ({
+                url: `deleteTeamFromGroup/`,
+                method: "POST",
+                body: {
+                    teamId: teamId
+                },
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            })
         })
-    }),
+    })
 })
