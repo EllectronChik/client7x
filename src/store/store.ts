@@ -15,6 +15,7 @@ import playerListSlice from './reducers/PlayerListSlice';
 import pageManagerSlice from './reducers/pageManagerSlice';
 import accountSlice from './reducers/AccountSlice';
 import DragPlayerSlice from './reducers/DragPlayerSlice';
+import GroupsSlice from './reducers/GroupsSlice';
 
 
 const rootReducer = combineReducers({
@@ -33,7 +34,8 @@ const rootReducer = combineReducers({
     players: playerListSlice,
     pageManager: pageManagerSlice,
     account: accountSlice,
-    dragPlayer: DragPlayerSlice
+    dragPlayer: DragPlayerSlice,
+    groupsManager: GroupsSlice
 })
 
 export const setupStore = () => {
