@@ -17,7 +17,7 @@ const initialState: IAccountSlice = {
     localTime: null,
     globalTime: null,
     canRegister: null,
-    isInitialLoad: [true, true],
+    isInitialLoad: [true, true, true],  
     initLoadSum: 0,
     isStaff: null,
     isManager: null
@@ -45,6 +45,9 @@ const accountSlice = createSlice({
         setIsInitialLoadSecond: (state, action) => {
             state.isInitialLoad[1] = action.payload
         },
+        setIsInitialLoadThird: (state, action) => {
+            state.isInitialLoad[2] = action.payload
+        },
         setInitLoadSum: (state, action) => {
             state.initLoadSum = action.payload
         },
@@ -53,6 +56,16 @@ const accountSlice = createSlice({
         },
         setIsManager: (state, action) => {
             state.isManager = action.payload
+        },
+        returnToInitialState: (state) => {
+            state.teamRegistred = null
+            state.localTime = null
+            state.globalTime = null
+            state.canRegister = null
+            state.isInitialLoad = [true, true]
+            state.initLoadSum = 0
+            state.isStaff = null
+            state.isManager = null            
         }
         
     }
@@ -74,7 +87,9 @@ export const {  setTeamRegistred,
                 setCanRegister, 
                 setIsInitialLoadFirst, 
                 setIsInitialLoadSecond,
+                setIsInitialLoadThird,
                 setInitLoadSum,
                 setIsManager,
-                setIsStaff } = accountSlice.actions
+                setIsStaff,
+                returnToInitialState } = accountSlice.actions
 export default accountSlice.reducer
