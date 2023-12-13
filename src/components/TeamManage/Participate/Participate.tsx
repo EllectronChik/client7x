@@ -121,7 +121,7 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
       }
     }, [myTeam, isInitialLoad]);
 
-    useEffect(() => {      
+    useEffect(() => {   
       if (initLoadSum === 2) {
         dispatch(setIsInitialLoadSecond(false));
       }
@@ -187,9 +187,7 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
           newDragZonePlayers.push(...dragZonePlayers)
           return newDragZonePlayers;
         })
-      }
-      // console.log(droppedPlayer);
-      
+      }      
     }, [droppedPlayer])
 
     useEffect(() => {
@@ -218,6 +216,7 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
         setDeletePlayer(-1);
       }
     },[deletePlayer])
+
   
     return (
       <div className={props.className}>
