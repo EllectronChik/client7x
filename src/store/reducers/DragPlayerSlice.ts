@@ -42,6 +42,11 @@ const dragPlayerSlice = createSlice({
             } else {
                 state.draggable[index] = action.payload
             }
+        },
+        returnToInitialState: (state) => {
+            state.playerDragged = null
+            state.playerDropped = []
+            state.draggable = []
         }
     }
 })
@@ -50,6 +55,6 @@ export const selectDragPlayer = (state: RootState) => state.dragPlayer.playerDra
 export const selectDroppedPlayer = (state: RootState) => state.dragPlayer.playerDropped
 export const selectDraggable = (state: RootState) => state.dragPlayer.draggable
 
-export const { setDragPlayer, setDroppedPlayer, setDraggable, deleteDroppedPlayer } = dragPlayerSlice.actions
+export const { setDragPlayer, setDroppedPlayer, setDraggable, deleteDroppedPlayer, returnToInitialState } = dragPlayerSlice.actions
 
 export default dragPlayerSlice.reducer
