@@ -90,7 +90,7 @@ export const MESSAGES = {
         groupPlural: "groups",
         addGroup: "Add group",
         randomizeGroups: "Randomize groups",
-        randomizeMessage: "You can randomly assign teams to {count}",
+        randomizeMessage: "You can randomly assign teams to {count} {groups} or do it manually by dragging and dropping teams",
         groupsCount: "Groups count",
     },
     [LOCALES.RUSSIAN]: {
@@ -182,7 +182,7 @@ export const MESSAGES = {
         groupPlural: "группам",
         addGroup: "Добавить группу",
         randomizeGroups: "Рандомизировать группы",
-        randomizeMessage: "Вы можете случайно распределить команды по {count} ",
+        randomizeMessage: "Вы можете случайным образом распределить команды по {count} {groups} или сделать это вручную, перетаскивая команды.",
         groupsCount: "Количество групп",
 
     },
@@ -275,7 +275,7 @@ export const MESSAGES = {
         groupPlural: "групами",
         addGroup: "Додати групу",
         randomizeGroups: "Рандомізувати групи",
-        randomizeMessage: "Ви можете рандомізувати команди за {count}",
+        randomizeMessage: "Ви можете випадковим чином призначити команди до {count} {groups} або зробити це вручну, перетягнувши команди",
         groupsCount: "Кількість груп",
     }
 }
