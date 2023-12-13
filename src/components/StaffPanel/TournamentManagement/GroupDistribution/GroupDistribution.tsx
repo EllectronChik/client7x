@@ -7,7 +7,9 @@ import { IGroup } from 'models/IGroup';
 import { FormattedMessage, FormattedPlural } from 'react-intl';
 import Button7x from 'components/UI/Button7x/Button7x';
 import Loader7x from 'components/UI/Loader7x/Loader7x';
-
+import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
+import { setGroups, addGroup, updateGroupTeams, selectGroups, setUndistributedTeams, selectUndistributedTeams } from 'store/reducers/GroupsSlice';
+import { selectIsInitialLoad, setIsInitialLoadThird } from 'store/reducers/AccountSlice';
 
 const GroupDistribution: React.FC = () => {
   const [cookies] = useCookies(['token']);
@@ -15,12 +17,13 @@ const GroupDistribution: React.FC = () => {
   const {data: fetchedGroups, isLoading: fetchedGroupsLoading} = GroupApi.useFetchGroupsQuery(cookies.token);
   const [ postTeamToGroup ] = GroupApi.usePostTeamToGroupMutation();
   const [ randomizeGroups, {data: randomizeGroupsData, isLoading: randomizeGroupsLoading} ] = GroupApi.useRandmizeGroupsMutation();
-  const [ fetchedUndistributedTeams, setUndistributedTeams ] = useState<IClan[]>([]);
-  const [ undistributedTeams, setUndistributedTeamsState ] = useState<IClan[]>([]);
-  const [ groups, setGroups ] = useState<IGroup[]>([]);
   const [ draggedTeam, setDraggedTeam ] = useState<IClan | null>(null);
   const [ groupsCnt, setGroupsCnt ] = useState<number>(0);
   const cntInputRef = React.useRef<HTMLInputElement>(null);
+  const groups = useAppSelector(selectGroups);
+  const undistributedTeams = useAppSelector(selectUndistributedTeams);
+  const isInitialLoad = useAppSelector(selectIsInitialLoad);
+  const dispatch = useAppDispatch();
 
   const getTextWidth = (text: string) => {
     const canvas = document.createElement('canvas');
@@ -31,16 +34,12 @@ const GroupDistribution: React.FC = () => {
 }
 
   useEffect(() => {
-    if(fetchedGroups) {
-      setGroups(fetchedGroups);
+    if(fetchedGroups && isInitialLoad[2]) {      
+      dispatch(setGroups(fetchedGroups));
+      dispatch(setIsInitialLoadThird(false));
     }
-  }, [fetchedGroups])
+  }, [fetchedGroups, isInitialLoad])
 
-  useEffect(() => {
-    if (fetchedUndistributedTeams) {
-      setUndistributedTeamsState(fetchedUndistributedTeams);
-    }
-  }, [fetchedUndistributedTeams])
 
   useEffect(() => {
     if (registredTeams) {
@@ -56,15 +55,15 @@ const GroupDistribution: React.FC = () => {
           teamsInGroups.push(clan.id || 0);
         })
       })
-      setUndistributedTeams(registredTeams.filter((team: IClan) => {
+      dispatch(setUndistributedTeams(registredTeams.filter((team: IClan) => {
         return !teamsInGroups.includes(team.id || 0)
-      }))
+      })))
     }
   }, [groups, registredTeams])
 
   useEffect(() => {
     if (randomizeGroupsData) {
-      setGroups(randomizeGroupsData);
+      dispatch(setGroups(randomizeGroupsData));
     }
   }, [randomizeGroupsData])
 
@@ -81,8 +80,7 @@ const GroupDistribution: React.FC = () => {
       <h2><FormattedMessage id='groupStageDistribution' /></h2>
       <div className={classes.randomizeBlock}>
         <h2>
-          <FormattedMessage id='randomizeMessage' values={{count: groupsCnt}} />
-          <FormattedPlural value={groupsCnt} one={<FormattedMessage id='groupSingle' />} other={<FormattedMessage id='groupPlural' />} />
+          <FormattedMessage id='randomizeMessage' values={{count: groupsCnt, groups: <FormattedPlural value={groupsCnt} one={<FormattedMessage id='groupSingle' />} other={<FormattedMessage id='groupPlural' />} />}} />
         </h2>
         <div>
           <FormattedMessage id='groupsCount' />:
@@ -123,30 +121,7 @@ const GroupDistribution: React.FC = () => {
                         }}
                         onDrop={() => {
                             if (draggedTeam) {
-                              setGroups((prevGroups) => {
-                                if (group.teams.includes(draggedTeam)) {
-                                  return prevGroups;
-                                } else {
-                                  return prevGroups.map((prevGroup: IGroup) => {
-                                    if (prevGroup.id === group.id) {
-                                      return {
-                                        ...prevGroup,
-                                        teams: [...prevGroup.teams, draggedTeam]
-                                      }
-                                    } else {
-                                      if (prevGroup.teams.includes(draggedTeam)) {
-                                        const teamKey = prevGroup.teams.indexOf(draggedTeam);
-                                        return {
-                                          ...prevGroup,
-                                          teams: [...prevGroup.teams.slice(0, teamKey), ...prevGroup.teams.slice(teamKey + 1)]
-                                        }
-                                      } else {
-                                        return prevGroup;
-                                      }
-                                    }
-                                  })
-                                }
-                              });
+                              dispatch(updateGroupTeams({groupId: group.id || 0, team: draggedTeam}));
                               postTeamToGroup({
                                 token: cookies.token,
                                 groupStageMark: group.groupMark,
@@ -178,19 +153,7 @@ const GroupDistribution: React.FC = () => {
           })}
         </div>
         <Button7x className={`${classes.button} ${classes.addGroupButton}`} onClick={() => {
-          setGroups((prev: IGroup[]) => {
-            let newGroupMark;
-            if (prev.length > 0) {
-              newGroupMark = String.fromCharCode(prev[prev.length - 1].groupMark.charCodeAt(0) + 1);
-            } else {
-              newGroupMark = 'A';
-            }
-            return [...prev, {
-              id: prev.length,
-              groupMark: newGroupMark,
-              teams: []
-            }]
-          })
+          dispatch(addGroup());
         }}><FormattedMessage id='addGroup' /></Button7x>
       </div>
   )
