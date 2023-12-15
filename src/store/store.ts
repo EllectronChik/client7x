@@ -1,5 +1,4 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { MatchesApi } from '../services/MatchesService';
 import { UsersApi } from 'services/UserService';
 import { StatusApi } from 'services/StatusService';
 import { ClanApi } from 'services/ClanService';
@@ -10,16 +9,17 @@ import { ClanResourcesApi } from 'services/ClanResourcesService';
 import { DeviceCntApi } from 'services/DeviceCntService';
 import { SeasonApi } from 'services/SeasonService';
 import { GroupApi } from '../services/GroupService';
+import { TournamentApi } from 'services/TournamentService';
 import clanSlice from 'store/reducers/ClanSlice';
 import playerListSlice from './reducers/PlayerListSlice';
 import pageManagerSlice from './reducers/pageManagerSlice';
 import accountSlice from './reducers/AccountSlice';
 import DragPlayerSlice from './reducers/DragPlayerSlice';
 import GroupsSlice from './reducers/GroupsSlice';
+import MatchesSlice from './reducers/MatchesSlice';
 
 
 const rootReducer = combineReducers({
-    [MatchesApi.reducerPath]: MatchesApi.reducer,
     [UsersApi.reducerPath]: UsersApi.reducer,
     [StatusApi.reducerPath]: StatusApi.reducer,
     [ClanApi.reducerPath]: ClanApi.reducer,
@@ -30,19 +30,20 @@ const rootReducer = combineReducers({
     [DeviceCntApi.reducerPath]: DeviceCntApi.reducer,
     [SeasonApi.reducerPath]: SeasonApi.reducer,
     [GroupApi.reducerPath]: GroupApi.reducer,
+    [TournamentApi.reducerPath]: TournamentApi.reducer,
     clan: clanSlice,
     players: playerListSlice,
     pageManager: pageManagerSlice,
     account: accountSlice,
     dragPlayer: DragPlayerSlice,
-    groupsManager: GroupsSlice
+    groupsManager: GroupsSlice,
+    matches: MatchesSlice
 })
 
 export const setupStore = () => {
     return configureStore({
         reducer: rootReducer,
         middleware: (getDefaultMiddleware) => getDefaultMiddleware()
-        .concat(MatchesApi.middleware)
         .concat(UsersApi.middleware)
         .concat(StatusApi.middleware)
         .concat(ClanApi.middleware)
@@ -53,6 +54,7 @@ export const setupStore = () => {
         .concat(DeviceCntApi.middleware)
         .concat(SeasonApi.middleware)
         .concat(GroupApi.middleware)
+        .concat(TournamentApi.middleware)
     })
         
 }
