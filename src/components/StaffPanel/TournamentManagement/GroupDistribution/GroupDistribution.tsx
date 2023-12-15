@@ -9,12 +9,15 @@ import Button7x from 'components/UI/Button7x/Button7x';
 import Loader7x from 'components/UI/Loader7x/Loader7x';
 import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
 import { setGroups, addGroup, updateGroupTeams, selectGroups, setUndistributedTeams, selectUndistributedTeams } from 'store/reducers/GroupsSlice';
+import { setInputValues, setSelectedTeams } from 'store/reducers/MatchesSlice';
 import { selectIsInitialLoad, setIsInitialLoadThird } from 'store/reducers/AccountSlice';
+import { SeasonApi } from 'services/SeasonService';
 
 const GroupDistribution: React.FC = () => {
   const [cookies] = useCookies(['token']);
   const {data: registredTeams, isLoading: registredTeamsLoading} = GroupApi.useFetchRegistredTeamsQuery(cookies.token);
   const {data: fetchedGroups, isLoading: fetchedGroupsLoading} = GroupApi.useFetchGroupsQuery(cookies.token);
+  const {data: currentSeason } = SeasonApi.useFetchCurrentSeasonQuery();
   const [ postTeamToGroup ] = GroupApi.usePostTeamToGroupMutation();
   const [ randomizeGroups, {data: randomizeGroupsData, isLoading: randomizeGroupsLoading} ] = GroupApi.useRandmizeGroupsMutation();
   const [ draggedTeam, setDraggedTeam ] = useState<IClan | null>(null);
@@ -70,7 +73,6 @@ const GroupDistribution: React.FC = () => {
   useEffect(() => {
     if (groupsCnt && cntInputRef.current) {
       cntInputRef.current.style.width = `${getTextWidth(groupsCnt.toString())}px`;
-      
     }
   }, [groupsCnt])
 
@@ -78,83 +80,91 @@ const GroupDistribution: React.FC = () => {
   return (
     <div className={classes.groupDistribution}>
       <h2><FormattedMessage id='groupStageDistribution' /></h2>
-      <div className={classes.randomizeBlock}>
-        <h2>
-          <FormattedMessage id='randomizeMessage' values={{count: groupsCnt, groups: <FormattedPlural value={groupsCnt} one={<FormattedMessage id='groupSingle' />} other={<FormattedMessage id='groupPlural' />} />}} />
-        </h2>
+      {currentSeason && 
         <div>
-          <FormattedMessage id='groupsCount' />:
-          <input ref={cntInputRef} className={classes.input} type="number" value={groupsCnt} min={1} onChange={(e) => setGroupsCnt(Number(e.target.value))} />
-        </div>
-      <Button7x className={`${classes.randomizeButton}`} onClick={() => {
-        randomizeGroups({token: cookies.token, groupCnt: groupsCnt});
-        }}><FormattedMessage id='randomizeGroups' /></Button7x>
-      </div>
-      <div className={classes.groupsList}>
-        {undistributedTeams.length > 0 && <div className={classes.group}>
-          <h3><FormattedMessage id='undistributedTeams' /></h3>
-          {undistributedTeams.map((team: IClan) => {
-            return <div className={classes.team} 
-                        draggable={true}
-                        onDragStart={() => {
-                          setDraggedTeam(team);
-                        }}
-                        onDragEnd={() => {
-                          setDraggedTeam(null);
-                        }}
-            key={team.id}>
-              <img draggable={false} className={classes.teamLogo} src={`${import.meta.env.VITE_SERVER_URL}/${team.logo}`} alt="" />
-              <div>
-                <h3 className={classes.teamName}>{team.name}</h3>
-                <h4 className={classes.teamTag}>&lt;{team.tag}&gt;</h4>
-              </div>
+          <div className={classes.randomizeBlock}>
+            <h2>
+              <FormattedMessage id='randomizeMessage' values={{count: groupsCnt, groups: <FormattedPlural value={groupsCnt} one={<FormattedMessage id='groupSingle' />} other={<FormattedMessage id='groupPlural' />} />}} />
+            </h2>
+            <div>
+              <FormattedMessage id='groupsCount' />:
+              <input ref={cntInputRef} className={classes.input} type="number" value={groupsCnt} min={1} onChange={(e) => setGroupsCnt(Number(e.target.value))} />
             </div>
-          })}
-        </div>}
-        {registredTeamsLoading && <Loader7x />}
-        {fetchedGroupsLoading && <Loader7x />}
-        {randomizeGroupsLoading && <Loader7x />}
-          {groups && !registredTeamsLoading && !fetchedGroupsLoading && !randomizeGroupsLoading && groups.map((group: IGroup) => {
-            return <div className={classes.group} key={group.id}
-                        onDragOver={(e) => {
-                          e.preventDefault();
-                        }}
-                        onDrop={() => {
-                            if (draggedTeam) {
-                              dispatch(updateGroupTeams({groupId: group.id || 0, team: draggedTeam}));
-                              postTeamToGroup({
-                                token: cookies.token,
-                                groupStageMark: group.groupMark,
-                                teamId: draggedTeam.id || 0
-                              })
-                            }
-                        }}>
-              <h3><FormattedMessage id='group' /> {group.groupMark}</h3>
-              <div className={classes.groupTeams}>
-                {group.teams.map((team: IClan) => {
-                  return <div className={classes.team}
-                              draggable={true}
-                              onDragStart={() => {
-                                setDraggedTeam(team);
-                              }}
-                              onDragEnd={() => {
-                                setDraggedTeam(null);
-                              }}
-                          key={team.id}>
-                    <img draggable={false} className={classes.teamLogo} src={`${import.meta.env.VITE_SERVER_URL}/${team.logo}`} alt="" />
-                    <div>
-                      <h3 className={classes.teamName}>{team.name}</h3>
-                      <h4 className={classes.teamTag}>&lt;{team.tag}&gt;</h4>
-                    </div>
+            <div>
+              <Button7x className={`${classes.randomizeButton}`} onClick={() => {
+              randomizeGroups({token: cookies.token, groupCnt: groupsCnt});
+              dispatch(setInputValues([]));
+              dispatch(setSelectedTeams([]));
+              }}><FormattedMessage id='randomizeGroups' /></Button7x>
+              <Button7x className={`${classes.button} ${classes.addGroupButton}`} onClick={() => {
+              dispatch(addGroup());
+            }}><FormattedMessage id='addGroup' /></Button7x>
+            </div>
+          </div>
+          <div className={classes.groupsList}>
+            {undistributedTeams.length > 0 && <div className={classes.group}>
+              <h3><FormattedMessage id='undistributedTeams' /></h3>
+              {undistributedTeams.map((team: IClan) => {
+                return <div className={classes.team} 
+                            draggable={true}
+                            onDragStart={() => {
+                              setDraggedTeam(team);
+                            }}
+                            onDragEnd={() => {
+                              setDraggedTeam(null);
+                            }}
+                key={team.id}>
+                  <img draggable={false} className={classes.teamLogo} src={`${import.meta.env.VITE_SERVER_URL}/${team.logo}`} alt="" />
+                  <div>
+                    <h3 className={classes.teamName}>{team.name}</h3>
+                    <h4 className={classes.teamTag}>&lt;{team.tag}&gt;</h4>
                   </div>
-                })}
-              </div>
+                </div>
+              })}
+            </div>}
+            {registredTeamsLoading && <Loader7x />}
+            {fetchedGroupsLoading && <Loader7x />}
+            {randomizeGroupsLoading && <Loader7x />}
+              {groups && !registredTeamsLoading && !fetchedGroupsLoading && !randomizeGroupsLoading && groups.map((group: IGroup) => {
+                return <div className={classes.group} key={group.id}
+                            onDragOver={(e) => {
+                              e.preventDefault();
+                            }}
+                            onDrop={() => {
+                                if (draggedTeam) {
+                                  dispatch(updateGroupTeams({groupId: group.id || 0, team: draggedTeam}));
+                                  postTeamToGroup({
+                                    token: cookies.token,
+                                    groupStageMark: group.groupMark,
+                                    teamId: draggedTeam.id || 0
+                                  })
+                                }
+                            }}>
+                  <h3><FormattedMessage id='group' /> {group.groupMark}</h3>
+                  <div className={classes.groupTeams}>
+                    {group.teams.map((team: IClan) => {
+                      return <div className={classes.team}
+                                  draggable={true}
+                                  onDragStart={() => {
+                                    setDraggedTeam(team);
+                                  }}
+                                  onDragEnd={() => {
+                                    setDraggedTeam(null);
+                                  }}
+                              key={team.id}>
+                        <img draggable={false} className={classes.teamLogo} src={`${import.meta.env.VITE_SERVER_URL}/${team.logo}`} alt="" />
+                        <div>
+                          <h3 className={classes.teamName}>{team.name}</h3>
+                          <h4 className={classes.teamTag}>&lt;{team.tag}&gt;</h4>
+                        </div>
+                      </div>
+                    })}
+                  </div>
+                </div>
+              })}
             </div>
-          })}
-        </div>
-        <Button7x className={`${classes.button} ${classes.addGroupButton}`} onClick={() => {
-          dispatch(addGroup());
-        }}><FormattedMessage id='addGroup' /></Button7x>
+          </div>
+      }
       </div>
   )
 }
