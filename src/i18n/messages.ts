@@ -92,6 +92,9 @@ export const MESSAGES = {
         randomizeGroups: "Randomize groups",
         randomizeMessage: "You can randomly assign teams to {count} {groups} or do it manually by dragging and dropping teams",
         groupsCount: "Groups count",
+        selectTeam: "Select team",
+        reset: "Reset",
+        autoOut: "out of the group"
     },
     [LOCALES.RUSSIAN]: {
         header_statistic: 'Статистика',
@@ -184,6 +187,9 @@ export const MESSAGES = {
         randomizeGroups: "Рандомизировать группы",
         randomizeMessage: "Вы можете случайным образом распределить команды по {count} {groups} или сделать это вручную, перетаскивая команды.",
         groupsCount: "Количество групп",
+        selectTeam: "Выберите команду",
+        reset: "Сброс",
+        autoOut: "автоматически выходит из группы"
 
     },
     [LOCALES.UKRAINIAN]: {
@@ -277,5 +283,8 @@ export const MESSAGES = {
         randomizeGroups: "Рандомізувати групи",
         randomizeMessage: "Ви можете випадковим чином призначити команди до {count} {groups} або зробити це вручну, перетягнувши команди",
         groupsCount: "Кількість груп",
+        selectTeam: "Виберіть команду",
+        reset: "Скинути",
+        autoOut: "автоматично виходить з групи"
     }
 }
