@@ -28,6 +28,8 @@ import { SeasonApi } from 'services/SeasonService';
 import playerDefault from '@assets/images/player/default.svg';
 import { PlayerApi } from 'services/PlayerService';
 import { IPlayer } from 'models/IPlayer';
+import { TournamentApi } from 'services/TournamentService';
+import TournamentCard from './TournamentCard/TournamentCard';
 
 
 const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
@@ -52,6 +54,7 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
     const [setPlayerToSeason, {}] = PlayerApi.usePostPlayerToSeasonMutation();
     const [deletePlayerFromSeason, {}] = PlayerApi.useDeletePlayerFromSeasonMutation();
     const {data: playerToSeason} = PlayerApi.useGetRegForSeasonPlayersQuery({token: cookies.token});
+    const {data: tournamets} = TournamentApi.useFetchTournamentsByManagerQuery(cookies.token);
 
   
     const handleChangeDateFormat = () => {
@@ -89,7 +92,7 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
     useEffect(() => {
       if (dragZonePlayers.length > 0) {
         setDragZoneText(
-          <FormattedMessage id='onDragPlayerNotEmpty' />
+          <FormattedMessage id='onDragPlayerNotEmpty' values={{br: <br/>}}/>
         )
       } else {
         setDragZoneText(
@@ -140,6 +143,9 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
               }
               newDragZonePlayers.push(                
               <div draggable={false}
+              onDragOver={() => {                
+                setDragZoneText(<FormattedMessage id='onDragPlayerOver' />);
+              }}
               onClick={() => {
                 deletePlayerFromSeason({player_id: player.id, token: cookies.token});
                 setDeletePlayer(player.id);
@@ -243,13 +249,26 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
         </div>}
         {currentTournament && myTeam && teamRegistred === true &&
         <div>
-          {globalTime && <div className={classes.timer}>
-            <FormattedMessage id='tourStartMessage' 
-            values={{
-              time: <Timer datetime={globalTime} />, 
-              season: currentTournament.number
-              }}/>
+          {globalTime && tournamets && tournamets.length === 0 && <div className={classes.timerBlock}>
+            <div className={classes.timer}>
+              <FormattedMessage id='tourStartMessage' 
+              values={{
+                time: <Timer datetime={globalTime} />, 
+                season: currentTournament.number
+                }}/>
+            </div>
           </div>}
+          {tournamets && tournamets.length > 0 &&
+          <div className={classes.nextMatches}>
+            {tournamets.map((tournament, index) => {
+              if (tournament.isFinished === false) {
+                return <div className={classes.tournamentCard}  key={index}>
+                  <TournamentCard tournament={tournament} /></div>
+              } else {
+                return null;
+              }
+            })}
+            </div>}
           <div className={classes.dropZone}
             onDragEnter={(e) => {              
               e.preventDefault();
@@ -258,7 +277,7 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
               }
               if (dragZonePlayers.length > 0) {
                 setDragZoneText(
-                  <FormattedMessage id='onDragPlayerNotEmpty' />
+                  <FormattedMessage id='onDragPlayerNotEmpty' values={{br: <br />}} />
                 )
               } else {
                 setDragZoneText(
@@ -267,7 +286,7 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
               }
             }}
             onDragOver={(e) => {
-              e.preventDefault();              
+              e.preventDefault();                            
             }}
             onDragLeave={(e) => {
               e.preventDefault();
@@ -289,7 +308,7 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
               };
               if (dragZonePlayers.length > 0) {
                 setDragZoneText(
-                  <FormattedMessage id='onDragPlayerNotEmpty' />
+                  <FormattedMessage id='onDragPlayerNotEmpty' values={{br: <br />}} />
                 )
               } else {
                 setDragZoneText(
