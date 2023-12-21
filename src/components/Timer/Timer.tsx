@@ -1,7 +1,6 @@
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { FormattedPlural, useIntl } from 'react-intl';
-import classes from './Timer.module.scss';
 
 
 interface TimerProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -41,7 +40,7 @@ const Timer: React.FC<TimerProps> = ({...props}) => {
     }, [props.datetime])
 
   return (
-    <div className={classes.timer}>
+    <div>
         {timeLeft.days > 0 &&
         <span>{timeLeft.days}<span> </span>
         <FormattedPlural value={timeLeft.days}
