@@ -135,97 +135,100 @@ const ClanInfo: React.FC = () => {
 
 
   return (
-    <div className={classes.teamManage}>
-        {myTeam && 
-        <div className={classes.teamInfo}>
-            <div className={classes.teamLogoBox}
-            onClick={() => logoInputRef.current?.click()}>
-                <img src={teamDefault} alt={myTeam.team_name} 
-                className={classes.teamLogo}
-                onLoad={(e) => {
-                    e.currentTarget.src = teamLogoUrl ? teamLogoUrl : teamDefault;
-                }}/>
-                <input  ref={logoInputRef} type="file" className={classes.editLogo}
-                        onChange={(e) => {
-                            changeLogo({teamId: myTeam.team_id, logo: e.target.files![0], token: cookies.token});
-                            setTeamLogoUrl(URL.createObjectURL(e.target.files![0]));
-                            }}/>
-            </div>
-            <div>
-                <input className={classes.teamName} defaultValue={myTeam.team_name} 
-                onChange={(e) => {
-                    if (changeNameTimeout) {
-                        clearTimeout(changeNameTimeout);
-                    }
-                    changeNameTimeout = setTimeout(() => {
-                        changeName({teamId: myTeam.team_id, name: e.target.value, token: cookies.token});
-                    }, 1000);
-                }}/>
-                <div>
-                    <span>&lt;</span>
-                    <input ref={tagInputRef} className={classes.teamTag} defaultValue={myTeam.team_tag} 
-                    onChange={(e) => {
-                        if (changeTagTimeout) {
-                            clearTimeout(changeTagTimeout);
-                        }
-                        changeTagTimeout = setTimeout(() => {
-                            changeTag({teamId: myTeam.team_id, tag: e.target.value, token: cookies.token});
-                        }, 1000);
-                        if (tagInputRef.current) {
-                            const textWidth = getTextWidth(e.target.value);
-                            tagInputRef.current.style.width = `${textWidth}px`;
-                        }
-                    }}
-                    />
-                    <span>&gt;</span>
+    <div>
+
+        <div className={classes.teamManage}>
+            {myTeam && 
+            <div className={classes.teamInfo}>
+                <div className={classes.teamLogoBox}
+                onClick={() => logoInputRef.current?.click()}>
+                    <img src={teamDefault} alt={myTeam.team_name} 
+                    className={classes.teamLogo}
+                    onLoad={(e) => {
+                        e.currentTarget.src = teamLogoUrl ? teamLogoUrl : teamDefault;
+                    }}/>
+                    <input  ref={logoInputRef} type="file" className={classes.editLogo}
+                            onChange={(e) => {
+                                changeLogo({teamId: myTeam.team_id, logo: e.target.files![0], token: cookies.token});
+                                setTeamLogoUrl(URL.createObjectURL(e.target.files![0]));
+                                }}/>
                 </div>
-            </div>
-            <div className={classes.regionFlag}>
-                <img draggable={false} src={`${import.meta.env.VITE_SERVER_URL}${myTeam.team_region_flag}`} alt={myTeam.team_region_name} />
-            </div>
-        </div>}
-        <div className={classes.teamContent}>
-            <div className={classes.playersInfo}>
-                {myTeam && draggable && myTeam.players.map((player, index) => (
-                    <div draggable={draggable[index] && draggable[index][1]}
-                    onDragStart={(e) => {handleDragStartPlayer(e, index)}}
-                    onDragEnd={(e) => {handleDragEndPlayer(e)}}
-                    className={classes.playerInfo} key={index}>
-                        <div className={classes.playerInfoBox}>
-                            <div className={classes.infoImages}>
-                                <div>{leagues[index]}</div>
-                                <div>{race[index]}</div>
-                            </div>
-                            <img draggable={false} src={playerDefault} alt={player.username} 
-                            className={classes.playerLogo}
-                            onLoad={(e) => {
-                                if (!e.currentTarget.classList.contains('error')) {
-                                    (player.avatar) ? e.currentTarget.src = player.avatar : e.currentTarget.src = playerDefault;
-                                }
-                            }}
-                            onError={(e) => {
-                                if (!e.currentTarget.classList.contains('error')) {
-                                    e.currentTarget.classList.add('error');
-                                    e.currentTarget.src = playerDefault;
-                                }
-                            }}/>
-                            <div>
-                                <h2 className={classes.playerName}>{player.username}</h2>
-                                <h3 className={classes.playerMMR}>MMR: {player.mmr}</h3>
-                            </div>
-                        </div>
-                        <div className={classes.playerStats}>
-                            <div className={classes.playerStat}>
-                                <h4><FormattedMessage id='totalGames' />: </h4>
-                                <h4 className={classes.playerWins}>{player.total_games}</h4>
-                            </div>
-                            <div className={classes.playerStat}>
-                                <h4><FormattedMessage id='wins' />: </h4>
-                                <h4 className={classes.playerWins}>{player.wins}</h4>
-                            </div>
-                        </div>
+                <div>
+                    <input className={classes.teamName} defaultValue={myTeam.team_name} 
+                    onChange={(e) => {
+                        if (changeNameTimeout) {
+                            clearTimeout(changeNameTimeout);
+                        }
+                        changeNameTimeout = setTimeout(() => {
+                            changeName({teamId: myTeam.team_id, name: e.target.value, token: cookies.token});
+                        }, 1000);
+                    }}/>
+                    <div>
+                        <span>&lt;</span>
+                        <input ref={tagInputRef} className={classes.teamTag} defaultValue={myTeam.team_tag} 
+                        onChange={(e) => {
+                            if (changeTagTimeout) {
+                                clearTimeout(changeTagTimeout);
+                            }
+                            changeTagTimeout = setTimeout(() => {
+                                changeTag({teamId: myTeam.team_id, tag: e.target.value, token: cookies.token});
+                            }, 1000);
+                            if (tagInputRef.current) {
+                                const textWidth = getTextWidth(e.target.value);
+                                tagInputRef.current.style.width = `${textWidth}px`;
+                            }
+                        }}
+                        />
+                        <span>&gt;</span>
                     </div>
-                ))}
+                </div>
+                <div className={classes.regionFlag}>
+                    <img draggable={false} src={`${import.meta.env.VITE_SERVER_URL}${myTeam.team_region_flag}`} alt={myTeam.team_region_name} />
+                </div>
+            </div>}
+            <div className={classes.teamContent}>
+                <div className={classes.playersInfo}>
+                    {myTeam && draggable && myTeam.players.map((player, index) => (
+                        <div draggable={draggable[index] && draggable[index][1]}
+                        onDragStart={(e) => {handleDragStartPlayer(e, index)}}
+                        onDragEnd={(e) => {handleDragEndPlayer(e)}}
+                        className={classes.playerInfo} key={index}>
+                            <div className={classes.playerInfoBox}>
+                                <div className={classes.infoImages}>
+                                    <div>{leagues[index]}</div>
+                                    <div>{race[index]}</div>
+                                </div>
+                                <img draggable={false} src={playerDefault} alt={player.username} 
+                                className={classes.playerLogo}
+                                onLoad={(e) => {
+                                    if (!e.currentTarget.classList.contains('error')) {
+                                        (player.avatar) ? e.currentTarget.src = player.avatar : e.currentTarget.src = playerDefault;
+                                    }
+                                }}
+                                onError={(e) => {
+                                    if (!e.currentTarget.classList.contains('error')) {
+                                        e.currentTarget.classList.add('error');
+                                        e.currentTarget.src = playerDefault;
+                                    }
+                                }}/>
+                                <div>
+                                    <h2 className={classes.playerName}>{player.username}</h2>
+                                    <h3 className={classes.playerMMR}>MMR: {player.mmr}</h3>
+                                </div>
+                            </div>
+                            <div className={classes.playerStats}>
+                                <div className={classes.playerStat}>
+                                    <h4><FormattedMessage id='totalGames' />: </h4>
+                                    <h4 className={classes.playerWins}>{player.total_games}</h4>
+                                </div>
+                                <div className={classes.playerStat}>
+                                    <h4><FormattedMessage id='wins' />: </h4>
+                                    <h4 className={classes.playerWins}>{player.wins}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     </div>
