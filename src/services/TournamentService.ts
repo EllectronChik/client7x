@@ -1,5 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 import { ITournament } from "models/ITournament";
+import { ITournamentApiResponse } from "models/ITournamentApiResponse";
+
 
 
 export const TournamentApi = createApi({
@@ -27,6 +29,40 @@ export const TournamentApi = createApi({
                 method: "DELETE",
                 headers: {
                     Authorization: `Token ${token}`
+                }
+            })
+        }),
+        fetchTournamentsByManager: builder.query<ITournamentApiResponse[], string>({
+            query: (token) => ({
+                url: `/getToursByManager/`,
+                method: "GET",
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            })
+        }),
+        setTimeSuggestion: builder.mutation<void, {id: number, timeSuggestion: string, token: string}>({
+            query: ({id, timeSuggestion, token}) => ({
+                url: `/setTimeSuggestion/`,
+                method: "PATCH",
+                headers: {
+                    Authorization: `Token ${token}`
+                },
+                body: {
+                    id: id,
+                    timeSuggestion: timeSuggestion
+                }
+            })
+        }),
+        acceptTimeSuggestion: builder.mutation<void, {id: number, token: string}>({
+            query: ({id, token}) => ({
+                url: `/acceptTimeSuggestion/`,
+                method: "PATCH",
+                headers: {
+                    Authorization: `Token ${token}`
+                },
+                body: {
+                    id: id,
                 }
             })
         })
