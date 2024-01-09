@@ -114,7 +114,7 @@ const GroupDistribution: React.FC = () => {
                               setDraggedTeam(null);
                             }}
                 key={team.id}>
-                  <img draggable={false} className={classes.teamLogo} src={`${import.meta.env.VITE_SERVER_URL}/${team.logo}`} alt="" />
+                  <img draggable={false} className={classes.teamLogo} src={`${import.meta.env.VITE_SERVER_URL}${team.logo}`} alt="" />
                   <div>
                     <h3 className={classes.teamName}>{team.name}</h3>
                     <h4 className={classes.teamTag}>&lt;{team.tag}&gt;</h4>
@@ -152,7 +152,7 @@ const GroupDistribution: React.FC = () => {
                                     setDraggedTeam(null);
                                   }}
                               key={team.id}>
-                        <img draggable={false} className={classes.teamLogo} src={`${import.meta.env.VITE_SERVER_URL}/${team.logo}`} alt="" />
+                        <img draggable={false} className={classes.teamLogo} src={`${import.meta.env.VITE_SERVER_URL}${team.logo}`} alt="" />
                         <div>
                           <h3 className={classes.teamName}>{team.name}</h3>
                           <h4 className={classes.teamTag}>&lt;{team.tag}&gt;</h4>
