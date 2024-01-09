@@ -56,7 +56,7 @@ const StartedSeasonManage: React.FC<StartedSeasonManageProps> = ({...props}) => 
   return (
     <div className={`${classes.form} ${askForFinished ? classes.formAskForFinished : ''}`}>
         <h2><FormattedMessage id='manage_started_season' values={{season: seasonNumber}} /></h2>
-        <div>
+        <div className={classes.form_content}>
             <label className={classes.label} htmlFor="datetime"><FormattedMessage id='tournament_start' />(UTC {props.timeZoneOffsetString}): </label>
             <input id="datetime" className={classes.input} type="datetime-local" defaultValue={localTime ? localTime : ''} onChange={(e) => {
                 if (setDateTimeout) {
@@ -71,8 +71,8 @@ const StartedSeasonManage: React.FC<StartedSeasonManageProps> = ({...props}) => 
                     dispatch(setLocalTime(e.target.value));
                     dispatch(setGlobalTime(new Date(e.target.value).toISOString()));
             }, 3000)}} />
-            {globalTime && <Timer datetime={globalTime} />}
         </div>
+            {globalTime && <Timer datetime={globalTime} />}
         <div className={classes.form_content}>
             <label className={classes.label} htmlFor="can_register"><FormattedMessage id='open_registration' /></label>
                 {canRegister !== null && <input className={classes.input} id="can_register" type="checkbox" checked={canRegister ? canRegister : false} onChange={(e) => {
