@@ -6,6 +6,7 @@ import StartedSeasonManage from './StartedSeasonManage/StartedSeasonManage';
 import GroupDistribution from './GroupDistribution/GroupDistribution';
 import classes from './TourManage.module.scss';
 import MatchDistribution from './MatchDistribution/MatchDistribution';
+import moment from 'moment';
 
 
 const TourManage: React.FC = () => {
@@ -13,6 +14,14 @@ const TourManage: React.FC = () => {
   const [seasonStarted, setSeasonStarted] = useState<boolean | undefined>(undefined);
   const [timeZoneOffset, ] = useState<number>(- new Date().getTimezoneOffset() / 60);
   const [timeZoneOffsetString, setTimeZoneOffsetString] = useState<string>(String(timeZoneOffset));
+  const [currentDateTime, setCurrentDateTime] = useState<Date>(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentDateTime(new Date());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [currentDateTime]);
 
   useEffect(() => {
       if (timeZoneOffset < 0) {
@@ -46,14 +55,17 @@ const TourManage: React.FC = () => {
       : (seasonStarted === false) ? <div>
         <StartSeason setSeasonStarted={setSeasonStarted} timeZoneOffsetString={timeZoneOffsetString} /> 
       </div>
-      : <div className={classes.tournamentManage}>
-        <div>
-          <StartedSeasonManage setSeasonStarted={setSeasonStarted} timeZoneOffsetString={timeZoneOffsetString} />
-          <MatchDistribution />
-        </div>
+      : (currentSeason && moment(currentSeason.start_datetime).isAfter(currentDateTime)) ?
+        <div className={classes.tournamentManage}>
+          <div>
+            <StartedSeasonManage setSeasonStarted={setSeasonStarted} timeZoneOffsetString={timeZoneOffsetString} />
+            <MatchDistribution />
+          </div>
           <GroupDistribution />
-        </div>
-      }
+        </div> : 
+        <div>
+          <p>Турнир уже начался</p>
+        </div>}
     </div>
   )
 }
