@@ -1,0 +1,114 @@
+@import '../../../settings.scss';
+
+.tournamentProgress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+
+
+    .tournament {
+        margin-top: 9px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 600px;
+        border: 1px solid $clr_red;
+        border-radius: 20px;
+        align-items: center;
+        
+        .tournamentHeader {
+            position: relative;
+            background: radial-gradient(circle, rgb(154, 27, 27) 30%, rgb(115, 29, 29) 85%);
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+
+            .HeaderText {
+                border-bottom: 1px solid $clr_light;
+                width: 200px;
+                text-align: center; 
+            }
+
+            .HeaderScore {
+                width: 50px;
+            }
+
+            .button {
+                cursor: pointer;
+                right: 50px;
+                background-color: $clr_light;
+                width: 35px;
+                height: 35px;
+                border-radius: 50%;
+                border: 1px solid $clr_red;
+            }
+        }
+
+        .match {
+            margin-bottom: 20px;
+            border-bottom: 1px solid $clr_red;
+            .matchLineTop {
+                display: flex;
+                justify-content: center;
+                gap: 25px;
+                .select {
+                    background: $clr_dark;
+                    color: $clr_light;
+                    font-size: 20px;
+                    width: 200px;
+                    text-align: center;
+                    border: 0;
+                    border-bottom: 1px solid $clr_light;
+                }
+    
+                .vs {
+                    text-align: center;
+                    width: 50px;
+                }
+    
+                .plug {
+                    width: 35px;
+                }
+            }
+
+            .matchLineBottom {
+                display: flex;
+                justify-content: space-between;
+                gap: 25px;
+                padding-bottom: 20px;
+                .input {
+                    background: $clr_dark;
+                    color: $clr_light;
+                    font-size: 20px;
+                    width: 200px;
+                    text-align: center;
+                    border: 0;
+                    border-bottom: 1px solid $clr_light;
+                }
+
+                .select {
+                    background: $clr_dark;
+                    color: $clr_light;
+                    font-size: 20px;
+                    width: 200px;
+                    text-align: center;
+                    border: 0;
+                    border-bottom: 1px solid $clr_light;
+                }
+
+                .plug1 {
+                    width: 50px;
+                }
+
+                .plug2 {
+                    width: 35px;
+                }
+            }
+
+        }
+    }
+}
