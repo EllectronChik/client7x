@@ -7,6 +7,7 @@ import { ClanApi } from 'services/ClanService';
 import classes from './TournamentProgress.module.scss';
 import { Tooltip } from 'react-tooltip';
 import { PlayerApi } from 'services/PlayerService';
+import { ITournamentApiResponse } from 'models/ITournamentApiResponse';
 
 interface ITournamentScore {
   [key: number]: {
@@ -34,114 +35,215 @@ const TournamentProgress: React.FC = () => {
   const [matches, setMatches] = useState<IMatches>({});
   const [matchesWebSockets, setMatchesWebSockets] = useState<{[key: number]: WebSocket}>({});
   const [mapNames, setMapNames] = useState<IMapNames>({});
+  const [matchShowed, setMatchShowed] = useState<{[key: number]: boolean}>({});
+  const [tournamentsData, setTournamentsData] = useState<ITournamentApiResponse[]>([]);
+  const [unstartedTournaments, setUnstartedTournaments] = useState<number[]>([]);
   let mapSendTimeout: NodeJS.Timeout;
 
+  const scoreWebSocketFunc = (tournament: ITournamentApiResponse) => {
+    const scoreWebSocket = new WebSocket(`${import.meta.env.VITE_SERVER_WS_URL}tournament_score/`);
+    scoreWebSocket.onopen = () => {
+      scoreWebSocket.send(JSON.stringify({
+        token: cookies.token,
+        action: 'subscribe',
+        group: tournament.id
+      }));
+    }
+
+    scoreWebSocket.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      setTournamentsScores((prev) => {
+        return {
+          ...prev,
+          [tournament.id]: message
+        }
+      });
+    }
+
+    scoreWebSocket.onclose = () => {
+      setTimeout(() => {
+        scoreWebSocketFunc(tournament);
+      }, 2000);
+    }
+  }
+
+  const matchesWebSocketFunc = (tournament: ITournamentApiResponse) => {
+    const matchesWebSocket = new WebSocket(`${import.meta.env.VITE_SERVER_WS_URL}match/`);
+      matchesWebSocket.onopen = () => {
+        matchesWebSocket.send(JSON.stringify({
+          token: cookies.token,
+          action: 'subscribe',
+          group: tournament.id
+        }));
+    }
+
+    matchesWebSocket.onmessage = (event) => {
+      const message = JSON.parse(event.data);            
+      setMatches((prev) => {
+        if (message.length > 0) {
+          message.forEach((match: IMatch) => {    
+            setMapNames((prev) => {
+              if (match.map !== null) {
+                return {
+                  ...prev,
+                  [match.id]: match.map
+                }
+              } else {
+                return {
+                  ...prev,
+                  [match.id]: ''
+                }
+              }
+            })
+                          
+            if (!prev[match.tournament]) {
+              prev[match.tournament] = {};
+            }
+            prev[match.tournament][match.id] = match;                  
+          })
+        } else {
+          prev[tournament.id] = {};
+        }
+        return prev
+      });
+    }
+
+    matchesWebSocket.onclose = () => {
+      setTimeout(() => {
+        matchesWebSocketFunc(tournament);
+      }, 2000);
+    }
+
+    setMatchesWebSockets((prev) => {
+      return {
+        ...prev,
+        [tournament.id]: matchesWebSocket
+      }
+    })
+  }
 
   useEffect(() => {
     if (tournaments) {
-      tournaments.forEach((tournament) => {        
-        if (moment(tournament.startTime).isBefore(new Date()) && tournament.isFinished === false) {
-          
-          
-          const scoreWebSocketFunc = () => {
-            const scoreWebSocket = new WebSocket(`${import.meta.env.VITE_SERVER_WS_URL}tournament_score/`);
-            scoreWebSocket.onopen = () => {
-              scoreWebSocket.send(JSON.stringify({
-                token: cookies.token,
-                action: 'subscribe',
-                group: tournament.id
-              }));
-            }
-  
-            scoreWebSocket.onmessage = (event) => {
-              const message = JSON.parse(event.data);
-              console.log(message);
-              setTournamentsScores((prev) => {
-                return {
-                  ...prev,
-                  [tournament.id]: message
-                }
-              });
-            }
-  
-            scoreWebSocket.onclose = () => {
-              setTimeout(() => {
-                scoreWebSocketFunc();
-              }, 2000);
-            }
-          }
-
-        const matchesWebSocketFunc = () => {
-          const matchesWebSocket = new WebSocket(`${import.meta.env.VITE_SERVER_WS_URL}match/`);
-            matchesWebSocket.onopen = () => {
-              matchesWebSocket.send(JSON.stringify({
-                token: cookies.token,
-                action: 'subscribe',
-                group: tournament.id
-              }));
-          }
-
-          matchesWebSocket.onmessage = (event) => {
-            const message = JSON.parse(event.data);
-            console.log(message);
-            
-            setMatches((prev) => {
-              if (message.length > 0) {
-                message.forEach((match: IMatch) => {    
-                  setMapNames((prev) => {
-                    if (match.map !== null) {
-                      return {
-                        ...prev,
-                        [match.id]: match.map
-                      }
-                    } else {
-                      return {
-                        ...prev,
-                        [match.id]: ''
-                      }
-                    }
-                  })
-                                
-                  if (!prev[match.tournament]) {
-                    prev[match.tournament] = {};
-                  }
-                  prev[match.tournament][match.id] = match;                  
-                })
-              } else {
-                prev[tournament.id] = {};
-              }
-              return prev
-            });
-          }
-
-          matchesWebSocket.onclose = () => {
-            setTimeout(() => {
-              matchesWebSocketFunc();
-            }, 2000);
-          }
-
-          setMatchesWebSockets((prev) => {
-            return {
-              ...prev,
-              [tournament.id]: matchesWebSocket
-            }
-          })
-        }
-        scoreWebSocketFunc();
-        matchesWebSocketFunc();
-        }
-      })
+      setTournamentsData(tournaments);
     }
     
   }, [tournaments])
 
+  useEffect(() => {
+    if (tournamentsData) {
+      console.log(tournamentsData);
+      
+      tournamentsData.forEach((tournament) => {        
+        if (moment(tournament.startTime).isBefore(new Date()) && tournament.isFinished === false) {
+        scoreWebSocketFunc(tournament);
+        matchesWebSocketFunc(tournament);
+        }
+        else if (tournament.isFinished === true) {
+          setMatchShowed((prev) => {
+            return {
+              ...prev,
+              [tournament.id]: false
+            }
+          })
+        }
+        else {
+          setUnstartedTournaments((prev) => {
+            return [
+              ...prev,
+              tournament.id
+            ]
+          })
+        }
+      })
+    }
+  }, [tournamentsData])
+
+  useEffect(() => {
+    console.log('here');
+    
+    const interval = setInterval(() => {
+      if (tournamentsData) {
+        tournamentsData.forEach((tournament) => {          
+          if (moment(tournament.startTime).isBefore(new Date()) && tournament.isFinished === false && unstartedTournaments.indexOf(tournament.id) !== -1) {
+            
+            setUnstartedTournaments((prev) => {
+              return prev.filter((id) => id !== tournament.id)
+            })
+            scoreWebSocketFunc(tournament);
+            matchesWebSocketFunc(tournament);
+          }
+        })
+      }
+        
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [tournamentsData, unstartedTournaments])
+
 
   return (
-    <div>
-      {tournaments && tournamentsScores && <div className={classes.tournamentProgress}>
+    <div className={classes.tournamentProgressBlock}>
+      {tournamentsData && tournamentsData.findIndex((tournament) => tournament.isFinished === true) !== -1 && <h2 className={classes.finishedTournamentsTitle}>Finished tournaments</h2>}
+      {tournamentsData && tournamentsData.map((tournament) => {
+        if (tournament.isFinished === true) {
+          return (<div className={classes.finishedTournament} key={tournament.id}>
+            {tournament.teamInTournament === 1 && <div className={classes.finishedTournamentHeader}>
+              <h3 className={`${tournament.team_one_wins 
+                                && tournament.team_two_wins 
+                                && tournament.team_one_wins > tournament.team_two_wins 
+                                ? classes.winner : classes.participant} ${classes.leftTeam}`}>{myTeam?.team_name}</h3>
+              <h3>
+                {tournament.team_one_wins ? tournament.team_one_wins : 0} 
+                : 
+                {tournament.team_two_wins ? tournament.team_two_wins : 0}</h3>
+              <h3 className={`${tournament.team_one_wins 
+                                && tournament.team_two_wins 
+                                && tournament.team_one_wins < tournament.team_two_wins 
+                                ? classes.winner : classes.participant}`}>{tournament.opponent.name}</h3>
+              </div>}
+              {tournament.teamInTournament === 2 && <div className={classes.finishedTournamentHeader}>
+              <h3>{tournament.opponent.name}</h3>
+              <h3>
+                {tournament.team_one_wins ? tournament.team_one_wins : 0} 
+                : 
+                {tournament.team_two_wins ? tournament.team_two_wins : 0}</h3>
+              <h3>{myTeam?.team_name}</h3>
+              </div>}
+              <button className={`${classes.matchesResults} ${matchShowed[tournament.id] ? classes.show : ''}`}
+                      onClick={() => {
+                        setMatchShowed((prev) => {
+                          return {
+                            ...prev,
+                            [tournament.id]: !prev[tournament.id]
+                          }
+                        })
+                      }}>
+                <h3 className={classes.matchesResultsTitle}>Match results </h3><div className={`${classes.arrow} ${matchShowed[tournament.id] ? classes.rotate : ''}`}> 	&gt; </div>
+              </button>
+              <div className={`${classes.finishedTournamentMatches} ${matchShowed[tournament.id] ? classes.show : ''}`}>
+                {tournament.matches && tournament.matches.map((match) => {
+                  return (<div key={match.id} className={`${classes.finishedTournamentMatchContainer} ${matchShowed[tournament.id] ?  '' : classes.hiden}`}>
+                    <div className={classes.finishedTournamentMatch}>
+                      <h3 className={`${match.winner === match.player_one ? classes.winner : classes.participant} ${classes.player} ${classes.playerOne}`}>{myTeam?.players.find((player) => player.id === match.player_one)?.username 
+                          || 
+                          tournament.opponent.players.find((player) => player.id === match.player_one)?.username}</h3>
+                      <h3>VS</h3>
+                      <h3 className={`${match.winner === match.player_two ? classes.winner : classes.participant} ${classes.player}`}>{myTeam?.players.find((player) => player.id === match.player_two)?.username 
+                          || 
+                          tournament.opponent.players.find((player) => player.id === match.player_two)?.username} </h3>
+                    </div>
+                          <h3 className={classes.map}>{match.map}</h3>
+                  </div>)
+                })}
+              </div>
+          </div>)
+        } else {
+          return null
+        }
+      })}
+      {tournamentsData && tournamentsScores && <div className={classes.tournamentProgress}>
         <h2>Current Tournaments</h2>
       {matches && Object.keys(matches).map((key) => {
-        const tournament = tournaments?.find((tournament) => tournament.id === parseInt(key));
+        const tournament = tournamentsData?.find((tournament) => tournament.id === parseInt(key));
         
         return <div className={classes.tournament} key={key}>
           {tournament?.teamInTournament === 1 ? 
