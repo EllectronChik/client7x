@@ -1,4 +1,5 @@
 import { IClan } from "./IClan";
+import { IMatch } from "./IMatch";
 
 interface IClanOpponent extends IClan {
     players: {
@@ -13,5 +14,8 @@ export interface ITournamentApiResponse {
     timeSuggested: string | null,
     opponent: IClanOpponent,
     isFinished: boolean,
-    teamInTournament: number
+    teamInTournament: number,
+    matches?: IMatch[],
+    team_one_wins?: number,
+    team_two_wins?: number
 }
