@@ -16,9 +16,10 @@ export interface ITournamentApiResponse {
     isFinished: boolean,
     teamInTournament: number,
     matches?: IMatch[],
-    team_one_wins?: number,
-    team_two_wins?: number,
+    teamOneWins?: number,
+    teamTwoWins?: number,
     winner?: number,
     askForFinished?: boolean,
-    askedTeam?: boolean
+    askedTeam?: boolean,
+    tournamentInGroup: boolean 
 }
