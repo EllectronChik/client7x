@@ -7,6 +7,7 @@ import GroupDistribution from './GroupDistribution/GroupDistribution';
 import classes from './TourManage.module.scss';
 import MatchDistribution from './MatchDistribution/MatchDistribution';
 import moment from 'moment';
+import TournamentAdminProgress from './TournamentAdminProgress/TournamentAdminProgress';
 
 
 const TourManage: React.FC = () => {
@@ -64,7 +65,7 @@ const TourManage: React.FC = () => {
           <GroupDistribution />
         </div> : 
         <div>
-          <p>Турнир уже начался</p>
+          <TournamentAdminProgress />
         </div>}
     </div>
   )
