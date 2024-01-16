@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useCookies } from 'react-cookie';
 import { IMatch } from '../../../models/IMatch';
 import { ClanApi } from 'services/ClanService';
@@ -9,65 +9,37 @@ import { PlayerApi } from 'services/PlayerService';
 import { ITournamentApiResponse } from 'models/ITournamentApiResponse';
 import Button7x from 'components/UI/Button7x/Button7x';
 import Loader7x from 'components/UI/Loader7x/Loader7x';
+import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
+import { FormattedMessage, useIntl } from 'react-intl';
+import {  selectMatches,
+          setMatches,
+          selectMapNames,
+          setMapNames,
+          selectMatchShowed,
+          setMatchShowed,
+          selectTournamentsData,
+          setTournamentsData,
+          selectUnstartedTournaments,
+          setUnstartedTournaments,
+          deleteUnstartedTournament
+          } from 'store/reducers/TournamentsSlice';
 
-interface ITournamentScore {
-  [key: number]: {
-    team_one_wins: number,
-    team_two_wins: number
-  }
-}
-
-interface IMatches {
-  [key: number]: {
-    [key: number]: IMatch
-  }
-}
-
-interface IMapNames {
-  [key: number]: string
-}
 
 const TournamentProgress: React.FC = () => {
   const [cookies,] = useCookies(['token', 'userId']); 
   const {data: myTeam} = ClanApi.useFetchClanByManagerQuery(cookies.userId);
   const {data: regPlayers} = PlayerApi.useGetRegForSeasonPlayersQuery({token: cookies.token});
-  const [tournamentsScores, setTournamentsScores] = useState<ITournamentScore>({});
-  const [matches, setMatches] = useState<IMatches>({});
-  const [matchesWebSockets, setMatchesWebSockets] = useState<{[key: number]: WebSocket}>({});
-  const [tournamentsWebSocket, setTournamentsWebSocket] = useState<WebSocket>();
-  const [mapNames, setMapNames] = useState<IMapNames>({});
-  const [matchShowed, setMatchShowed] = useState<{[key: number]: boolean}>({});
-  const [tournamentsData, setTournamentsData] = useState<ITournamentApiResponse[]>([]);
-  const [unstartedTournaments, setUnstartedTournaments] = useState<number[]>([]);
-  const [firstLoad, setFirstLoad] = useState<{[key: number]: boolean}>({});
+  const matchesWebSocketsRef = useRef<{[key: number]: WebSocket}>({});
+  const tournamentsWebSocketRef = useRef<WebSocket>();
+  const matches = useAppSelector(selectMatches);
+  const mapNames = useAppSelector(selectMapNames);
+  const matchShowed = useAppSelector(selectMatchShowed);
+  const tournamentsData = useAppSelector(selectTournamentsData);
+  const unstartedTournaments = useAppSelector(selectUnstartedTournaments);
+  const dispatch = useAppDispatch();
   let mapSendTimeout: NodeJS.Timeout;
+  const intl = useIntl();
 
-  const scoreWebSocketFunc = (tournament: ITournamentApiResponse) => {
-    const scoreWebSocket = new WebSocket(`${import.meta.env.VITE_SERVER_WS_URL}tournament_score/`);
-    scoreWebSocket.onopen = () => {
-      scoreWebSocket.send(JSON.stringify({
-        token: cookies.token,
-        action: 'subscribe',
-        group: tournament.id
-      }));
-    }
-
-    scoreWebSocket.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      setTournamentsScores((prev) => {
-        return {
-          ...prev,
-          [tournament.id]: message
-        }
-      });
-    }
-
-    scoreWebSocket.onclose = () => {
-      setTimeout(() => {
-        scoreWebSocketFunc(tournament);
-      }, 2000);
-    }
-  }
 
   const matchesWebSocketFunc = (tournament: ITournamentApiResponse) => {
     const matchesWebSocket = new WebSocket(`${import.meta.env.VITE_SERVER_WS_URL}match/`);
@@ -80,53 +52,41 @@ const TournamentProgress: React.FC = () => {
     }
 
     matchesWebSocket.onmessage = (event) => {
-      const message = JSON.parse(event.data);            
-      setMatches((prev) => {
-        if (message.length > 0) {
-          message.forEach((match: IMatch) => {    
-            setMapNames((prev) => {
-              if (match.map !== null) {
-                return {
-                  ...prev,
-                  [match.id]: match.map
-                }
-              } else {
-                return {
-                  ...prev,
-                  [match.id]: ''
-                }
-              }
-            })
-                          
-            if (!prev[match.tournament]) {
-              prev[match.tournament] = {};
-            }
-            prev[match.tournament][match.id] = match;                  
-          })
+      const message = JSON.parse(event.data);
+                  
+      dispatch(setMatches({
+        tournamentId: tournament.id,
+        matches: message
+      }));
+      message.forEach((match: IMatch) => {
+        if (match.map !== null) {
+          dispatch(setMapNames({
+            matchId: match.id,
+            mapNames: match.map
+          }))
         } else {
-          prev[tournament.id] = {};
+          dispatch(setMapNames({
+            matchId: match.id,
+            mapNames: ''
+          }))
         }
-        return prev
-      });
+      })
     }
 
     matchesWebSocket.onclose = () => {
       setTimeout(() => {
-        matchesWebSocketFunc(tournament);
+        if (matchesWebSocketsRef.current[tournament.id]) {
+          matchesWebSocketFunc(tournament);
+        }
       }, 2000);
     }
 
-    setMatchesWebSockets((prev) => {
-      return {
-        ...prev,
-        [tournament.id]: matchesWebSocket
-      }
-    })
+    matchesWebSocketsRef.current[tournament.id] = matchesWebSocket;
   }
 
   const tournamentsWebSocketFunc = () => {
     const tournamentsWebSocket = new WebSocket(`${import.meta.env.VITE_SERVER_WS_URL}tournament_status/`);
-    setTournamentsWebSocket(tournamentsWebSocket);
+    tournamentsWebSocketRef.current = tournamentsWebSocket;
     tournamentsWebSocket.onopen = () => {      
       tournamentsWebSocket.send(JSON.stringify({
         token: cookies.token,
@@ -136,36 +96,30 @@ const TournamentProgress: React.FC = () => {
     }
 
     tournamentsWebSocket.onmessage = (event) => {
-      const message = JSON.parse(event.data);      
-      setTournamentsData(message[0]);
+      const message = JSON.parse(event.data);
+      dispatch(setTournamentsData(message[0]));
     }
 
     tournamentsWebSocket.onclose = () => {
       setTimeout(() => {
-        tournamentsWebSocketFunc();
-      }, 2000);
+          if (tournamentsWebSocketRef.current) {
+            tournamentsWebSocketFunc();
+        }
+        }, 2000);
     }
   }
 
   useEffect(() => {
-    
-    if (tournamentsData) {     
+    if (tournamentsData) {          
       tournamentsData.forEach((tournament) => {        
         if (tournament.isFinished === true) {
-          setMatchShowed((prev) => {
-            return {
-              ...prev,
-              [tournament.id]: false
-            }
-          })
+          dispatch(setMatchShowed({
+            tournamentId: tournament.id,
+            showed: false
+          }))
         }
         else {
-          setUnstartedTournaments((prev) => {
-            return [
-              ...prev,
-              tournament.id
-            ]
-          })
+          if (unstartedTournaments.indexOf(tournament.id) === -1) dispatch(setUnstartedTournaments(tournament.id))
         }
       })
     }
@@ -177,38 +131,39 @@ const TournamentProgress: React.FC = () => {
       if (tournamentsData) {
         tournamentsData.forEach((tournament) => {          
           if (moment(tournament.startTime).isBefore(new Date()) && tournament.isFinished === false && unstartedTournaments.indexOf(tournament.id) !== -1) {
-            
-            setUnstartedTournaments((prev) => {
-              return prev.filter((id) => id !== tournament.id)
-            })
-            if (!firstLoad[tournament.id]) {
-              setFirstLoad((prev) => {
-                return {
-                  ...prev,
-                  [tournament.id]: true
-                }
-              })
-              
-              scoreWebSocketFunc(tournament);
-              matchesWebSocketFunc(tournament);
-            }
+            dispatch(deleteUnstartedTournament(tournament.id));
+            matchesWebSocketFunc(tournament);
           }
         })
       }
-        
     }, 1000)
     return () => clearInterval(interval)
   }, [tournamentsData, unstartedTournaments])
 
   useEffect(() => {
     tournamentsWebSocketFunc();
+    return () => {
+      if (tournamentsWebSocketRef.current) {
+        tournamentsWebSocketRef.current.close();
+        tournamentsWebSocketRef.current = undefined;
+      }
+      if (matchesWebSocketsRef.current) {
+        Object.values(matchesWebSocketsRef.current).forEach((webSocket) => {
+          webSocket.close();
+        })
+        matchesWebSocketsRef.current = {};
+      }
+    }
   }, [])
 
 
   return (
     <div className={classes.tournamentProgressBlock}>
-      {tournamentsData && tournamentsData.length > 0 && tournamentsScores && matches && Object.keys(matches).length > 0 && <div className={classes.tournamentProgress}>
-        <h2>Current Tournaments</h2>
+      {tournamentsData && tournamentsData.findIndex((tournamet) => tournamet.isFinished === false) === -1 && 
+        tournamentsData.findIndex((tournament) => tournament.tournamentInGroup === false) === -1 && 
+        <h3><FormattedMessage id="groupStageCompleteMessage" /></h3>}
+      {tournamentsData && tournamentsData.length > 0 && matches && Object.keys(matches).length > 0 && <div className={classes.tournamentProgress}>
+        <h2><FormattedMessage id="currentTournamentsTitle" /></h2>
       {matches && Object.keys(matches).length === 0 && <Loader7x />}
       {matches && Object.keys(matches).map((key) => {
         const tournament = tournamentsData?.find((tournament) => tournament.id === parseInt(key));        
@@ -219,7 +174,7 @@ const TournamentProgress: React.FC = () => {
           {tournament?.teamInTournament === 1 && tournament.isFinished ? 
             <div className={classes.tournamentHeader}>
               <h2 className={classes.HeaderText}>{myTeam?.team_name}</h2>
-              <h2 className={classes.HeaderScore}>{tournamentsScores[parseInt(key)].team_one_wins + ' : ' + tournamentsScores[parseInt(key)].team_two_wins}</h2>
+              <h2 className={classes.HeaderScore}>{tournament.teamOneWins + ' : ' + tournament.teamTwoWins}</h2>
               <h2 className={classes.HeaderText}>{tournament?.opponent.name}</h2>
               <Tooltip  id={key} 
                         border='1px solid red'>
@@ -227,22 +182,22 @@ const TournamentProgress: React.FC = () => {
                         </Tooltip>
               <button data-tooltip-id={key} className={classes.button}
               onClick={() => {
-                matchesWebSockets[parseInt(key)].send(JSON.stringify({
+                matchesWebSocketsRef.current[parseInt(key)].send(JSON.stringify({
                   action: 'create',
                 }));
               }}>+</button>
             </div>
           : <div className={classes.tournamentHeader}>
             <h2 className={classes.HeaderText}>{tournament?.opponent.name}</h2>
-            <h2 className={classes.HeaderScore}>{tournamentsScores[parseInt(key)].team_one_wins + ' : ' + tournamentsScores[parseInt(key)].team_two_wins}</h2>
+            <h2 className={classes.HeaderScore}>{tournament?.teamOneWins + ' : ' + tournament?.teamTwoWins}</h2>
             <h2 className={classes.HeaderText}>{myTeam?.team_name}</h2>
             <Tooltip  id={key}
                       border='1px solid red'>
-                        <h3>Add a new match</h3>
+                        <h3><FormattedMessage id='addMatch' /></h3>
                       </Tooltip>
             <button data-tooltip-id={key} className={classes.button}
             onClick={() => {
-              matchesWebSockets[parseInt(key)].send(JSON.stringify({
+              matchesWebSocketsRef.current[parseInt(key)].send(JSON.stringify({
                 action: 'create',
               }));
             }}>+</button>
@@ -256,7 +211,7 @@ const TournamentProgress: React.FC = () => {
                           ? '0' : matches[parseInt(key)][parseInt(key2)].player_one}
                           onChange={
                             (event) => {                              
-                              matchesWebSockets[parseInt(key)].send(JSON.stringify({
+                              matchesWebSocketsRef.current[parseInt(key)].send(JSON.stringify({
                                 action: 'update',
                                 updated_field: matches[parseInt(key)][parseInt(key2)].id,
                                 updated_column: 'player_one',
@@ -264,7 +219,7 @@ const TournamentProgress: React.FC = () => {
                               }));
                             }
                           }>
-                    <option value='0' disabled>Select player</option>
+                    <option value='0' disabled><FormattedMessage id='selectPlayerLabel' /></option>
                     {tournament?.teamInTournament === 1 && regPlayers?.map((player) => {
                       return <option key={player.player} value={player.player}>
                         {myTeam?.players.find((teamPlayer) => teamPlayer.id === player.player)?.username}
@@ -279,7 +234,7 @@ const TournamentProgress: React.FC = () => {
                         ? '0' : matches[parseInt(key)][parseInt(key2)].player_two}
                         onChange={
                           (event) => {
-                            matchesWebSockets[parseInt(key)].send(JSON.stringify({
+                            matchesWebSocketsRef.current[parseInt(key)].send(JSON.stringify({
                               action: 'update',
                               updated_field: matches[parseInt(key)][parseInt(key2)].id,
                               updated_column: 'player_two',
@@ -287,7 +242,7 @@ const TournamentProgress: React.FC = () => {
                             }));
                           }
                         }>
-                    <option value='0' disabled>Select player</option>
+                    <option value='0' disabled><FormattedMessage id='selectPlayerLabel' /></option>
                     {tournament?.teamInTournament === 2 && regPlayers?.map((player) => {
                       return <option key={player.player} value={player.player}>
                         {myTeam?.players.find((teamPlayer) => teamPlayer.id === player.player)?.username}
@@ -300,20 +255,18 @@ const TournamentProgress: React.FC = () => {
                   <span className={classes.plug}></span>
                 </div>
                 <div className={classes.matchLineBottom}>
-                  <input  type="text" className={classes.input} placeholder="Map" value={mapNames[parseInt(key2)]}
+                  <input  type="text" className={classes.input} placeholder={intl.formatMessage({id: 'mapLabel'})} value={mapNames[parseInt(key2)]}
                           onChange={
                             (event) => {
                               if (mapSendTimeout) {
                                 clearTimeout(mapSendTimeout);
                               }
-                              setMapNames((prev) => {
-                                return {
-                                  ...prev,
-                                  [key2]: event.target.value
-                                }
-                              })
+                              dispatch(setMapNames({
+                                matchId: parseInt(key2),
+                                mapNames: event.target.value,
+                              }))
                               mapSendTimeout = setTimeout(() => {
-                                matchesWebSockets[parseInt(key)].send(JSON.stringify({
+                                matchesWebSocketsRef.current[parseInt(key)].send(JSON.stringify({
                                   action: 'update',
                                   updated_field: matches[parseInt(key)][parseInt(key2)].id,
                                   updated_column: 'map',
@@ -328,7 +281,7 @@ const TournamentProgress: React.FC = () => {
                             ? '0' : matches[parseInt(key)][parseInt(key2)].winner}
                           onChange={
                             (event) => {
-                              matchesWebSockets[parseInt(key)].send(JSON.stringify({
+                              matchesWebSocketsRef.current[parseInt(key)].send(JSON.stringify({
                                 action: 'update',
                                 updated_field: matches[parseInt(key)][parseInt(key2)].id,
                                 updated_column: 'winner',
@@ -336,7 +289,7 @@ const TournamentProgress: React.FC = () => {
                               }));
                             }
                           }>
-                        <option value="0" disabled>Select winner</option>
+                        <option value="0" disabled><FormattedMessage id="selectWinnerLabel" /></option>
                         {tournament?.teamInTournament === 1 && 
                           <option value={matches[parseInt(key)][parseInt(key2)].player_one}>
                             {myTeam?.players.find((teamPlayer) => teamPlayer.id === matches[parseInt(key)][parseInt(key2)].player_one)?.username}
@@ -357,14 +310,20 @@ const TournamentProgress: React.FC = () => {
               </div>
             })}
             <div className={classes.buttonBlock}>
-              {tournament?.askForFinished && !tournament?.askedTeam && <h3 className={classes.finishTournamentsMessages}>The opponent pressed the "Finish" button. Clicking the button below will end the match and you will not be able to edit it yourself.</h3>}
-              {tournament?.askForFinished && tournament?.askedTeam && <h3 className={classes.finishTournamentsMessages}>You have clicked the "Finish" button. Wait for your opponent to confirm the end of the match.</h3>}
+              {tournament?.askForFinished && !tournament?.askedTeam && 
+              <h3 className={classes.finishTournamentsMessages}>
+                <FormattedMessage id="opponentFinishConfirmationMessage" />
+                </h3>}
+              {tournament?.askForFinished && tournament?.askedTeam && 
+              <h3 className={classes.finishTournamentsMessages}>
+                <FormattedMessage id="yourFinishConfirmationMessage" />
+                </h3>}
               <Button7x className={classes.button} onClick={() => {
-                tournamentsWebSocket && tournamentsWebSocket.send(JSON.stringify({
+                tournamentsWebSocketRef.current && tournamentsWebSocketRef.current.send(JSON.stringify({
                   action: 'finish',
                   id: tournament?.id
                 }))
-              }}>Finish</Button7x>
+              }}><FormattedMessage id="finish" /></Button7x>
             </div>
           </div>
         </div>
@@ -372,7 +331,9 @@ const TournamentProgress: React.FC = () => {
     </div>}
       <div className={classes.notRunning}>
         <div className={classes.notRunningBlock}>
-          {tournamentsData && tournamentsData.length > 0 && tournamentsData.findIndex((tournament) => tournament.isFinished === true) !== -1 && <h2 className={classes.finishedTournamentsTitle}>Finished tournaments</h2>}
+          {tournamentsData && tournamentsData.length > 0 && tournamentsData.findIndex((tournament) => tournament.isFinished === true) !== -1 && 
+          <h2 className={classes.finishedTournamentsTitle}>
+            <FormattedMessage id="finishedTournamentsTitle" /></h2>}
           {tournamentsData && tournamentsData.map((tournament) => {
             if (tournament.isFinished === true) {              
               return (<div className={classes.finishedTournament} key={tournament.id}>
@@ -380,13 +341,13 @@ const TournamentProgress: React.FC = () => {
                   <h3 className={`${tournament.winner !== undefined && tournament.winner === myTeam?.team_id
                                     ? classes.winner : classes.participant} ${classes.leftTeam}`}>{myTeam?.team_name}</h3>
                   <h3>
-                    {tournament.team_two_wins !== undefined && (tournament.team_two_wins !== 0 || tournament.team_one_wins !== 0) ? tournament.team_two_wins : null}
-                    {tournament.team_two_wins !== undefined && (tournament.team_two_wins === 0 && tournament.team_one_wins === 0) && tournament.winner && tournament.winner === myTeam?.team_id ? 'TW' : null}
-                    {tournament.team_two_wins !== undefined && (tournament.team_two_wins === 0 && tournament.team_one_wins === 0) && tournament.winner && tournament.winner === tournament.opponent.id ? 'TL' : null}
+                    {tournament.teamTwoWins !== undefined && (tournament.teamTwoWins !== 0 || tournament.teamOneWins !== 0) ? tournament.teamTwoWins : null}
+                    {tournament.teamTwoWins !== undefined && (tournament.teamTwoWins === 0 && tournament.teamOneWins === 0) && tournament.winner && tournament.winner === myTeam?.team_id ? 'TW' : null}
+                    {tournament.teamTwoWins !== undefined && (tournament.teamTwoWins === 0 && tournament.teamOneWins === 0) && tournament.winner && tournament.winner === tournament.opponent.id ? 'TL' : null}
                     : 
-                    {tournament.team_one_wins !== undefined && (tournament.team_one_wins !== 0 || tournament.team_two_wins !== 0) ? tournament.team_one_wins : null} 
-                    {tournament.team_one_wins !== undefined && (tournament.team_one_wins === 0 && tournament.team_two_wins === 0) && tournament.winner && tournament.winner === tournament.opponent.id ? 'TW' : null}
-                    {tournament.team_one_wins !== undefined && (tournament.team_one_wins === 0 && tournament.team_two_wins === 0) && tournament.winner && tournament.winner === myTeam?.team_id ? 'TL' : null}
+                    {tournament.teamOneWins !== undefined && (tournament.teamOneWins !== 0 || tournament.teamTwoWins !== 0) ? tournament.teamOneWins : null} 
+                    {tournament.teamOneWins !== undefined && (tournament.teamOneWins === 0 && tournament.teamTwoWins === 0) && tournament.winner && tournament.winner === tournament.opponent.id ? 'TW' : null}
+                    {tournament.teamOneWins !== undefined && (tournament.teamOneWins === 0 && tournament.teamTwoWins === 0) && tournament.winner && tournament.winner === myTeam?.team_id ? 'TL' : null}
                     </h3>
                   <h3 className={`${tournament.winner !== undefined && tournament.winner === tournament.opponent.id
                                     ? classes.winner : classes.participant}`}>{tournament.opponent.name}</h3>
@@ -395,13 +356,13 @@ const TournamentProgress: React.FC = () => {
                   <h3 className={`${tournament.winner !== undefined && tournament.winner === tournament.opponent.id
                                     ? classes.winner : classes.participant} ${classes.leftTeam}`}>{tournament.opponent.name}</h3>
                   <h3>
-                    {tournament.team_one_wins !== undefined && (tournament.team_one_wins !== 0 || tournament.team_two_wins !== 0) ? tournament.team_one_wins : null} 
-                    {tournament.team_one_wins !== undefined && (tournament.team_one_wins === 0 && tournament.team_two_wins === 0) && tournament.winner && tournament.winner === tournament.opponent.id ? 'TW' : null}
-                    {tournament.team_one_wins !== undefined && (tournament.team_one_wins === 0 && tournament.team_two_wins === 0) && tournament.winner && tournament.winner === myTeam?.team_id ? 'TL' : null}
+                    {tournament.teamOneWins !== undefined && (tournament.teamOneWins !== 0 || tournament.teamTwoWins !== 0) ? tournament.teamOneWins : null} 
+                    {tournament.teamOneWins !== undefined && (tournament.teamOneWins === 0 && tournament.teamTwoWins === 0) && tournament.winner && tournament.winner === tournament.opponent.id ? 'TW' : null}
+                    {tournament.teamOneWins !== undefined && (tournament.teamOneWins === 0 && tournament.teamTwoWins === 0) && tournament.winner && tournament.winner === myTeam?.team_id ? 'TL' : null}
                     : 
-                    {tournament.team_two_wins !== undefined && (tournament.team_two_wins !== 0 || tournament.team_one_wins !== 0) ? tournament.team_two_wins : null}
-                    {tournament.team_two_wins !== undefined && (tournament.team_two_wins === 0 && tournament.team_one_wins === 0) && tournament.winner && tournament.winner === myTeam?.team_id ? 'TW' : null}
-                    {tournament.team_two_wins !== undefined && (tournament.team_two_wins === 0 && tournament.team_one_wins === 0) && tournament.winner && tournament.winner === tournament.opponent.id ? 'TL' : null}
+                    {tournament.teamTwoWins !== undefined && (tournament.teamTwoWins !== 0 || tournament.teamOneWins !== 0) ? tournament.teamTwoWins : null}
+                    {tournament.teamTwoWins !== undefined && (tournament.teamTwoWins === 0 && tournament.teamOneWins === 0) && tournament.winner && tournament.winner === myTeam?.team_id ? 'TW' : null}
+                    {tournament.teamTwoWins !== undefined && (tournament.teamTwoWins === 0 && tournament.teamOneWins === 0) && tournament.winner && tournament.winner === tournament.opponent.id ? 'TL' : null}
                     </h3>
                   <h3 className={`${tournament.winner !== undefined && tournament.winner === myTeam?.team_id
                                     ? classes.winner : classes.participant}`}>{myTeam?.team_name}</h3>
@@ -410,24 +371,24 @@ const TournamentProgress: React.FC = () => {
                     <div className={classes.finishedTournamentMatchesContainer}>
                       <button className={`${classes.matchesResults} ${matchShowed[tournament.id] ? classes.show : ''}`}
                               onClick={() => {
-                                setMatchShowed((prev) => {
-                                  return {
-                                    ...prev,
-                                    [tournament.id]: !prev[tournament.id]
-                                  }
-                                })
+                                dispatch(setMatchShowed({
+                                  tournamentId: tournament.id,
+                                  showed: !matchShowed[tournament.id]
+                                }))
                               }}>
-                        <h3 className={classes.matchesResultsTitle}>Match results </h3><div className={`${classes.arrow} ${matchShowed[tournament.id] ? classes.rotate : ''}`}> 	&gt; </div>
+                        <h3 className={classes.matchesResultsTitle}><FormattedMessage id="matchResultsTitle" /> </h3><div className={`${classes.arrow} ${matchShowed[tournament.id] ? classes.rotate : ''}`}> 	&gt; </div>
                       </button>
                       <div className={`${classes.finishedTournamentMatches} ${matchShowed[tournament.id] ? '' : classes.hide}`}>
                         {tournament.matches && tournament.matches.map((match) => {
                           return (<div key={match.id} className={`${classes.finishedTournamentMatchContainer} ${matchShowed[tournament.id] ?  '' : classes.hiden}`}>
                             <div className={classes.finishedTournamentMatch}>
-                              <h3 className={`${match.winner === match.player_one ? classes.winner : classes.participant} ${classes.player} ${classes.playerOne}`}>{myTeam?.players.find((player) => player.id === match.player_one)?.username 
+                              <h3 className={`${match.winner === match.player_one ? classes.winner : classes.participant} ${classes.player} ${classes.playerOne}`}>
+                                {myTeam?.players.find((player) => player.id === match.player_one)?.username 
                                   || 
                                   tournament.opponent.players.find((player) => player.id === match.player_one)?.username}</h3>
                               <h3>VS</h3>
-                              <h3 className={`${match.winner === match.player_two ? classes.winner : classes.participant} ${classes.player}`}>{myTeam?.players.find((player) => player.id === match.player_two)?.username 
+                              <h3 className={`${match.winner === match.player_two ? classes.winner : classes.participant} ${classes.player}`}>
+                                {myTeam?.players.find((player) => player.id === match.player_two)?.username 
                                   || 
                                   tournament.opponent.players.find((player) => player.id === match.player_two)?.username} </h3>
                             </div>
@@ -446,20 +407,20 @@ const TournamentProgress: React.FC = () => {
         <div className={classes.notRunningBlock}>
           {tournamentsData && tournamentsData.length > 0 && 
           tournamentsData.findIndex((tournament) => moment(tournament.startTime) > moment()) !== -1 
-          && <h2 className={classes.finishedTournamentsTitle}>Upcoming tournaments</h2>}
+          && <h2 className={classes.finishedTournamentsTitle}><FormattedMessage id='upcomingTournamentsTitle' /></h2>}
           {tournamentsData && tournamentsData.map((tournament) => {
             if (moment(tournament.startTime) > moment()) {              
               return (<div className={classes.upcomingTournament} key={tournament.id}>
                 <div className={classes.upcomingTournamentHeader}>
-                  <h3>Opponent: {tournament.opponent.name}</h3>
+                  <h3><FormattedMessage id='opponentLabel' />: {tournament.opponent.name}</h3>
                 </div>
-                  <h3>Start time: {moment(tournament.startTime).format('DD.MM.YYYY HH:mm')}</h3>
+                  <h3><FormattedMessage id='startTimeLabel' />: {moment(tournament.startTime).format('DD.MM.YYYY HH:mm')}</h3>
                   <Button7x className={classes.button} onClick={() => {
-                    tournamentsWebSocket && tournamentsWebSocket.send(JSON.stringify({
+                    tournamentsWebSocketRef.current && tournamentsWebSocketRef.current.send(JSON.stringify({
                       action: 'start_now',
                       id: tournament?.id
                     }))
-                  }}>Start early</Button7x>
+                  }}><FormattedMessage id='startEarlyLabel' /></Button7x>
               </div>)}})}
         </div>
       </div>
