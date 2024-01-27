@@ -22,24 +22,12 @@ interface IMatchEdit {
     [key: number]: boolean
 }
 
-interface IWinners {
-    [key: number]: number
-}
-
-interface IPlayersInTeams {
-    [key: number]: {
-      [key: number]: string[]
-    }
-  }
-
 interface ITournamentsSlice {
     matches: IMatches,
     mapNames: IMapNames,
     tournamentsData: ITournamentAdmin[],
     localTimes: ILocalTimes,
     matchEdit: IMatchEdit,
-    wins: IWinners,
-    playersInTeams: IPlayersInTeams
 }
 
 const initialState: ITournamentsSlice = {
@@ -47,9 +35,7 @@ const initialState: ITournamentsSlice = {
     mapNames: {},
     tournamentsData: [],
     localTimes: {},
-    matchEdit: {},
-    wins: {},
-    playersInTeams: {}
+    matchEdit: {}
 }
 
 export const tournamentsAdminSlice = createSlice({
@@ -70,12 +56,6 @@ export const tournamentsAdminSlice = createSlice({
         },
         setMatchEdit: (state, action: PayloadAction<{matchId: number, edit: boolean}>) => {
             state.matchEdit[action.payload.matchId] = action.payload.edit
-        },
-        setWins: (state, action: PayloadAction<{teamId: number, wins: number}>) => {
-            state.wins[action.payload.teamId] = action.payload.wins
-        },
-        setPlayersInTeams: (state, action: PayloadAction<IPlayersInTeams>) => {
-            state.playersInTeams = action.payload
         }
     }
 })
@@ -85,8 +65,6 @@ export const selectMapNames = (state: RootState) => state.tournamentsAdmin.mapNa
 export const selectTournamentsData = (state: RootState) => state.tournamentsAdmin.tournamentsData
 export const selectLocalTimes = (state: RootState) => state.tournamentsAdmin.localTimes
 export const selectMatchEdit = (state: RootState) => state.tournamentsAdmin.matchEdit
-export const selectWins = (state: RootState) => state.tournamentsAdmin.wins
-export const selectPlayersInTeams = (state: RootState) => state.tournamentsAdmin.playersInTeams
 
 export const {
     setMatches,
@@ -94,8 +72,6 @@ export const {
     setTournamentsData,
     setLocalTimes,
     setMatchEdit,
-    setWins,
-    setPlayersInTeams
 } = tournamentsAdminSlice.actions
 
 export default tournamentsAdminSlice.reducer
