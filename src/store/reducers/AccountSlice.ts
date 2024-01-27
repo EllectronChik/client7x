@@ -56,16 +56,6 @@ const accountSlice = createSlice({
         },
         setIsManager: (state, action) => {
             state.isManager = action.payload
-        },
-        returnToInitialState: (state) => {
-            state.teamRegistred = null
-            state.localTime = null
-            state.globalTime = null
-            state.canRegister = null
-            state.isInitialLoad = [true, true]
-            state.initLoadSum = 0
-            state.isStaff = null
-            state.isManager = null            
         }
         
     }
@@ -90,6 +80,6 @@ export const {  setTeamRegistred,
                 setIsInitialLoadThird,
                 setInitLoadSum,
                 setIsManager,
-                setIsStaff,
-                returnToInitialState } = accountSlice.actions
+                setIsStaff
+             } = accountSlice.actions
 export default accountSlice.reducer
