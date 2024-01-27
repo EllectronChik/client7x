@@ -25,7 +25,7 @@ const TeamManage: React.FC = () => {
   return (
     <div className={classes.teamManage}>
       <ClanInfo />
-      {myTeam && myTeam.is_reg_to_current_season && currentTournament && moment(currentDateTime).isBefore(currentTournament.start_datetime) &&
+      {myTeam && currentTournament && moment(currentDateTime).isBefore(currentTournament.start_datetime) &&
       <Participate />
     }
       {myTeam && myTeam.is_reg_to_current_season && currentTournament && moment(currentDateTime).isAfter(currentTournament.start_datetime) &&
