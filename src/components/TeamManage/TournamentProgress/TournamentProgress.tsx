@@ -53,7 +53,6 @@ const TournamentProgress: React.FC = () => {
 
     matchesWebSocket.onmessage = (event) => {
       const message = JSON.parse(event.data);
-                  
       dispatch(setMatches({
         tournamentId: tournament.id,
         matches: message
@@ -110,8 +109,8 @@ const TournamentProgress: React.FC = () => {
   }
 
   useEffect(() => {
-    if (tournamentsData) {          
-      tournamentsData.forEach((tournament) => {        
+    if (tournamentsData) {
+      tournamentsData.forEach((tournament) => {     
         if (tournament.isFinished === true) {
           dispatch(setMatchShowed({
             tournamentId: tournament.id,
@@ -129,7 +128,7 @@ const TournamentProgress: React.FC = () => {
   useEffect(() => {    
     const interval = setInterval(() => {
       if (tournamentsData) {
-        tournamentsData.forEach((tournament) => {          
+        tournamentsData.forEach((tournament) => {
           if (moment(tournament.startTime).isBefore(new Date()) && tournament.isFinished === false && unstartedTournaments.indexOf(tournament.id) !== -1) {
             dispatch(deleteUnstartedTournament(tournament.id));
             matchesWebSocketFunc(tournament);
@@ -141,6 +140,7 @@ const TournamentProgress: React.FC = () => {
   }, [tournamentsData, unstartedTournaments])
 
   useEffect(() => {
+    document.title = intl.formatMessage({id: 'tournamentProgressTitle'})
     tournamentsWebSocketFunc();
     return () => {
       if (tournamentsWebSocketRef.current) {
@@ -171,7 +171,7 @@ const TournamentProgress: React.FC = () => {
           return null
         }
         return <div className={classes.tournament} key={key}>
-          {tournament?.teamInTournament === 1 && tournament.isFinished ? 
+          {tournament?.teamInTournament === 1 ? 
             <div className={classes.tournamentHeader}>
               <h2 className={classes.HeaderText}>{myTeam?.team_name}</h2>
               <h2 className={classes.HeaderScore}>{tournament.teamOneWins + ' : ' + tournament.teamTwoWins}</h2>
@@ -406,10 +406,10 @@ const TournamentProgress: React.FC = () => {
         </div>
         <div className={classes.notRunningBlock}>
           {tournamentsData && tournamentsData.length > 0 && 
-          tournamentsData.findIndex((tournament) => moment(tournament.startTime) > moment()) !== -1 
+          tournamentsData.findIndex((tournament) => moment(tournament.startTime) > moment() && tournament.isFinished !== true) !== -1 
           && <h2 className={classes.finishedTournamentsTitle}><FormattedMessage id='upcomingTournamentsTitle' /></h2>}
           {tournamentsData && tournamentsData.map((tournament) => {
-            if (moment(tournament.startTime) > moment()) {              
+            if (moment(tournament.startTime) > moment() && tournament.isFinished !== true) {             
               return (<div className={classes.upcomingTournament} key={tournament.id}>
                 <div className={classes.upcomingTournamentHeader}>
                   <h3><FormattedMessage id='opponentLabel' />: {tournament.opponent.name}</h3>
