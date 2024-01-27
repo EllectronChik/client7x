@@ -128,11 +128,6 @@ const MatchDistribution: React.FC = () => {
         }
     }, [groups, blocksCnt, fetchedTournaments]);
 
-    // useEffect(() => {
-    //     console.log(inputValues);
-        
-    // }, [inputValues])
-
 
     useEffect(() => {
         if (inputValues && inputValues[slideGroupIndex] && oldLocalTime) {         
@@ -240,7 +235,6 @@ const MatchDistribution: React.FC = () => {
                                     {groups[slideGroupIndex].teams.map((team) => {
                                         return <option key={team.id} value={team.id} 
                                         disabled={(selectedTeams[slideStageIndex].includes(team.id || -1) 
-                                            // || (regPairs.includes([parseInt(inputValues[slideGroupIndex][slideStageIndex][blockIndex][0]), team.id || -1].sort((a, b) => a - b))
                                             || ( regPairs.some(pair => JSON.stringify(pair.sort((a, b) => a - b)) === JSON.stringify([parseInt(inputValues[slideGroupIndex][slideStageIndex][blockIndex][0]), team.id || -1].sort((a, b) => a - b)))
                                                 && inputValues[slideGroupIndex][slideStageIndex][blockIndex][1] !== '0'))}>
                                                 {team.name}
@@ -305,7 +299,6 @@ const MatchDistribution: React.FC = () => {
                                         return <option 
                                         key={team.id} value={team.id} disabled={
                                             (selectedTeams[slideStageIndex].includes(team.id || -1) 
-                                            // || (regPairs.includes([parseInt(inputValues[slideGroupIndex][slideStageIndex][blockIndex][0]), team.id || -1].sort((a, b) => a - b))
                                             || ( regPairs.some(pair => JSON.stringify(pair.sort((a, b) => a - b)) === JSON.stringify([parseInt(inputValues[slideGroupIndex][slideStageIndex][blockIndex][0]), team.id || -1].sort((a, b) => a - b)))
                                                 && inputValues[slideGroupIndex][slideStageIndex][blockIndex][0] !== '0'))}>
                                                 {team.name}
