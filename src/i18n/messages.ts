@@ -111,6 +111,7 @@ export const MESSAGES = {
         startTimeLabel: "Start time",
         startEarlyLabel: "Start early",
         finish: "Finish",
+        tournamentProgressTitle: "Tournament management"
     },
     [LOCALES.RUSSIAN]: {
         header_statistic: 'Статистика',
@@ -222,6 +223,7 @@ export const MESSAGES = {
         startTimeLabel: "Время начала",
         startEarlyLabel: "Начать раньше",
         finish: "Завершить",
+        tournamentProgressTitle: "Управление турнирами",
     },
     [LOCALES.UKRAINIAN]: {
         header_statistic: 'Статистика',
@@ -333,5 +335,6 @@ export const MESSAGES = {
         startTimeLabel: "Час початку",
         startEarlyLabel: "Почати раніше",
         finish: "Завершити",
+        tournamentProgressTitle: "Управління турнірами",
     }
 }
