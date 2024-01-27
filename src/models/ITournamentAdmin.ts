@@ -10,9 +10,9 @@ export interface ITournamentAdmin {
     teamTwoName: string,
     teamTwoWins: number,
     stage: number,
-    group: number,
-    winner: number,
-    askedTeam: boolean,
-    askForFinished: boolean,
+    group: number | null,
+    winner: number | null,
+    askedTeam: boolean | null,
+    askForFinished: boolean | null,
     matchesExists?: boolean
 }
