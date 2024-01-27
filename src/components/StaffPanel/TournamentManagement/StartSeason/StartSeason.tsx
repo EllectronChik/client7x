@@ -37,6 +37,7 @@ const StartSeason: React.FC<StartSeasonProps> = ({...props}) => {
         });
         
         props.setSeasonStarted(true);
+        window.location.reload();
     }}>
         <p className={classes.title}><FormattedMessage id='no_seasons' /></p>
         {(seasonStartError || seasonStartErrorState) && <div className={classes.error}><img className={classes.errorIcon} src={important} alt="ERROR: " />
