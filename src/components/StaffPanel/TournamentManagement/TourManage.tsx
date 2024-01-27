@@ -8,7 +8,6 @@ import classes from './TourManage.module.scss';
 import MatchDistribution from './MatchDistribution/MatchDistribution';
 import moment from 'moment';
 import TournamentAdminProgress from './TournamentAdminProgress/TournamentAdminProgress';
-import GridDistribution from './GridDistribution/GridDistribution';
 
 
 const TourManage: React.FC = () => {
@@ -50,9 +49,10 @@ const TourManage: React.FC = () => {
     }
   }, [currentSeasonError])
 
+
   return (
     <div>
-      {currentSeasonLoading ?
+      {seasonStarted === undefined ?
        <Loader7x />
       : (seasonStarted === false) ? <div>
         <StartSeason setSeasonStarted={setSeasonStarted} timeZoneOffsetString={timeZoneOffsetString} /> 
@@ -67,7 +67,6 @@ const TourManage: React.FC = () => {
         </div> : 
         <div>
           <TournamentAdminProgress />
-          <GridDistribution />
         </div>}
     </div>
   )
