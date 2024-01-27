@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { match } from "assert";
 import { IMatch } from "models/IMatch";
 import { ITournamentApiResponse } from "models/ITournamentApiResponse";
 import { RootState } from "store/store";
@@ -38,7 +39,15 @@ export const tournamentsSlice = createSlice({
     initialState,
     reducers: {
         setMatches: (state, action: PayloadAction<{tournamentId: number, matches: IMatch[]}>) => {
-            state.matches[action.payload.tournamentId] = action.payload.matches
+            for (const match of action.payload.matches) {
+                if (!state.matches[action.payload.tournamentId]) {
+                    state.matches[action.payload.tournamentId] = {}
+                }
+                state.matches[action.payload.tournamentId][match.id] = match
+            }
+            if (action.payload.matches.length === 0) {
+                state.matches[action.payload.tournamentId] = {}
+            }
         },
         updateMatch: (state, action: PayloadAction<{tournamentId: number, match: IMatch}>) => {
             state.matches[action.payload.tournamentId][action.payload.match.id] = action.payload.match
