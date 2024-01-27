@@ -3,6 +3,12 @@ import { ITournament } from "models/ITournament";
 import { ITournamentApiResponse } from "models/ITournamentApiResponse";
 
 
+interface IPlayersInTeams {
+    [key: number]: {
+      [key: number]: string
+    }
+}
+
 
 export const TournamentApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_URL }),
@@ -65,7 +71,16 @@ export const TournamentApi = createApi({
                     id: id,
                 }
             })
+        }),
+        fetchPlayerByTeams: builder.query<IPlayersInTeams, string>({
+            query: (token) => ({
+                url: `/getPlayersByTeam/`,
+                method: "GET",
+                headers: {
+                    Authorization: `Token ${token}`
+                }
+            })
         })
-    }),
+    })
 })
 
