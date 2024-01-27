@@ -118,7 +118,10 @@ const Account: React.FC = () => {
             </div>
           )
         } else {
-            navigate('/login');
+            useEffect(() => {
+                navigate('/login');
+            }, [])
+            return null
         }
 
 }
