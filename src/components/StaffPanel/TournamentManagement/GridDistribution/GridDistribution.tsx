@@ -71,7 +71,7 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
     }
   }
 
-  const handleSelectFirstTeam = (event: React.ChangeEvent<HTMLSelectElement>, col: number) => {
+  const handleSelectFirstTeam = (event: React.ChangeEvent<HTMLSelectElement>, col: number) => {    
     const selectedTeam = Number(event.target.value);
     setLvlsTournaments((prev) => {
       const allStageTournaments = prev[1] || [];
@@ -81,13 +81,15 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
         winner: -1,
         id: allStageTournaments[col] && allStageTournaments[col].id ? allStageTournaments[col].id : null
       }
+      
       if (allStageTournaments[col].teamTwo !== 0 && allStageTournaments[col].id === null) {
         tournamentsWebSocketRef.current?.send(JSON.stringify({
           action: "create_tournament",
-          match_start_time: "2024-01-29T00:00:00Z",
+          match_start_time: new Date().toISOString(),
           team_one: selectedTeam,
           team_two: allStageTournaments[col].teamTwo,
-          stage: 1
+          stage: 1,
+          inline_number: col
         }))
       } else if (allStageTournaments[col].teamTwo !== 0) {
         tournamentsWebSocketRef.current?.send(JSON.stringify({
@@ -119,10 +121,11 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
       if (allStageTournaments[col].teamOne !== 0 && allStageTournaments[col].id === null) {
         tournamentsWebSocketRef.current?.send(JSON.stringify({
           action: "create_tournament",
-          match_start_time: "2024-01-29T00:00:00Z",
+          match_start_time: new Date().toISOString(),
           team_one: allStageTournaments[col].teamOne,
           team_two: selectedTeam,
-          stage: 1
+          stage: 1,
+          inline_number: col
         }))
       } else if (allStageTournaments[col].teamOne !== 0) {
         tournamentsWebSocketRef.current?.send(JSON.stringify({
@@ -152,18 +155,15 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
           winner: tournament.winner ? tournament.winner : -1,
           id: tournament.id
         })
+        setMinGridRow(locLvllsTournaments[1] ? Math.ceil(Math.log2(locLvllsTournaments[1].length) + 1) : 1);
         setLvlsTournaments(locLvllsTournaments);
-        
       })
+      if (gridRow === 0) {
+        setGridRow(locLvllsTournaments[1] ? Math.ceil(Math.log2(locLvllsTournaments[1].length) + 1) : maxGridRow / 2);
+      }
     }
   }, [tournamentsData])
 
-  useEffect(() => {
-    if (lvlsTournaments) {      
-      setMinGridRow(lvlsTournaments[1] ? lvlsTournaments[1].length : 1);
-      
-    }
-  }, [lvlsTournaments])
 
   useEffect(() => {
     groupsWebSocketFunc();
@@ -199,14 +199,12 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
       setTeamDict(teams);
       setSortedGroups(sortedGroupsData);
       setMaxGridRow(Math.ceil(Math.log2(Object.keys(teams).length)));
+      
+      
     }
   }, [groups, wins])
 
-  useEffect(() => {
-    if (maxGridRow > 0) {
-      setGridRow(Math.ceil(maxGridRow / 2));
-    }
-  }, [maxGridRow])
+
 
 
   return (
@@ -253,72 +251,82 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
           </div>
         ))}
       </div>
-      <div className={classes.grid}>
+      <div className={classes.gridBox}>
         <input  type="range" min={1} max={maxGridRow} value={gridRow} 
                 onChange={(e) => {
                   if (Number(e.target.value) >= minGridRow) {
                     setGridRow(Number(e.target.value));
                   }
                 }} />
-        {Array.from(Array(gridRow).keys()).map((row) => (
-          <div className={classes.row} key={row}>
-            {Array.from(Array(2 ** (row)).keys()).map((col) => (
-              <div key={col}>
-                {row + 1 == gridRow && <div className={classes.col}>
-                  <select 
-                    value={lvlsTournaments[1] && lvlsTournaments[1][col] ? lvlsTournaments[1][col].teamOne : 0}
-                    onChange={(e) => handleSelectFirstTeam(e, col)}>
-                    <option value="0" disabled>Select player</option>
-                    {teamDict && Object.values(teamDict).map((team) => (
-                      <option key={team.id} value={team.id}>
-                        {team.name}
-                      </option>
-                    ))}
-                  </select>
-                  <select 
-                    value={lvlsTournaments[1] && lvlsTournaments[1][col] ? lvlsTournaments[1][col].teamTwo : 0}
-                    onChange={(e) => handleSelectSecondTeam(e, col)}>
-                    <option value="0" disabled>Select player</option>
-                    {teamDict && Object.values(teamDict).map((team) => (
-                      <option key={team.id} value={team.id}>
-                        {team.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                }
-                {row + 1 != gridRow && lvlsTournaments[gridRow - row] === undefined && <div className={classes.col}>
-                  <p>{teamDict && 
-                      lvlsTournaments && 
-                      lvlsTournaments[gridRow - row - 1] && 
-                      lvlsTournaments[gridRow - row - 1][Math.floor(col * 2)] && 
-                      teamDict[lvlsTournaments[gridRow - row - 1][Math.floor(col * 2)]?.winner]?.name}</p>
-                  {teamDict &&
-                    !(lvlsTournaments && 
-                      lvlsTournaments[gridRow - row - 1] && 
-                      lvlsTournaments[gridRow - row - 1][Math.floor(col * 2)]?.winner !== -1) &&
-                      <p>Waiting...</p>
+        <div className={classes.grid}>
+          {Array.from(Array(gridRow).keys()).map((row) => (
+            <div className={classes.row} key={row}>
+              {Array.from(Array(2 ** (row)).keys()).map((col) => (
+                <div className={classes.colBox} key={col}>
+                  {row + 1 == gridRow && <div className={classes.col}>
+                    <select className={classes.select}
+                      value={lvlsTournaments[1] && lvlsTournaments[1][col] ? lvlsTournaments[1][col].teamOne : 0}
+                      onChange={(e) => handleSelectFirstTeam(e, col)}>
+                      <option value="0" disabled>Select player</option>
+                      {teamDict && Object.values(teamDict).map((team) => (
+                        <option key={team.id} value={team.id}>
+                          {team.name}
+                        </option>
+                      ))}
+                    </select>
+                    <select className={classes.select}
+                      value={lvlsTournaments[1] && lvlsTournaments[1][col] ? lvlsTournaments[1][col].teamTwo : 0}
+                      onChange={(e) => handleSelectSecondTeam(e, col)}>
+                      <option value="0" disabled>Select player</option>
+                      {teamDict && Object.values(teamDict).map((team) => (
+                        <option key={team.id} value={team.id}>
+                          {team.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                   }
-                  <p>{teamDict &&
-                      lvlsTournaments &&
-                      lvlsTournaments[gridRow - row - 1] &&
-                      lvlsTournaments[gridRow - row - 1][Math.floor(col * 2)] &&
-                      teamDict[lvlsTournaments[gridRow - row - 1][Math.floor(col * 2) + 1]?.winner]?.name}</p>
-                  {teamDict &&
-                    !(lvlsTournaments && 
-                      lvlsTournaments[gridRow - row - 1] && 
-                      lvlsTournaments[gridRow - row - 1][Math.floor(col * 2) + 1]?.winner &&
-                      lvlsTournaments[gridRow - row - 1][Math.floor(col * 2) + 1]?.winner !== -1) &&
-                      <p>Waiting...</p>}
-                  </div>}
-                {row + 1 != gridRow && lvlsTournaments[gridRow - row] !== undefined && <div className={classes.col}>
-                  <div>{lvlsTournaments[gridRow - row][col] ? <p>{teamDict[lvlsTournaments[gridRow - row][col].teamOne].name}</p> : 0}</div>
-                  <div>{lvlsTournaments[gridRow - row][col] ? <p>{teamDict[lvlsTournaments[gridRow - row][col].teamTwo].name}</p> : 0}</div>
-                  </div>}
-              </div>
-            ))}
-          </div>
-        ))}
+                  {row + 1 !== gridRow && <div style={{width: `${(200 * 2 ** (gridRow - 1)) / Array(2 ** (row)).length + 20 * (gridRow - row - 1)}px`}} className={`${classes.col} ${classes.textCol}`}>
+                    {lvlsTournaments[gridRow - row] && lvlsTournaments[gridRow - row][col] && lvlsTournaments[gridRow - row][col].id &&
+                    <div className={classes.teamBox}>
+                      <p className={classes.team}>
+                        {teamDict && teamDict[lvlsTournaments[gridRow - row][col].teamOne].name}
+                      </p>
+                      <p className={classes.team}>
+                        {teamDict && teamDict[lvlsTournaments[gridRow - row][col].teamTwo].name}
+                      </p>
+                      </div>}
+                      {(!lvlsTournaments[gridRow - row] || !lvlsTournaments[gridRow - row][col] || !lvlsTournaments[gridRow - row][col].id) &&
+                      <div className={classes.teamBox}>
+                        {lvlsTournaments[gridRow - row - 1] && 
+                        lvlsTournaments[gridRow - row - 1][col * 2] && lvlsTournaments[gridRow - row - 1][col * 2]?.winner !== -1 ? 
+                        <p className={classes.team}>
+                          {teamDict && teamDict[lvlsTournaments[gridRow - row - 1][col * 2]?.winner].name}
+                        </p> : 
+                        <p className={classes.team}>
+                          
+                        </p>}
+                        {lvlsTournaments[gridRow - row - 1] &&
+                        lvlsTournaments[gridRow - row - 1][col * 2 + 1] && lvlsTournaments[gridRow - row - 1][col * 2 + 1]?.winner !== -1 ? 
+                        <p className={classes.team}>
+                          {teamDict && teamDict[lvlsTournaments[gridRow - row - 1][col * 2 + 1]?.winner].name}
+                        </p> : 
+                        <p className={classes.team}>
+                          
+                        </p>}
+                      </div>}
+                      <div className={classes.line_1}>
+                        <div className={classes.col_1} style={{width: `${100 * 2 ** (gridRow - row - 2) + 20}px`}}></div>
+                        <div className={classes.col_2} style={{width: `${100 * 2 ** (gridRow - row - 2) + 20}px`}}></div>
+                      </div>
+                      <div className={classes.line_2} style={{width: `${200 * 2 ** (gridRow - row - 2) + 40}px`}}></div>
+                    </div>}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+        <div></div>
       </div>
     </div>
   )
