@@ -1,6 +1,6 @@
-import React from 'react'
+import { FC } from 'react'
 
-const StartPage = () => {
+const StartPage: FC = () => {
   return (
     <div>StartPage</div>
   )
