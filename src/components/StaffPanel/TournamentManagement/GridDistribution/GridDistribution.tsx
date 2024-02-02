@@ -41,6 +41,7 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
   const [gridRow, setGridRow] = useState<number>(0);
   const [maxGridRow, setMaxGridRow] = useState<number>(0);
   const [minGridRow, setMinGridRow] = useState<number>(1);
+  const [thirdPlace, setThirdPlace] = useState<boolean>(true);
   const [lvlsTournaments, setLvlsTournaments] = useState<ILevelsTournaments>({});
   const groupsWebSocketRef = useRef<WebSocket>();
   const tournamentsData = useAppSelector(selectTournamentsData);
@@ -71,10 +72,10 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
     }
   }
 
-  const handleSelectFirstTeam = (event: React.ChangeEvent<HTMLSelectElement>, col: number) => {    
+  const handleSelectFirstTeam = (event: React.ChangeEvent<HTMLSelectElement>, col: number, stage: number) => {    
     const selectedTeam = Number(event.target.value);
     setLvlsTournaments((prev) => {
-      const allStageTournaments = prev[1] || [];
+      const allStageTournaments = prev[stage] || [];
       allStageTournaments[col] = {
         teamOne: selectedTeam,
         teamTwo: allStageTournaments[col] ? allStageTournaments[col].teamTwo : 0,
@@ -88,7 +89,7 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
           match_start_time: new Date().toISOString(),
           team_one: selectedTeam,
           team_two: allStageTournaments[col].teamTwo,
-          stage: 1,
+          stage: stage,
           inline_number: col
         }))
       } else if (allStageTournaments[col].teamTwo !== 0) {
@@ -102,15 +103,15 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
       
       return {
         ...prev,
-        [1]: allStageTournaments
+        [stage]: allStageTournaments
       }
     })
   }
 
-  const handleSelectSecondTeam = (event: React.ChangeEvent<HTMLSelectElement>, col: number) => {
+  const handleSelectSecondTeam = (event: React.ChangeEvent<HTMLSelectElement>, col: number, stage: number) => {
     const selectedTeam = Number(event.target.value);
     setLvlsTournaments((prev) => {      
-      const allStageTournaments = prev[1] || [];
+      const allStageTournaments = prev[stage] || [];
       allStageTournaments[col] = {
         teamOne: allStageTournaments[col] ? allStageTournaments[col].teamOne : 0,
         teamTwo: selectedTeam,
@@ -124,7 +125,7 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
           match_start_time: new Date().toISOString(),
           team_one: allStageTournaments[col].teamOne,
           team_two: selectedTeam,
-          stage: 1,
+          stage: stage,
           inline_number: col
         }))
       } else if (allStageTournaments[col].teamOne !== 0) {
@@ -138,7 +139,7 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
 
       return {
         ...prev,
-        [1]: allStageTournaments
+        [stage]: allStageTournaments
       }
     })
   }
@@ -175,6 +176,7 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
       }
     }
   }, [])
+
 
   useEffect(() => {
     if (groups && Object.keys(wins).length > 0) {
@@ -252,21 +254,38 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
         ))}
       </div>
       <div className={classes.gridBox}>
-        <input  type="range" min={1} max={maxGridRow} value={gridRow} 
-                onChange={(e) => {
-                  if (Number(e.target.value) >= minGridRow) {
-                    setGridRow(Number(e.target.value));
-                  }
-                }} />
+        <div className={classes.gridTitleBox}>
+          <div>
+            <h3>Specify the number of stages in the grid:</h3>
+            <div className={classes.gridTitle}>
+              <input  type="range" min={1} max={maxGridRow} value={gridRow} 
+                      onChange={(e) => {
+                        if (Number(e.target.value) >= minGridRow) {
+                          setGridRow(Number(e.target.value));
+                        }
+                      }} />
+              <h3>{gridRow}</h3>
+            </div>
+          </div>
+          <div className={classes.thirdPlace}>
+            <h3>3rd place match:</h3>
+            <input type="checkbox" className={classes.checkbox} checked={thirdPlace} onChange={() => setThirdPlace(!thirdPlace)}/>
+          </div>
+        </div>
         <div className={classes.grid}>
           {Array.from(Array(gridRow).keys()).map((row) => (
             <div className={classes.row} key={row}>
               {Array.from(Array(2 ** (row)).keys()).map((col) => (
                 <div className={classes.colBox} key={col}>
                   {row + 1 == gridRow && <div className={classes.col}>
-                    <select className={classes.select}
+                    <select className={`${classes.select} 
+                      ${lvlsTournaments[1] && 
+                        lvlsTournaments[1][col] && 
+                        lvlsTournaments[1][col].teamOne &&
+                        lvlsTournaments[1][col].winner &&
+                        lvlsTournaments[1][col].teamOne == lvlsTournaments[1][col].winner ? classes.winner : ''}`} 
                       value={lvlsTournaments[1] && lvlsTournaments[1][col] ? lvlsTournaments[1][col].teamOne : 0}
-                      onChange={(e) => handleSelectFirstTeam(e, col)}>
+                      onChange={(e) => handleSelectFirstTeam(e, col, 1)}>
                       <option value="0" disabled>Select player</option>
                       {teamDict && Object.values(teamDict).map((team) => (
                         <option key={team.id} value={team.id}>
@@ -274,9 +293,14 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
                         </option>
                       ))}
                     </select>
-                    <select className={classes.select}
+                    <select className={`${classes.select} 
+                      ${lvlsTournaments[1] && 
+                        lvlsTournaments[1][col] && 
+                        lvlsTournaments[1][col].teamTwo &&
+                        lvlsTournaments[1][col].winner &&
+                        lvlsTournaments[1][col].teamTwo == lvlsTournaments[1][col].winner ? classes.winner : ''}`}
                       value={lvlsTournaments[1] && lvlsTournaments[1][col] ? lvlsTournaments[1][col].teamTwo : 0}
-                      onChange={(e) => handleSelectSecondTeam(e, col)}>
+                      onChange={(e) => handleSelectSecondTeam(e, col, 1)}>
                       <option value="0" disabled>Select player</option>
                       {teamDict && Object.values(teamDict).map((team) => (
                         <option key={team.id} value={team.id}>
@@ -287,13 +311,24 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
                   </div>
                   }
                   {row + 1 !== gridRow && <div style={{width: `${(200 * 2 ** (gridRow - 1)) / Array(2 ** (row)).length + 20 * (gridRow - row - 1)}px`}} className={`${classes.col} ${classes.textCol}`}>
+                    {row === 0 && <p>Final</p>}
                     {lvlsTournaments[gridRow - row] && lvlsTournaments[gridRow - row][col] && lvlsTournaments[gridRow - row][col].id &&
                     <div className={classes.teamBox}>
-                      <p className={classes.team}>
-                        {teamDict && teamDict[lvlsTournaments[gridRow - row][col].teamOne].name}
+                      <p className={`${classes.team} 
+                        ${lvlsTournaments[gridRow - row] && 
+                          lvlsTournaments[gridRow - row][col] && 
+                          lvlsTournaments[gridRow - row][col].teamOne &&
+                          lvlsTournaments[gridRow - row][col].winner &&
+                          lvlsTournaments[gridRow - row][col].teamOne == lvlsTournaments[gridRow - row][col].winner ? classes.winner : ''}`}>
+                        {teamDict && teamDict[lvlsTournaments[gridRow - row][col].teamOne]?.name}
                       </p>
-                      <p className={classes.team}>
-                        {teamDict && teamDict[lvlsTournaments[gridRow - row][col].teamTwo].name}
+                      <p className={`${classes.team}
+                        ${lvlsTournaments[gridRow - row] && 
+                          lvlsTournaments[gridRow - row][col] && 
+                          lvlsTournaments[gridRow - row][col].teamTwo &&
+                          lvlsTournaments[gridRow - row][col].winner &&
+                          lvlsTournaments[gridRow - row][col].teamTwo == lvlsTournaments[gridRow - row][col].winner ? classes.winner : ''}`}>
+                        {teamDict && teamDict[lvlsTournaments[gridRow - row][col].teamTwo]?.name}
                       </p>
                       </div>}
                       {(!lvlsTournaments[gridRow - row] || !lvlsTournaments[gridRow - row][col] || !lvlsTournaments[gridRow - row][col].id) &&
@@ -323,6 +358,29 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
                     </div>}
                 </div>
               ))}
+              {thirdPlace && row === 0 && <div className={classes.thirdPlace} style={{position: gridRow >= 4 ? 'relative' : 'absolute'}}>
+              <p>Third place match</p>
+              <select className={classes.select}
+                      value={lvlsTournaments[999] && lvlsTournaments[999][0] ? lvlsTournaments[999][0].teamOne : 0}
+                      onChange={(e) => handleSelectFirstTeam(e, 0, 999)}>
+                      <option value="0" disabled>Select player</option>
+                      {teamDict && Object.values(teamDict).map((team) => (
+                        <option key={team.id} value={team.id}>
+                          {team.name}
+                        </option>
+                      ))}
+                    </select>
+                    <select className={classes.select}
+                      value={lvlsTournaments[999] && lvlsTournaments[999][0] ? lvlsTournaments[999][0].teamTwo : 0}
+                      onChange={(e) => handleSelectSecondTeam(e, 0, 999)}>
+                      <option value="0" disabled>Select player</option>
+                      {teamDict && Object.values(teamDict).map((team) => (
+                        <option key={team.id} value={team.id}>
+                          {team.name}
+                        </option>
+                      ))}
+                    </select>
+              </div>}
             </div>
           ))}
         </div>
