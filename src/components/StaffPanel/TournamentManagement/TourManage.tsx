@@ -65,8 +65,9 @@ const TourManage: React.FC = () => {
           </div>
           <GroupDistribution />
         </div> : 
-        <div>
+        <div className={classes.tournamentsAdminProgress}>
           <TournamentAdminProgress />
+          <StartedSeasonManage setSeasonStarted={setSeasonStarted} timeZoneOffsetString={timeZoneOffsetString} />
         </div>}
     </div>
   )
