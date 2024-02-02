@@ -23,6 +23,7 @@ import {  selectMatches,
           setUnstartedTournaments,
           deleteUnstartedTournament
           } from 'store/reducers/TournamentsSlice';
+import { setPlayerGames, setPlayerWins, selectPlayers } from 'store/reducers/ClanSlice';
 
 
 const TournamentProgress: React.FC = () => {
@@ -36,6 +37,7 @@ const TournamentProgress: React.FC = () => {
   const matchShowed = useAppSelector(selectMatchShowed);
   const tournamentsData = useAppSelector(selectTournamentsData);
   const unstartedTournaments = useAppSelector(selectUnstartedTournaments);
+  const players = useAppSelector(selectPlayers);
   const dispatch = useAppDispatch();
   let mapSendTimeout: NodeJS.Timeout;
   const intl = useIntl();
@@ -140,7 +142,6 @@ const TournamentProgress: React.FC = () => {
   }, [tournamentsData, unstartedTournaments])
 
   useEffect(() => {
-    document.title = intl.formatMessage({id: 'tournamentProgressTitle'})
     tournamentsWebSocketFunc();
     return () => {
       if (tournamentsWebSocketRef.current) {
@@ -217,6 +218,12 @@ const TournamentProgress: React.FC = () => {
                                 updated_column: 'player_one',
                                 updated_value: event.target.value
                               }));
+                              const player = players.find((player) => player.id === parseInt(event.target.value));
+                              const oldPlayer = players.find((player) => player.id === matches[parseInt(key)][parseInt(key2)].player_one);
+                              const playerGames = player ? player.total_games : 0;
+                              const oldPlayerGames = oldPlayer ? oldPlayer.total_games : 0;
+                              dispatch(setPlayerGames({ playerGames: playerGames + 1, index: parseInt(event.target.value) }));
+                              dispatch(setPlayerGames({ playerGames: oldPlayerGames - 1, index: matches[parseInt(key)][parseInt(key2)].player_one }));
                             }
                           }>
                     <option value='0' disabled><FormattedMessage id='selectPlayerLabel' /></option>
@@ -240,6 +247,12 @@ const TournamentProgress: React.FC = () => {
                               updated_column: 'player_two',
                               updated_value: event.target.value
                             }));
+                            const player = players.find((player) => player.id === parseInt(event.target.value));
+                            const oldPlayer = players.find((player) => player.id === matches[parseInt(key)][parseInt(key2)].player_two);
+                            const playerGames = player ? player.total_games : 0;
+                            const oldPlayerGames = oldPlayer ? oldPlayer.total_games : 0;
+                            dispatch(setPlayerGames({ playerGames: playerGames + 1, index: parseInt(event.target.value) }));
+                            dispatch(setPlayerGames({ playerGames: oldPlayerGames - 1, index: matches[parseInt(key)][parseInt(key2)].player_two }));
                           }
                         }>
                     <option value='0' disabled><FormattedMessage id='selectPlayerLabel' /></option>
@@ -287,6 +300,12 @@ const TournamentProgress: React.FC = () => {
                                 updated_column: 'winner',
                                 updated_value: event.target.value
                               }));
+                              const player = players.find((player) => player.id === parseInt(event.target.value));
+                              const oldPlayer = players.find((player) => player.id === matches[parseInt(key)][parseInt(key2)].winner);
+                              const playerWins = player ? player.wins : 0;
+                              const oldPlayerWins = oldPlayer ? oldPlayer.wins : 0;
+                              dispatch(setPlayerWins({ playerWins: playerWins + 1, index: parseInt(event.target.value) }));
+                              dispatch(setPlayerWins({ playerWins: oldPlayerWins - 1, index: matches[parseInt(key)][parseInt(key2)].winner }));
                             }
                           }>
                         <option value="0" disabled><FormattedMessage id="selectWinnerLabel" /></option>
