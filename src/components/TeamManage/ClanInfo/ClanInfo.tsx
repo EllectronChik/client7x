@@ -18,6 +18,7 @@ import leagueDefault from '@assets/images/league_marks/0.svg';
 import playerDefault from '@assets/images/player/default.svg';
 import { setDragPlayer, selectDraggable, setDraggable } from 'store/reducers/DragPlayerSlice';
 import { selectTeamRegistred } from 'store/reducers/AccountSlice';
+import { selectPlayers, setPlayers } from 'store/reducers/ClanSlice';
 import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
 import { FormattedMessage } from 'react-intl'
 import { PlayerApi } from 'services/PlayerService';
@@ -36,6 +37,7 @@ const ClanInfo: React.FC = () => {
     const teamRegistred = useAppSelector(selectTeamRegistred);
     const {data: playerToSeason} = PlayerApi.useGetRegForSeasonPlayersQuery({token: cookies.token});
     const draggable = useAppSelector(selectDraggable);
+    const players = useAppSelector(selectPlayers);
     const [teamLogoUrl, setTeamLogoUrl] = useState<string | null>(null);
     const dispatch = useAppDispatch();
     let changeNameTimeout: NodeJS.Timeout;
@@ -43,6 +45,7 @@ const ClanInfo: React.FC = () => {
 
     useEffect(() => {
         if (myTeam) {
+            dispatch(setPlayers(myTeam.players));
             setRace(() => {
                 return myTeam.players.map((player) => {
                     if (player.race === 1) {
@@ -136,7 +139,6 @@ const ClanInfo: React.FC = () => {
 
   return (
     <div>
-
         <div className={classes.teamManage}>
             {myTeam && 
             <div className={classes.teamInfo}>
@@ -188,7 +190,7 @@ const ClanInfo: React.FC = () => {
             </div>}
             <div className={classes.teamContent}>
                 <div className={classes.playersInfo}>
-                    {myTeam && draggable && myTeam.players.map((player, index) => (
+                    {players && draggable && players.map((player, index) => (
                         <div draggable={draggable[index] && draggable[index][1]}
                         onDragStart={(e) => {handleDragStartPlayer(e, index)}}
                         onDragEnd={(e) => {handleDragEndPlayer(e)}}
