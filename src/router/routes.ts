@@ -1,4 +1,4 @@
-import StartPage from '../pages/StartPage';
+import StartPage from '../pages/StartPage/StartPage';
 import Arhive from './../pages/Arhive';
 import Login from '../pages/Login/Login';
 import Account from './../pages/Account/Account';
