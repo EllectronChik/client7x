@@ -85,7 +85,6 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({...props}) => {
   
   
     useEffect(() => {
-      document.title = intl.formatMessage({id: 'team_manage'});
       handleChangeDateFormat();
     }, [intl])
 
