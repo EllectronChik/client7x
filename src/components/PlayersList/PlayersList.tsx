@@ -17,6 +17,7 @@ import Select from 'react-select';
 import ReloadinWarning from 'components/UI/ReloadinWarning';
 import important from 'assets/images/techImages/important.svg';
 import { useAppDispatch, useAppSelector } from 'hooks/reduxHooks';
+import { cancelAllLogoRequests } from 'services/PlayerLogoService';
 import {
   setClan,
   updateClanField,
@@ -161,7 +162,7 @@ const PlayersList: React.FC<PlayersListProps> = ({tag}) => {
       user: cookies.userId,
     }    
 
-
+    cancelAllLogoRequests();
 
     try {
       if ((await axios.get(`${import.meta.env.VITE_API_URL}teams/?tag=${clan.tag}`)).data.results.length > 0) {
