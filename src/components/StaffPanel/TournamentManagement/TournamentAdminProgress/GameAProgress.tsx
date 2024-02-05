@@ -17,6 +17,7 @@ import { TournamentApi } from 'services/TournamentService';
 import classes from './TournamentAdminProgress.module.scss';
 import { ITournamentAdmin } from 'models/ITournamentAdmin';
 import { IMatch } from 'models/IMatch';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 interface IProps {
     tournament: ITournamentAdmin
@@ -41,6 +42,7 @@ const GameAProgress: FC<IProps> = ({
     const matchEdit = useAppSelector(selectMatchEdit);
     const matches = useAppSelector(selectMatches);
     const {data: playersInTeams} = TournamentApi.useFetchPlayerByTeamsQuery(cookies.token);
+    const intl = useIntl();
 
     return <div className={classes.tournament} key={tournament.id}>
     <div className={classes.tournamentInfo}>
@@ -86,7 +88,7 @@ const GameAProgress: FC<IProps> = ({
         }
       }}/>}
       <Tooltip  id='addMatch'
-                border='1px solid red'><h3>Add Match</h3></Tooltip>
+                border='1px solid red'><h3><FormattedMessage id='addMatch' /></h3></Tooltip>
         <button data-tooltip-id='addMatch' className={classes.addMatch} onClick={() => {
           if (!matchesWebSocketsRef.current[tournament.id]) {
             matchesWebSocketFunc(tournament);
@@ -137,7 +139,7 @@ const GameAProgress: FC<IProps> = ({
             </h3>
           </div>
           <div className={classes.matchInfo}>
-              <h3 className={classes.map}>{match.map !== null ? (match.map !== '' ? match.map : 'Map unspecified') : 'Map unspecified'}</h3>
+              <h3 className={classes.map}>{match.map !== null ? (match.map !== '' ? match.map : intl.formatMessage({id: 'mapUnspecified'})) : intl.formatMessage({id: 'mapUnspecified'})}</h3>
               <button className={classes.editButton} 
                       onClick={() => {
                         dispatch(setMatchEdit({
@@ -170,7 +172,7 @@ const GameAProgress: FC<IProps> = ({
                 updated_value: event.target.value
               }))
             }}>
-              <option className={classes.option} value="0" disabled>Select player</option>
+              <option className={classes.option} value="0" disabled><FormattedMessage id="selectPlayerLabel"/></option>
               {playersInTeams[tournament.teamOne] && Object.keys(playersInTeams[tournament.teamOne]).map((playerId) => {
                 return <option className={classes.option} key={playerId} value={playerId}>{playersInTeams[tournament.teamOne][parseInt(playerId)]}</option>
               })}
@@ -184,14 +186,14 @@ const GameAProgress: FC<IProps> = ({
                 updated_value: event.target.value
               }));
             }}>
-              <option className={classes.option} value="0" disabled>Select player</option>
+              <option className={classes.option} value="0" disabled><FormattedMessage id="selectPlayerLabel"/></option>
               {playersInTeams[tournament.teamTwo] && Object.keys(playersInTeams[tournament.teamTwo]).map((playerId) => {
                 return <option className={classes.option} key={playerId} value={playerId}>{playersInTeams[tournament.teamTwo][parseInt(playerId)]}</option>
               })}
             </select>
           </div>
           <div className={classes.matchInfo}>
-            <input placeholder='MAP' className={classes.mapNames} type="text" value={mapNames[match.id]} onChange={(event) => {
+            <input placeholder={intl.formatMessage({id: 'mapLabel'})} className={classes.mapNames} type="text" value={mapNames[match.id]} onChange={(event) => {
               dispatch(setMapNames({
                 matchId: match.id,
                 mapNames: event.target.value
@@ -228,7 +230,7 @@ const GameAProgress: FC<IProps> = ({
       </div>
     })}
     <div className={classes.isFinished}>
-      <label htmlFor={`isFinished_${tournament.id}`} className={classes.isFinishedLabel}>Completed</label>
+      <label htmlFor={`isFinished_${tournament.id}`} className={classes.isFinishedLabel}><FormattedMessage id="completed" /></label>
       <input id={`isFinished_${tournament.id}`} type="checkbox" checked={tournament.isFinished} onChange={() => {
         tournamentsWebSocketRef.current?.send(JSON.stringify({
           action: "update",
