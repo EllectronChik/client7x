@@ -1,0 +1,133 @@
+@import '../../settings.scss';
+
+
+.container {
+    @include container();
+    align-items: center;
+    flex-direction: column;
+    margin-top: 30px;
+    color: $clr_light;
+    .season {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .seasonContent {
+            display: flex;
+            gap: 50px;
+
+            .groups {
+                margin-top: 20px;
+                display: flex;
+                flex-direction: column;
+                gap: 25px;
+                
+                .group {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 25px 50px;
+                    font-size: 20px;
+                    border: 2px solid $clr_red;
+                    border-radius: 25px;
+                    width: 350px;
+        
+                    .groupName {
+                        display: flex;
+                        gap: 10px;
+                    }
+                
+                    .table {
+                        width: 100%;
+                        .team {
+                            text-align: left;
+                        }
+                        .wins {
+                            text-align: right;
+                        }
+                    }
+                
+                }
+            }
+
+            .gridBox {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                margin-top: 20px;
+                min-width: 840px;
+                padding: 15px 50px 50px 50px;
+                border: 2px solid $clr_red;
+                border-radius: 20px;
+                .grid {
+                    .playOffLabel {
+                        margin-bottom: 9px;
+                    }
+                    .row {
+                        display: flex;
+                        justify-content: center;
+                        gap: 20px;
+                
+                        .col {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            .teamBox {
+                                display: flex;
+                
+                                .team {
+                                    text-align: center;
+                                    width: 175px;
+                                    border: 1px solid $clr_red;
+                                    border-right: 0;
+                                }
+                                
+                                .score {
+                                    width: 25px;
+                                    border: 1px solid $clr_red;
+                                    text-align: center;
+                                }
+        
+                                .winner {
+                                    text-shadow: 0 0 10px rgba(41, 228, 235, .5) , 0 0 10px rgba(41, 228, 235, .5) , 0 0 10px rgba(41, 228, 235, .5);
+                                }
+                                
+                                &:last-child .team {
+                                    border-top: 0;
+                                }
+        
+                                &:last-child .score {
+                                    border-top: 0;
+                                }
+                            }
+                
+                            .line_1 {
+                                display: flex;
+                                height: 20px;
+                                .col_1 {
+                                    border-right: 1px solid $clr_red;
+                                    border-bottom: 1px solid $clr_red;
+                                }
+                                .col_2 {
+                                    border-bottom: 1px solid $clr_red;
+                
+                                }
+                            }
+                
+                            .line_2 {
+                                display: flex;
+                                height: 20px;
+                                border-left: 1px solid $clr_red;
+                                border-right: 1px solid $clr_red;
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+
+}
