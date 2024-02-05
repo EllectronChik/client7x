@@ -1,7 +1,7 @@
 import { IPlayer } from 'models/IPlayer';
 import React, { useEffect, useState } from 'react';
 import classes from './PlayerItem.module.scss';
-import { PlayerLogoApi } from 'services/PlayerLogo';
+import { PlayerLogoApi } from 'services/PlayerLogoService';
 import defaultPlayer from '../../assets/images/player/default.svg';
 import { useAppDispatch } from 'hooks/reduxHooks';
 import { updatePlayerField,  } from 'store/reducers/PlayerListSlice';
