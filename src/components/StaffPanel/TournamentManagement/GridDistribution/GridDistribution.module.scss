@@ -19,6 +19,11 @@
             border: 2px solid $clr_red;
             border-radius: 25px;
             width: 350px;
+
+            .groupName {
+                display: flex;
+                gap: 10px;
+            }
         
             .table {
                 width: 100%;
@@ -135,6 +140,10 @@
                             height: 20px;
                             border-left: 1px solid $clr_red;
                             border-right: 1px solid $clr_red;
+                        }
+
+                        .final {
+                            align-self: center;
                         }
                     }
     
