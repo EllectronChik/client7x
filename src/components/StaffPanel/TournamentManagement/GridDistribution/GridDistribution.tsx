@@ -6,6 +6,7 @@ import classes from './GridDistribution.module.scss';
 import { IClan } from 'models/IClan';
 import {  selectTournamentsData } from 'store/reducers/TournamentsAdminSlice';
 import { useAppSelector } from 'hooks/reduxHooks';
+import { FormattedMessage } from 'react-intl';
 
 
 interface IWins {
@@ -25,11 +26,13 @@ interface IProps {
 
 interface ILevelsTournaments {
   [key: number]: {
-    teamOne: number,
-    teamTwo: number,
-    winner: number,
-    id: number | null
-  }[]
+    [key: number] : {
+      teamOne: number,
+      teamTwo: number,
+      winner: number,
+      id: number | null
+    }
+  }
 }
 
 const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
@@ -145,22 +148,24 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
   }
 
   useEffect(() => {
-    if (tournamentsData) {
+    if (tournamentsData) {      
       const locLvllsTournaments: ILevelsTournaments = {};
+      let maxKey = 0;
       tournamentsData.filter((tournament) => tournament.group === null).forEach((tournament) => {
-
         locLvllsTournaments[tournament.stage ? tournament.stage : 0] = locLvllsTournaments[tournament.stage ? tournament.stage : 0] || [];
-        locLvllsTournaments[tournament.stage ? tournament.stage : 0].push({
+        locLvllsTournaments[tournament.stage ? tournament.stage : 0][tournament.inlineNumber ? tournament.inlineNumber : 0] = {
           teamOne: tournament.teamOne,
           teamTwo: tournament.teamTwo,
           winner: tournament.winner ? tournament.winner : -1,
           id: tournament.id
-        })
-        setMinGridRow(locLvllsTournaments[1] ? Math.ceil(Math.log2(locLvllsTournaments[1].length) + 1) : 1);
+        };
+        maxKey = Math.max(...Object.keys(locLvllsTournaments[1]).map(Number));
+        
+        setMinGridRow(locLvllsTournaments[1] ? Math.ceil(Math.log2(maxKey + 1) + 1) : 1);
         setLvlsTournaments(locLvllsTournaments);
       })
       if (gridRow === 0) {
-        setGridRow(locLvllsTournaments[1] ? Math.ceil(Math.log2(locLvllsTournaments[1].length) + 1) : maxGridRow / 2);
+        locLvllsTournaments[1] ? setGridRow(Math.ceil(Math.log2(maxKey + 1) + 1)) : setGridRow(maxGridRow / 2 + 1 <= maxGridRow ? maxGridRow / 2 + 1 : maxGridRow);
       }
     }
   }, [tournamentsData])
@@ -214,21 +219,25 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
       <div className={classes.groups}>
         {sortedGroups && sortedGroups.map((group) => (
           <div className={classes.group} key={group.id}>
-            <h3>
-              Group 
-              {group.groupMark}
-            </h3>
+            <div className={classes.groupName}>
+              <h3>
+                <FormattedMessage id="group"/> 
+              </h3>
+              <h3>
+                {group.groupMark}
+              </h3>
+            </div>
             <table className={classes.table}>
               <thead>
                 <tr>
                   <th className={classes.team}>
                     <h3>
-                      Team
+                      <FormattedMessage id="team" />
                     </h3>
                   </th>
                   <th className={classes.wins}>
                     <h3>
-                      Wins
+                      <FormattedMessage id="wins" />
                     </h3>
                   </th>
                 </tr>
@@ -256,7 +265,7 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
       <div className={classes.gridBox}>
         <div className={classes.gridTitleBox}>
           <div>
-            <h3>Specify the number of stages in the grid:</h3>
+            <h3><FormattedMessage id='specifyGrid' /></h3>
             <div className={classes.gridTitle}>
               <input  type="range" min={1} max={maxGridRow} value={gridRow} 
                       onChange={(e) => {
@@ -268,8 +277,10 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
             </div>
           </div>
           <div className={classes.thirdPlace}>
-            <h3>3rd place match:</h3>
-            <input type="checkbox" className={classes.checkbox} checked={thirdPlace} onChange={() => setThirdPlace(!thirdPlace)}/>
+            <label htmlFor='thirdPlace'>
+              <h3><FormattedMessage id='thirdPlace' /></h3>
+              </label>
+            <input id='thirdPlace' type="checkbox" className={classes.checkbox} checked={thirdPlace} onChange={() => setThirdPlace(!thirdPlace)}/>
           </div>
         </div>
         <div className={classes.grid}>
@@ -278,6 +289,7 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
               {Array.from(Array(2 ** (row)).keys()).map((col) => (
                 <div className={classes.colBox} key={col}>
                   {row + 1 == gridRow && <div className={classes.col}>
+                  {row === 0 && <p className={classes.final}><FormattedMessage id='final' /></p>}
                     <select className={`${classes.select} 
                       ${lvlsTournaments[1] && 
                         lvlsTournaments[1][col] && 
@@ -286,7 +298,7 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
                         lvlsTournaments[1][col].teamOne == lvlsTournaments[1][col].winner ? classes.winner : ''}`} 
                       value={lvlsTournaments[1] && lvlsTournaments[1][col] ? lvlsTournaments[1][col].teamOne : 0}
                       onChange={(e) => handleSelectFirstTeam(e, col, 1)}>
-                      <option value="0" disabled>Select player</option>
+                      <option value="0" disabled><FormattedMessage id='selectTeam' /></option>
                       {teamDict && Object.values(teamDict).map((team) => (
                         <option key={team.id} value={team.id}>
                           {team.name}
@@ -301,7 +313,7 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
                         lvlsTournaments[1][col].teamTwo == lvlsTournaments[1][col].winner ? classes.winner : ''}`}
                       value={lvlsTournaments[1] && lvlsTournaments[1][col] ? lvlsTournaments[1][col].teamTwo : 0}
                       onChange={(e) => handleSelectSecondTeam(e, col, 1)}>
-                      <option value="0" disabled>Select player</option>
+                      <option value="0" disabled><FormattedMessage id='selectTeam' /></option>
                       {teamDict && Object.values(teamDict).map((team) => (
                         <option key={team.id} value={team.id}>
                           {team.name}
@@ -311,7 +323,7 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
                   </div>
                   }
                   {row + 1 !== gridRow && <div style={{width: `${(200 * 2 ** (gridRow - 1)) / Array(2 ** (row)).length + 20 * (gridRow - row - 1)}px`}} className={`${classes.col} ${classes.textCol}`}>
-                    {row === 0 && <p>Final</p>}
+                    {row === 0 && <p><FormattedMessage id='final' /></p>}
                     {lvlsTournaments[gridRow - row] && lvlsTournaments[gridRow - row][col] && lvlsTournaments[gridRow - row][col].id &&
                     <div className={classes.teamBox}>
                       <p className={`${classes.team} 
@@ -336,18 +348,16 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
                         {lvlsTournaments[gridRow - row - 1] && 
                         lvlsTournaments[gridRow - row - 1][col * 2] && lvlsTournaments[gridRow - row - 1][col * 2]?.winner !== -1 ? 
                         <p className={classes.team}>
-                          {teamDict && teamDict[lvlsTournaments[gridRow - row - 1][col * 2]?.winner].name}
+                          {teamDict && teamDict[lvlsTournaments[gridRow - row - 1][col * 2]?.winner]?.name}
                         </p> : 
                         <p className={classes.team}>
-                          
                         </p>}
                         {lvlsTournaments[gridRow - row - 1] &&
                         lvlsTournaments[gridRow - row - 1][col * 2 + 1] && lvlsTournaments[gridRow - row - 1][col * 2 + 1]?.winner !== -1 ? 
                         <p className={classes.team}>
-                          {teamDict && teamDict[lvlsTournaments[gridRow - row - 1][col * 2 + 1]?.winner].name}
+                          {teamDict && teamDict[lvlsTournaments[gridRow - row - 1][col * 2 + 1]?.winner]?.name}
                         </p> : 
                         <p className={classes.team}>
-                          
                         </p>}
                       </div>}
                       <div className={classes.line_1}>
@@ -359,11 +369,11 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
                 </div>
               ))}
               {thirdPlace && row === 0 && <div className={classes.thirdPlace} style={{position: gridRow >= 4 ? 'relative' : 'absolute'}}>
-              <p>Third place match</p>
+              <p><FormattedMessage id='thirdPlace' /></p>
               <select className={classes.select}
                       value={lvlsTournaments[999] && lvlsTournaments[999][0] ? lvlsTournaments[999][0].teamOne : 0}
                       onChange={(e) => handleSelectFirstTeam(e, 0, 999)}>
-                      <option value="0" disabled>Select player</option>
+                      <option value="0" disabled><FormattedMessage id='selectTeam' /></option>
                       {teamDict && Object.values(teamDict).map((team) => (
                         <option key={team.id} value={team.id}>
                           {team.name}
@@ -373,7 +383,7 @@ const GridDistribution: FC<IProps> = ({tournamentsWebSocketRef}) => {
                     <select className={classes.select}
                       value={lvlsTournaments[999] && lvlsTournaments[999][0] ? lvlsTournaments[999][0].teamTwo : 0}
                       onChange={(e) => handleSelectSecondTeam(e, 0, 999)}>
-                      <option value="0" disabled>Select player</option>
+                      <option value="0" disabled><FormattedMessage id='selectTeam' /></option>
                       {teamDict && Object.values(teamDict).map((team) => (
                         <option key={team.id} value={team.id}>
                           {team.name}
