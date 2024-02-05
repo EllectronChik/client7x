@@ -3,7 +3,7 @@ import { UsersApi } from 'services/UserService';
 import { StatusApi } from 'services/StatusService';
 import { ClanApi } from 'services/ClanService';
 import { regionApi } from 'services/regionService';
-import { PlayerLogoApi } from 'services/PlayerLogo';
+import { PlayerLogoApi } from 'services/PlayerLogoService';
 import { PlayerApi } from 'services/PlayerService';
 import { ClanResourcesApi } from 'services/ClanResourcesService';
 import { DeviceCntApi } from 'services/DeviceCntService';
