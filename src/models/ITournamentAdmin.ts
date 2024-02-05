@@ -14,5 +14,6 @@ export interface ITournamentAdmin {
     winner: number | null,
     askedTeam: boolean | null,
     askForFinished: boolean | null,
-    matchesExists?: boolean
+    matchesExists?: boolean,
+    inlineNumber?: number
 }
