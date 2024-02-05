@@ -18,6 +18,7 @@ import editBlack from 'assets/images/techImages/edit.svg';
 import deleteBlack from 'assets/images/techImages/delete.svg';
 import GameAProgress from './GameAProgress';
 import GridDistribution from '../GridDistribution/GridDistribution';
+import { FormattedMessage } from 'react-intl';
 
 
 
@@ -180,17 +181,17 @@ const TournamentAdminProgress: React.FC = () => {
   return (
     <div className={classes.tournamentsAdminProgressContainer}>
       {tournamentsData.length > 0 && <div className={classes.tournamentsAdminProgressInfo}>
-      <h3> Admin panel features:
+      <h3> <FormattedMessage id='adminPanelFeatures' />
           </h3>
         <ul className={classes.tournamentsAdminProgressInfoList}>
-          <li>By clicking on a team name, you will set the "Completed" status for the tournament and give the specified team a winner status.</li>
-          <li>By clicking on a player's name you will give him the status of the winner of the match.</li>
-          <li>By clicking on the "Completed" checkbox you will end the game and also give the winner status to the team with the most points. <br /> If the score is zero, the winner must be selected manually. </li>
-          <li>By clicking on the <img className={classes.editIcon} src={editBlack} alt="edit" draggable="false"/> symbol you will go to the match editing mode and you will be able to change the players and the map name.</li>
-          <li>By clicking on the <img className={classes.deleteIcon} src={deleteBlack} alt="delete" draggable="false"/> symbol you will delete the match.</li>
+          <li><FormattedMessage id="teamCompletedStatusDescription"/></li>
+          <li><FormattedMessage id="playerWinnerStatusDescription"/></li>
+          <li><FormattedMessage id="endGameAndDeclareWinnerDescription" values={{br: <br/>}}/> </li>
+          <li><FormattedMessage id="editMatchModeDescription" values={{edit: <img className={classes.editIcon} src={editBlack} alt="edit" draggable="false"/>}}/></li>
+          <li><FormattedMessage id="deleteMatchDescription" values={{delete: <img className={classes.deleteIcon} src={deleteBlack} alt="delete" draggable="false"/>}}/></li>
         </ul>
         </div>}
-      {tournamentsData.find((tournament) => tournament.group !== null) && <h2>Group Stage</h2>}
+      {tournamentsData.find((tournament) => tournament.group !== null) && <h2><FormattedMessage id="groupStage" /></h2>}
       <div className={classes.tournamentsAdminProgress}>
         {tournamentsData.length > 0 && tournamentsData.map((tournament) => {
           if (tournament.group !== null) 
@@ -204,10 +205,10 @@ const TournamentAdminProgress: React.FC = () => {
             setDeletedMatches={setDeletedMatches} />
         })}
       </div>
-      <h2>Grid</h2>
+      <h2><FormattedMessage id="grid" /></h2>
       <GridDistribution
         tournamentsWebSocketRef={tournamentsWebSocketRef} />
-      {tournamentsData.find((tournament) => tournament.group === null) && <h2>Play-Off</h2>}
+      {tournamentsData.find((tournament) => tournament.group === null) && <h2><FormattedMessage id="playoff" /></h2>}
       <div className={classes.tournamentsAdminProgress}>
         {tournamentsData.length > 0 && tournamentsData.map((tournament) => {
           if (tournament.group === null) 
