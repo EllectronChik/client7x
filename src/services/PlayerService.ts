@@ -26,7 +26,19 @@ export const PlayerApi = createApi({
             query: ({player, token}) => ({
                 url: `/players/`,
                 method: "POST",
-                body: player,
+                body: {
+                    avatar: player.avatar,
+                    username: player.username,
+                    mmr: player.mmr,
+                    wins: player.wins,
+                    total_games: player.total_games,
+                    region: player.region,
+                    battlenet_id: player.id,
+                    league: player.league,
+                    race: player.race,
+                    team: player.team,
+                    user: player.user
+                },
                 headers: {
                     Authorization: `Token ${token}`
                 }
