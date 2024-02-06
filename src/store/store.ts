@@ -19,6 +19,7 @@ import GroupsSlice from './reducers/GroupsSlice';
 import MatchesSlice from './reducers/MatchesSlice';
 import TournamentsSlice from './reducers/TournamentsSlice';
 import TournamentsAdminSlice from './reducers/TournamentsAdminSlice';
+import StartPageSlice from './reducers/StartPageSlice';
 
 
 const rootReducer = combineReducers({
@@ -41,7 +42,8 @@ const rootReducer = combineReducers({
     groupsManager: GroupsSlice,
     matches: MatchesSlice,
     tournaments: TournamentsSlice,
-    tournamentsAdmin: TournamentsAdminSlice
+    tournamentsAdmin: TournamentsAdminSlice,
+    startPage: StartPageSlice
 })
 
 export const setupStore = () => {
