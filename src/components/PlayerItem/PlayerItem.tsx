@@ -9,13 +9,13 @@ import us_flag from 'assets/images/region_flags/us.svg';
 import eu_flag from 'assets/images/region_flags/eu.svg';
 import kr_flag from 'assets/images/region_flags/kr.svg';
 import no_league_mark from 'assets/images/league_marks/0.svg';
-import bronze_league_mark from 'assets/images/league_marks/1.png';
-import silver_league_mark from 'assets/images/league_marks/2.png';
-import gold_league_mark from 'assets/images/league_marks/3.png';
-import platinum_league_mark from 'assets/images/league_marks/4.png';
-import diamond_league_mark from 'assets/images/league_marks/5.png';
-import master_league_mark from 'assets/images/league_marks/6.png';
-import grandmaster_league_mark from 'assets/images/league_marks/7.png';
+import bronze_league_mark from 'assets/images/league_marks/1.webp';
+import silver_league_mark from 'assets/images/league_marks/2.webp';
+import gold_league_mark from 'assets/images/league_marks/3.webp';
+import platinum_league_mark from 'assets/images/league_marks/4.webp';
+import diamond_league_mark from 'assets/images/league_marks/5.webp';
+import master_league_mark from 'assets/images/league_marks/6.webp';
+import grandmaster_league_mark from 'assets/images/league_marks/7.webp';
 import { FormattedMessage } from 'react-intl';
 
 
