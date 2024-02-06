@@ -1,13 +1,12 @@
 //variables
-$clr_dark: #1D1D1D;
-$clr_light: #eef5ff;
-$clr_red: #ff0000;
-$clr_notice: #fbecb3;
-$container_width: 1400px;
-
+$clrDark: #1d1d1d;
+$clrLight: #eef5ff;
+$clrRed: #ff0000;
+$clrNotice: #fbecb3;
+$containerWidth: 1400px;
 
 @mixin container() {
-    width: $container_width;
-    display: flex;
-    margin: 0 auto;
+  width: $containerWidth;
+  display: flex;
+  margin: 0 auto;
 }

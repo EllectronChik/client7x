@@ -1,106 +1,104 @@
-@import '../../../../settings.scss';
+@import "../../../../settings.scss";
 
 .distrSlide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  border: 2px solid $clrRed;
+  border-radius: 25px;
+  width: 520px;
+  position: relative;
+  margin-top: 25px;
+  position: relative;
+
+  .distrSlideContent {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 10px;
-    border: 2px solid $clr_red;
-    border-radius: 25px;
-    width: 520px;
-    position: relative;
-    margin-top: 25px;
-    position: relative;
+  }
 
-    .distrSlideContent  {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+  .DistrSelection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-    .DistrSelection {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+  .distrSlideItems {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
 
-    .distrSlideItems {
-        display: flex;
-        flex: 1;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
+  .distrStageBttns {
+    border-top: 1px solid $clrRed;
+  }
 
-    .distrStageBttns {
-        border-top: 1px solid $clr_red;
-    }
-
-    .distrSlideItem {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-bottom: 25px;
-        margin-top: 10px;
-        .distrSlideItemBlock {
-            display: flex;
-            gap: 10px;
-            .distrSlideItemSelect {
-                width: 200px;
-                font-size: 20px;
-                background-color: $clr_dark;
-                color: $clr_light;
-                color-scheme: dark;
-                border: 0;
-                border-bottom: 1px solid $clr_light;
-            }
-        }
-        .distrSlideItemInput {
-            font-size: 20px;
-            background-color: $clr_dark;
-            color: $clr_light;
-            color-scheme: dark;
-            border: 0;
-            border-bottom: 1px solid $clr_light;
-        }
-    }
-
-
-    .button {
-        cursor: pointer;
-        background-color: $clr_dark;
-        color: $clr_light;
-        border: none;
-        font-size: 30px;
-        top: 200px;
-        line-height: 1;
-    }
-
-    .buttonLeft {
-        left: -25px;
-
-    }
-    .buttonRight {
-        right: -25px;
-    }
-
-    .distrSlideBtn {
-        color: $clr_light;
-        margin-top: 25px;
-        margin-bottom: 25px;    
-    }
-
-    .additionalStageBtn {
-        position: absolute;
-        color: $clr_dark;
-        width: 40px;
-        height: 40px;
-        border: 2px solid $clr_red;
-        border-radius: 50%;
+  .distrSlideItem {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 25px;
+    margin-top: 10px;
+    .distrSlideItemBlock {
+      display: flex;
+      gap: 10px;
+      .distrSlideItemSelect {
+        width: 200px;
         font-size: 20px;
-        background-color: $clr_light;
-        bottom: 40px;
-        right: 50px;
-        cursor: pointer;
+        background-color: $clrDark;
+        color: $clrLight;
+        color-scheme: dark;
+        border: 0;
+        border-bottom: 1px solid $clrLight;
+      }
     }
+    .distrSlideItemInput {
+      font-size: 20px;
+      background-color: $clrDark;
+      color: $clrLight;
+      color-scheme: dark;
+      border: 0;
+      border-bottom: 1px solid $clrLight;
+    }
+  }
+
+  .button {
+    cursor: pointer;
+    background-color: $clrDark;
+    color: $clrLight;
+    border: none;
+    font-size: 30px;
+    top: 200px;
+    line-height: 1;
+  }
+
+  .buttonLeft {
+    left: -25px;
+  }
+  .buttonRight {
+    right: -25px;
+  }
+
+  .distrSlideBtn {
+    color: $clrLight;
+    margin-top: 25px;
+    margin-bottom: 25px;
+  }
+
+  .additionalStageBtn {
+    position: absolute;
+    color: $clrDark;
+    width: 40px;
+    height: 40px;
+    border: 2px solid $clrRed;
+    border-radius: 50%;
+    font-size: 20px;
+    background-color: $clrLight;
+    bottom: 40px;
+    right: 50px;
+    cursor: pointer;
+  }
 }

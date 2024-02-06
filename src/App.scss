@@ -1,28 +1,30 @@
-@import 'settings.scss';
+@import "settings.scss";
 
 @font-face {
   font-display: swap;
-  font-family: 'Nunito Sans';
+  font-family: "Nunito Sans";
   font-style: normal;
   font-weight: 400;
-  src: url('/fonts/nunito-sans-v15-cyrillic_cyrillic-ext_latin_latin-ext-regular.woff2') format('woff2'),
-       url('/fonts/nunito-sans-v15-cyrillic_cyrillic-ext_latin_latin-ext-regular.ttf') format('truetype');
+  src: url("/fonts/nunito-sans-v15-cyrillic_cyrillic-ext_latin_latin-ext-regular.woff2")
+      format("woff2"),
+    url("/fonts/nunito-sans-v15-cyrillic_cyrillic-ext_latin_latin-ext-regular.ttf")
+      format("truetype");
 }
 
 * {
-  font-family: 'Nunito Sans';
+  font-family: "Nunito Sans";
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
 ::selection {
-  background-color: $clr_red;
-  color: $clr_light;
+  background-color: $clrRed;
+  color: $clrLight;
 }
 
 body {
-  background-color: $clr_dark;
+  background-color: $clrDark;
 }
 
 a {

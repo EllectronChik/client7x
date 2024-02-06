@@ -1,17 +1,17 @@
-@import '../../../settings.scss';
+@import "../../../settings.scss";
 
-.double_text span { 
-    font-size: 70px; 
-    font-weight: 700; 
-    color: #fff; 
-    position: relative; 
-    &::before {
-        z-index: -1;
-        content: attr(data-title); 
-        position: absolute; 
-        top: 5px; 
-        left: 5px; 
-        transform-origin: left; 
-        color: $clr_red; 
-    }
-} 
+.double_text span {
+  font-size: 70px;
+  font-weight: 700;
+  color: #fff;
+  position: relative;
+  &::before {
+    z-index: -1;
+    content: attr(data-title);
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    transform-origin: left;
+    color: $clrRed;
+  }
+}

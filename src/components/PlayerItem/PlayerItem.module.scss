@@ -1,73 +1,66 @@
-@import '../../settings.scss';
+@import "../../settings.scss";
 
-
-.player_item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border: 2px solid $clr_red;
-    border-radius: 20px;
-    padding: 30px;
-    min-width: 700px;
-    cursor: pointer;
-    -webkit-user-select: none;
-       -moz-user-select: none;
-        -ms-user-select: none;
-            user-select: none;  
-    &:not(:last-child) {
-        margin-bottom: 30px;
-    }
-
+.playerItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 2px solid $clrRed;
+  border-radius: 20px;
+  padding: 30px;
+  min-width: 700px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  &:not(:last-child) {
+    margin-bottom: 30px;
+  }
 }
-
-
 
 .logo {
-    border: 2px solid $clr_red;
-    border-radius: 10px;
+  border: 2px solid $clrRed;
+  border-radius: 10px;
 }
 
-.select_wrapper {
-    align-self: flex-end;
+.selectWrapper {
+  align-self: flex-end;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  .select {
+    font-size: 20px;
+    background-color: $clrDark;
+    color: $clrLight;
+    border: 2px solid $clrRed;
+    border-radius: 20px;
+    text-align: center;
+  }
+}
+
+.infoWrapper {
+  display: flex;
+  align-items: center;
+  .avatarWrapper {
     display: flex;
     flex-direction: column;
-    align-items: end;
-    .select {
-        font-size: 20px;
-        background-color: $clr_dark;
-        color: $clr_light;
-        border: 2px solid $clr_red;
-        border-radius: 20px;
-        text-align: center;
+    margin-right: 10px;
+    .flag {
+      width: 40px;
+      margin-bottom: 10px;
+      border: 1px teal solid;
     }
-
-}
-
-.info_wrapper {
-    display: flex;
-    align-items: center;
-    .avatar_wrapper {
-        display: flex;
-        flex-direction: column;
-        margin-right: 10px;
-        .flag {
-            width: 40px;
-            margin-bottom: 10px;
-            border: 1px teal solid;
-        }
-        .avatar_league {
-            width: 40px;
-        }
-
+    .avatarLeague {
+      width: 40px;
     }
-    .avatar {
-        width: 50px;
-        height: 50px;
-        -webkit-user-drag: none;
-        user-select: none;
-        -moz-user-select: none;
-        -webkit-user-select: none;
-        -ms-user-select: none;
-    }
-
+  }
+  .avatar {
+    width: 50px;
+    height: 50px;
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+  }
 }

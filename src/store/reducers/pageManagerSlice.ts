@@ -1,24 +1,23 @@
-
-import { createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../store';
+import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 
 interface PageManagerState {
-    page: number | null;
+  page: number | null;
 }
 
 const initialState: PageManagerState = {
-    page: null,
-}
+  page: null,
+};
 
 const pageManagerSlice = createSlice({
-    name: 'pageManager',
-    initialState,
-    reducers: {
-        setPageManager: (state, action) => {
-            state.page = action.payload;
-        },
+  name: "pageManager",
+  initialState,
+  reducers: {
+    setPageManager: (state, action) => {
+      state.page = action.payload;
     },
-})
+  },
+});
 
 export const selectManagerPage = (state: RootState) => state.pageManager.page;
 

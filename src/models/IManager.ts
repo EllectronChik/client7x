@@ -1,4 +1,4 @@
 export interface IManager {
-    user: number;
-    team: number;    
+  user: number;
+  team: number;
 }

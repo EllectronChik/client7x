@@ -1,178 +1,175 @@
-@import '../../../../settings.scss';
+@import "../../../../settings.scss";
 
 .container {
+  display: flex;
+  margin-top: 25px;
+  gap: 34px;
+  .groups {
     display: flex;
-    margin-top: 25px;
-    gap: 34px;
-    .groups {
-        display: flex;
-        flex-direction: column;
-        gap: 25px;
-        
-        .group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            padding: 25px 50px;
-            font-size: 20px;
-            border: 2px solid $clr_red;
-            border-radius: 25px;
-            width: 350px;
+    flex-direction: column;
+    gap: 25px;
 
-            .groupName {
-                display: flex;
-                gap: 10px;
-            }
-        
-            .table {
-                width: 100%;
-                .team {
-                    text-align: left;
-                }
-                .wins {
-                    text-align: right;
-                }
-            }
-        
+    .group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 25px 50px;
+      font-size: 20px;
+      border: 2px solid $clrRed;
+      border-radius: 25px;
+      width: 350px;
+
+      .groupName {
+        display: flex;
+        gap: 10px;
+      }
+
+      .table {
+        width: 100%;
+        .team {
+          text-align: left;
         }
+        .wins {
+          text-align: right;
+        }
+      }
     }
+  }
 
-    .gridBox {
-        position: relative;
+  .gridBox {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    border: 2px solid $clrRed;
+    border-radius: 25px;
+    padding: 25px 50px;
+
+    .gridTitleBox {
+      display: flex;
+      gap: 25px;
+      .gridTitle {
         display: flex;
-        flex-direction: column;
-        align-items: center;
+        gap: 10px;
+        width: 100%;
         justify-content: space-between;
-        border: 2px solid $clr_red;
-        border-radius: 25px;
-        padding: 25px 50px;
+      }
 
-        .gridTitleBox {
-            display: flex;
-            gap: 25px;
-            .gridTitle {
-                display: flex;
-                gap: 10px;
-                width: 100%;
-                justify-content: space-between;
-            }
+      .thirdPlace {
+        display: flex;
+        align-items: start;
+        gap: 10px;
 
-            .thirdPlace {
-                display: flex;
-                align-items: start;
-                gap: 10px;
-
-                .checkbox {
-                    width: 15px;
-                    height: 15px;
-                    margin-top: 5px;
-                }
-            }
+        .checkbox {
+          width: 15px;
+          height: 15px;
+          margin-top: 5px;
         }
-
-        
-        .grid {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: auto;
-            font-size: 20px;
-            width: 1115px;
-    
-            .row {
-                display: flex;
-                max-width: 1015px;
-                gap: 20px;
-                .colBox {
-                    .col {
-                        display: flex;
-                        flex-direction: column;
-                        .select {
-                            width: 200px;
-                            font-size: 20px;
-                            color: $clr_light;
-                            background-color: $clr_dark;
-                            border-color: $clr_red;
-                            height: 30px;
-
-                            &:not(:last-child) {
-                                border-bottom: 0;
-                            }
-                        }
-
-                        .winner {
-                            text-shadow: 0 0 10px rgba(41, 228, 235, .8) , 0 0 10px rgba(41, 228, 235, .8) , 0 0 10px rgba(41, 228, 235, .8); 
-                        }
-    
-                        .teamBox {
-                            .team {
-                                width: 200px;
-                                font-size: 20px;
-                                color: $clr_light;
-                                background-color: $clr_dark;
-                                border: 1px solid $clr_red;
-                                padding-left: 2px;
-                                height: 30px;
-                                
-                                &:not(:last-child) {
-                                    border-bottom: 0;
-                                }
-                            }
-                        }
-
-                        .line_1 {
-                            display: flex;
-                            height: 20px;
-                            .col_1 {
-                                border-right: 1px solid $clr_red;
-                                border-bottom: 1px solid $clr_red;
-                            }
-                            .col_2 {
-                                border-bottom: 1px solid $clr_red;
-
-                            }
-                        }
-
-                        .line_2 {
-                            display: flex;
-                            height: 20px;
-                            border-left: 1px solid $clr_red;
-                            border-right: 1px solid $clr_red;
-                        }
-
-                        .final {
-                            align-self: center;
-                        }
-                    }
-    
-                    .textCol {
-                        align-items: center;
-                    }
-
-                }
-
-                .thirdPlace {
-                    right: 175px;
-                    display: flex;
-                    flex-direction: column;
-
-                    .select {
-                        width: 200px;
-                        font-size: 20px;
-                        color: $clr_light;
-                        background-color: $clr_dark;
-                        border-color: $clr_red;
-                        height: 30px;
-
-                        &:not(:last-child) {
-                            border-bottom: 0;
-                        }
-                    }
-                }
-            }
-        }
+      }
     }
 
+    .grid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: auto;
+      font-size: 20px;
+      width: 1115px;
+
+      .row {
+        display: flex;
+        max-width: 1015px;
+        gap: 20px;
+        .colBox {
+          .col {
+            display: flex;
+            flex-direction: column;
+            .select {
+              width: 200px;
+              font-size: 20px;
+              color: $clrLight;
+              background-color: $clrDark;
+              border-color: $clrRed;
+              height: 30px;
+
+              &:not(:last-child) {
+                border-bottom: 0;
+              }
+            }
+
+            .winner {
+              text-shadow: 0 0 10px rgba(41, 228, 235, 0.8),
+                0 0 10px rgba(41, 228, 235, 0.8),
+                0 0 10px rgba(41, 228, 235, 0.8);
+            }
+
+            .teamBox {
+              .team {
+                width: 200px;
+                font-size: 20px;
+                color: $clrLight;
+                background-color: $clrDark;
+                border: 1px solid $clrRed;
+                padding-left: 2px;
+                height: 30px;
+
+                &:not(:last-child) {
+                  border-bottom: 0;
+                }
+              }
+            }
+
+            .line_1 {
+              display: flex;
+              height: 20px;
+              .col_1 {
+                border-right: 1px solid $clrRed;
+                border-bottom: 1px solid $clrRed;
+              }
+              .col_2 {
+                border-bottom: 1px solid $clrRed;
+              }
+            }
+
+            .line_2 {
+              display: flex;
+              height: 20px;
+              border-left: 1px solid $clrRed;
+              border-right: 1px solid $clrRed;
+            }
+
+            .final {
+              align-self: center;
+            }
+          }
+
+          .textCol {
+            align-items: center;
+          }
+        }
+
+        .thirdPlace {
+          right: 175px;
+          display: flex;
+          flex-direction: column;
+
+          .select {
+            width: 200px;
+            font-size: 20px;
+            color: $clrLight;
+            background-color: $clrDark;
+            border-color: $clrRed;
+            height: 30px;
+
+            &:not(:last-child) {
+              border-bottom: 0;
+            }
+          }
+        }
+      }
+    }
+  }
 }

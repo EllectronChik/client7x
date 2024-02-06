@@ -1,80 +1,80 @@
-@import '../../../../settings.scss';
+@import "../../../../settings.scss";
 
 .groupDistribution {
+  display: flex;
+  width: 900px;
+  flex-direction: column;
+  align-items: center;
+  .randomizeBlock {
     display: flex;
-    width: 900px;
     flex-direction: column;
     align-items: center;
-    .randomizeBlock {
+    text-align: center;
+    width: 805px;
+    background-color: $clrNotice;
+    border: 2px solid $clrRed;
+    border-radius: 25px;
+    padding: 25px;
+    color: $clrDark;
+    margin-top: 15px;
+  }
+  .groupsList {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+    flex-wrap: wrap;
+    gap: 25px;
+    .group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      min-height: 300px;
+      width: 390px;
+      padding: 20px;
+      border: 1px solid $clrRed;
+      border-radius: 25px;
+      background-image: linear-gradient(315deg, #444444, #312f2f, #444444);
+
+      .groupTeams {
         display: flex;
         flex-direction: column;
         align-items: center;
-        text-align: center;
-        width: 805px;
-        background-color: $clr_notice;
-        border: 2px solid $clr_red;
-        border-radius: 25px;
-        padding: 25px;
-        color: $clr_dark;
-        margin-top: 15px;
+        gap: 10px;
+      }
     }
-    .groupsList {
-        display: flex;  
-        justify-content: center;
-        margin-top: 25px;
-        flex-wrap: wrap;
-        gap: 25px;
-        .group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            min-height: 300px;
-            width: 390px;
-            padding: 20px;
-            border: 1px solid $clr_red;
-            border-radius: 25px;
-            background-image: linear-gradient(315deg, #444444, #312f2f,  #444444);
-
-            .groupTeams {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 10px;
-            }
-        }
-        .team {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            width: 350px;
-            padding: 10px;
-            border: 1px solid $clr_red;
-            border-radius: 25px;
-            background-color: $clr_dark;
-            color: $clr_light;
-            .teamLogo {
-                height: 80px;
-                width: 80px;
-                object-fit: cover;
-                border-radius: 50%;
-                border: 1px solid $clr_red;
-            }
-        }
+    .team {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 350px;
+      padding: 10px;
+      border: 1px solid $clrRed;
+      border-radius: 25px;
+      background-color: $clrDark;
+      color: $clrLight;
+      .teamLogo {
+        height: 80px;
+        width: 80px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 1px solid $clrRed;
+      }
     }
-    .addGroupButton {
-        margin-top: 25px;
-    }
-    .randomizeButton {
-        margin-right: 50px;
-        margin-top: 10px;
-    }
-    .input {
-        margin-left: 5px;
-        background-color: $clr_notice;
-        border: none;
-        border-bottom: 1px solid $clr_red;
-        color: $clr_dark;
-        color-scheme: dark;
-    }
+  }
+  .addGroupButton {
+    margin-top: 25px;
+  }
+  .randomizeButton {
+    margin-right: 50px;
+    margin-top: 10px;
+  }
+  .input {
+    margin-left: 5px;
+    background-color: $clrNotice;
+    border: none;
+    border-bottom: 1px solid $clrRed;
+    color: $clrDark;
+    color-scheme: dark;
+  }
 }

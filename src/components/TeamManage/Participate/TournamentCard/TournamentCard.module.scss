@@ -1,121 +1,118 @@
-@import '../../../../settings.scss';
+@import "../../../../settings.scss";
 
 .tournamentCard {
-    width: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border: 2px solid $clrRed;
+  border-radius: 20px;
+  height: 185px;
+  transition: height 0.5s ease-in-out;
+  position: relative;
+
+  .opponent {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    border: 2px solid $clr_red;
-    border-radius: 20px;
-    height: 185px;
-    transition: height 0.5s ease-in-out;
-    position: relative;
+    justify-content: space-between;
+    width: 100%;
 
-    .opponent {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
+    .opponentLeft {
+      display: flex;
+      align-items: center;
 
-        .opponentLeft {
-            display: flex;
-            align-items: center;
-
-            .opponentLogo {
-                border: 1px solid $clr_red;
-                border-radius: 50%;
-                margin-right: 5px;
-                width: 70px;
-                height: 70px;
-                object-fit: cover;
-            }
-        }
-        .opponentRight {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-
-            .opponentTime {
-                margin-top: 20px;
-                font-size: 26px;
-            }
-            .tooltip {
-                z-index: 1000;
-                background-color: $clr_dark;
-            }
-            .changeTime {
-                margin-top: 15px;
-
-            }
-        }
+      .opponentLogo {
+        border: 1px solid $clrRed;
+        border-radius: 50%;
+        margin-right: 5px;
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+      }
     }
-    .inputContainer {
+    .opponentRight {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .opponentTime {
         margin-top: 20px;
-        animation: opacity .6s ease-in-out;
-        .input {
-            font-size: 20px;
-            background-color: $clr_dark;
-            color: $clr_light;
-            border: 0;
-            color-scheme: dark;
-            border-bottom: 1px solid $clr_light;
-        }
+        font-size: 26px;
+      }
+      .tooltip {
+        z-index: 1000;
+        background-color: $clrDark;
+      }
+      .changeTime {
+        margin-top: 15px;
+      }
     }
-    
-    .timeSuggestedMessage {
-        position: absolute;
-        bottom: 10px;
-        text-align: center;
-        font-size: 16px;
-        left: 25%;
-        width: 50%;
+  }
+  .inputContainer {
+    margin-top: 20px;
+    animation: opacity 0.6s ease-in-out;
+    .input {
+      font-size: 20px;
+      background-color: $clrDark;
+      color: $clrLight;
+      border: 0;
+      color-scheme: dark;
+      border-bottom: 1px solid $clrLight;
     }
+  }
 
-    &.askForChange {
-        animation: height 0.3s ease-in-out;
-        height: 235px;
-    }
-    &.timeSuggested {
-        height: 355px;
-    }
-    &.askForChange.timeSuggested {
-        animation: height_2 0.3s ease-in-out;
-        height: 420px;
-    }
+  .timeSuggestedMessage {
+    position: absolute;
+    bottom: 10px;
+    text-align: center;
+    font-size: 16px;
+    left: 25%;
+    width: 50%;
+  }
 
+  &.askForChange {
+    animation: height 0.3s ease-in-out;
+    height: 235px;
+  }
+  &.timeSuggested {
+    height: 355px;
+  }
+  &.askForChange.timeSuggested {
+    animation: height_2 0.3s ease-in-out;
+    height: 420px;
+  }
 }
 
 .button {
-    color: $clr_light;
+  color: $clrLight;
 }
 
 @keyframes height {
-    0% {
-        height: 185px;
-    }
-    100% {
-        height: 235px;
-    }
+  0% {
+    height: 185px;
+  }
+  100% {
+    height: 235px;
+  }
 }
 
 @keyframes height_2 {
-    0% {
-        height: 355px;
-    }
-    100% {
-        height: 420px;
-    }
-    
+  0% {
+    height: 355px;
+  }
+  100% {
+    height: 420px;
+  }
 }
 
 @keyframes opacity {
-    0% {
-        opacity: 0;
-    }
-    50% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }

@@ -1,122 +1,127 @@
-@import '../../../settings.scss';
+@import "../../../settings.scss";
 
 .teamManage {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid $clrRed;
+  border-radius: 20px;
+  width: 600px;
+  .teamInfo {
     display: flex;
-    flex-direction: column;
-    border: 1px solid $clr_red;
-    border-radius: 20px;
-    width: 600px;
-    .teamInfo {
+    align-items: center;
+    justify-content: space-between;
+    background: rgb(154, 27, 27);
+    background: radial-gradient(
+      circle,
+      rgba(154, 27, 27, 1) 30%,
+      rgba(115, 29, 29, 1) 85%
+    );
+    border-radius: 20px 20px 0 0;
+    padding: 15px;
+    gap: 20px;
+    .teamLogoBox {
+      position: relative;
+      cursor: pointer;
+      .teamLogo {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border: 1px solid $clrRed;
+        border-radius: 50%;
+      }
+      &::before {
+        content: "";
+        position: absolute;
+        top: 10%;
+        left: 10%;
+        width: 80%;
+        height: 80%;
+        background: url("../../../assets/images/techImages/loadImg.svg") center
+          center no-repeat;
+        background-size: cover;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+      }
+      &:hover::before {
+        opacity: 0.7;
+      }
+      .editLogo {
+        display: none;
+      }
+    }
+    .teamName {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid $clrLight;
+      color: $clrLight;
+      font-size: 30px;
+      width: 370px;
+    }
+    .teamTag {
+      margin-top: 10px;
+      background: transparent;
+      border: none;
+      color: $clrLight;
+      font-size: 20px;
+    }
+    .regionFlag {
+      height: 40px;
+      width: 60px;
+      border: 1px solid #ffd700;
+      box-shadow: 0 0 10px #ffd700;
+    }
+  }
+
+  .teamContent {
+    display: flex;
+    .playersInfo {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+    .playerInfo {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      padding: 10px;
+      align-items: center;
+      .playerInfoBox {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        background: rgb(154,27,27);
-        background: radial-gradient(circle, rgba(154,27,27,1) 30%, rgba(115,29,29,1) 85%);
-        border-radius: 20px 20px 0 0;
-        padding: 15px;
-        gap: 20px;  
-        .teamLogoBox {
-            position: relative;
-            cursor: pointer;
-            .teamLogo {
-                width: 100px;
-                height: 100px;
-                object-fit: cover;
-                border: 1px solid $clr_red;
-                border-radius: 50%;
-            }
-            &::before {
-                content: '';
-                position: absolute;
-                top: 10%;
-                left: 10%;
-                width: 80%;
-                height: 80%;
-                background: url('../../../assets/images/techImages/load_img.svg') center center no-repeat;
-                background-size: cover;
-                opacity: 0;
-                transition: opacity 0.3s ease-in-out;
-            }
-            &:hover::before {
-                opacity: .7;
-            }
-            .editLogo {
-                display: none;
-            }
-        }
-        .teamName {
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid $clr_light;
-            color: $clr_light;
-            font-size: 30px;
-            width: 370px;
-        }
-        .teamTag {
-            margin-top: 10px;
-            background: transparent;
-            border: none;
-            color: $clr_light;
-            font-size: 20px;
-        }
-        .regionFlag {
-            height: 40px;
-            width: 60px;
-            border: 1px solid #FFD700;
-            box-shadow: 0 0 10px #FFD700;
-        }
-    }
-
-    .teamContent {
+        gap: 10px;
+      }
+      &:not(:last-child) {
+        border-bottom: 1px solid $clrRed;
+      }
+      &.drag {
+        background-color: $clrDark;
+        border: 1px solid $clrRed;
+        opacity: 0.5;
+      }
+      .playerStats {
         display: flex;
-        .playersInfo {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
+        flex-direction: column;
+        align-items: flex-end;
+        .playerStat {
+          display: flex;
         }
-        .playerInfo {
-            display: flex;
-            width: 100%;
-            justify-content: space-between;
-            padding: 10px;
-            align-items: center;
-            .playerInfoBox  {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
-            &:not(:last-child) {
-                border-bottom: 1px solid $clr_red;
-            }
-            &.drag {
-                background-color: $clr_dark;
-                border: 1px solid $clr_red;
-                opacity: .5;
-            }
-            .playerStats {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-end;
-                .playerStat {
-                    display: flex;
-                }
-            }
-        }
-        .infoImages  {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            .league {
-                height: 40px;
-            }
-            .race {
-                height: 40px;
-            }
-        }
-        .playerLogo {
-            height: 80px;
-            border: 1px solid $clr_red;
-            border-radius: 20px;
-        }
+      }
     }
+    .infoImages {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .league {
+        height: 40px;
+      }
+      .race {
+        height: 40px;
+      }
+    }
+    .playerLogo {
+      height: 80px;
+      border: 1px solid $clrRed;
+      border-radius: 20px;
+    }
+  }
 }

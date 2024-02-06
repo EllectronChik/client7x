@@ -1,60 +1,60 @@
-@import '../../settings.scss';
+@import "../../settings.scss";
 
 .footer {
-    background-color: $clr_dark;
-    color: $clr_light;
-    height: 200px;
+  background-color: $clrDark;
+  color: $clrLight;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+
+  .container {
+    align-self: center;
+    justify-content: space-between;
     display: flex;
-    justify-content: center;
+    width: 1400px;
+    margin-top: 100px;
+    align-items: flex-end;
 
-    .container {
-        align-self: center;
-        justify-content: space-between;
-        display: flex;
-        width: 1400px;
-        margin-top: 100px;
-        align-items: flex-end;
+    .language {
+      height: 30px;
+      display: flex;
+      gap: 20px;
 
-        .language {
-            height: 30px;
-            display: flex;
-            gap: 20px;
-            
-            .select {
-                background-color: $clr_dark;
-                color: $clr_light;
-                font-size: 20px;
-                width: 200px;
-                text-align: center;
-                border: 0;
-                border-bottom: 1px solid $clr_light;
-            }
-        }
-        
-        .copyright {
-            display: flex;
-            gap: 20px;
-            text-align: right;
-
-            .link {
-                color: $clr_light;
-            }
-
-            &:hover .link {
-                color: $clr_red;
-            }
-
-            .logo {
-                height: 66px;
-            }
-        }
+      .select {
+        background-color: $clrDark;
+        color: $clrLight;
+        font-size: 20px;
+        width: 200px;
+        text-align: center;
+        border: 0;
+        border-bottom: 1px solid $clrLight;
+      }
     }
 
-    .line {
-        background: url('../../assets/images/techImages/header_line.svg') no-repeat;
-        position: absolute;
-        transform: scaleY(-1);
-        width: 100%;
-        height: 100px;
+    .copyright {
+      display: flex;
+      gap: 20px;
+      text-align: right;
+
+      .link {
+        color: $clrLight;
+      }
+
+      &:hover .link {
+        color: $clrRed;
+      }
+
+      .logo {
+        height: 66px;
+      }
     }
+  }
+
+  .line {
+    background: url("../../assets/images/techImages/headerLine.svg") no-repeat;
+    position: absolute;
+    transform: scaleY(-1);
+    width: 100%;
+    height: 100px;
+  }
 }

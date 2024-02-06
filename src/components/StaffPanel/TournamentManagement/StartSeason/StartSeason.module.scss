@@ -1,45 +1,44 @@
-@import '../../../../settings.scss';
-
+@import "../../../../settings.scss";
 
 .form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 25px 50px;
+  color: $clrDark;
+  font-size: 20px;
+  background-color: $clrNotice;
+  border: 2px solid $clrRed;
+  border-radius: 25px;
+  max-width: 1000px;
+
+  .title {
+    text-align: center;
+  }
+
+  .error {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    font-size: 20px;
+    margin-top: 10px;
+    color: $clrRed;
+
+    .errorIcon {
+      height: 40px;
+    }
+  }
+
+  .form_content {
+    display: flex;
     align-items: center;
     gap: 10px;
-    padding: 25px 50px;
-    color: $clr_dark;
+  }
+
+  .input {
+    background-color: $clrNotice;
+    border: 0;
     font-size: 20px;
-    background-color: $clr_notice; 
-    border: 2px solid $clr_red;
-    border-radius: 25px;
-    max-width: 1000px;
-
-    .title {
-        text-align: center;
-    }
-
-    .error {
-        display: flex;
-        align-items: center;
-        font-size: 20px;
-        margin-top: 10px;
-        color: $clr_red;
-    
-        .errorIcon {
-            height: 40px;
-        }
-    }
-
-    .form_content {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .input {
-        background-color: $clr_notice;
-        border: 0;
-        font-size: 20px;
-        border-bottom: 1px solid $clr_dark;
-    }
+    border-bottom: 1px solid $clrDark;
+  }
 }

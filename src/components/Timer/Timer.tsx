@@ -1,72 +1,95 @@
-import moment from 'moment';
-import React, { useEffect, useState } from 'react'
-import { FormattedPlural, useIntl } from 'react-intl';
-
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { FormattedPlural, useIntl } from "react-intl";
 
 interface TimerProps extends React.HTMLAttributes<HTMLDivElement> {
-    datetime: string,
+  datetime: string;
 }
 
 interface ITimeLeft {
-    days: number;
-    hours: number;
-    minutes: number;
-    seconds: number;
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
 }
 
-const Timer: React.FC<TimerProps> = ({...props}) => {
-    const intl = useIntl();
-    const calculateTimeLeft = () => {
-        const now = moment.utc();
-        const target = moment.utc(props.datetime);
-        const duration = moment.duration(target.diff(now));
-        
-        return {
-            days: duration.days(),
-            hours: duration.hours(),
-            minutes: duration.minutes(),
-            seconds: duration.seconds(),
-        };
-    }
+const Timer: React.FC<TimerProps> = ({ ...props }) => {
+  const intl = useIntl();
+  const calculateTimeLeft = () => {
+    const now = moment.utc();
+    const target = moment.utc(props.datetime);
+    const duration = moment.duration(target.diff(now));
 
-    const [timeLeft, setTimeLeft] = useState<ITimeLeft>(calculateTimeLeft());
+    return {
+      days: duration.days(),
+      hours: duration.hours(),
+      minutes: duration.minutes(),
+      seconds: duration.seconds(),
+    };
+  };
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setTimeLeft(calculateTimeLeft());
-        }, 1000);
+  const [timeLeft, setTimeLeft] = useState<ITimeLeft>(calculateTimeLeft());
 
-        return () => clearInterval(timer);
-    }, [props.datetime])
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [props.datetime]);
 
   return (
     <div>
-        {timeLeft.days > 0 &&
-        <span>{timeLeft.days}<span> </span>
-        <FormattedPlural value={timeLeft.days}
-        one={intl.formatMessage({id: 'day_single'})} 
-        few={intl.formatMessage({id: 'day_few'})}
-        other={intl.formatMessage({id: 'day_plural'})}/> </span>}
-        {timeLeft.hours > 0 &&
-        <span>{timeLeft.hours}<span> </span>
-        <FormattedPlural value={timeLeft.hours}
-        one={intl.formatMessage({id: 'hour_single'})}
-        few={intl.formatMessage({id: 'hour_few'})}
-        other={intl.formatMessage({id: 'hour_plural'})}/> </span>}
-        {timeLeft.minutes > 0 &&
-        <span>{timeLeft.minutes}<span> </span>
-        <FormattedPlural value={timeLeft.minutes}
-        one={intl.formatMessage({id: 'minute_single'})}
-        few={intl.formatMessage({id: 'minute_few'})}
-        other={intl.formatMessage({id: 'minute_plural'})}/> </span>}
-        {timeLeft.seconds > 0 &&
-        <span>{timeLeft.seconds}<span> </span>
-        <FormattedPlural value={timeLeft.seconds}
-        one={intl.formatMessage({id: 'second_single'})}
-        few={intl.formatMessage({id: 'second_few'})}
-        other={intl.formatMessage({id: 'second_plural'})}/> </span>}
+      {timeLeft.days > 0 && (
+        <span>
+          {timeLeft.days}
+          <span> </span>
+          <FormattedPlural
+            value={timeLeft.days}
+            one={intl.formatMessage({ id: "daySingle" })}
+            few={intl.formatMessage({ id: "dayFew" })}
+            other={intl.formatMessage({ id: "dayPlural" })}
+          />{" "}
+        </span>
+      )}
+      {timeLeft.hours > 0 && (
+        <span>
+          {timeLeft.hours}
+          <span> </span>
+          <FormattedPlural
+            value={timeLeft.hours}
+            one={intl.formatMessage({ id: "hourSingle" })}
+            few={intl.formatMessage({ id: "hourFew" })}
+            other={intl.formatMessage({ id: "hourPlural" })}
+          />{" "}
+        </span>
+      )}
+      {timeLeft.minutes > 0 && (
+        <span>
+          {timeLeft.minutes}
+          <span> </span>
+          <FormattedPlural
+            value={timeLeft.minutes}
+            one={intl.formatMessage({ id: "minuteSingle" })}
+            few={intl.formatMessage({ id: "minuteFew" })}
+            other={intl.formatMessage({ id: "minutePlural" })}
+          />{" "}
+        </span>
+      )}
+      {timeLeft.seconds > 0 && (
+        <span>
+          {timeLeft.seconds}
+          <span> </span>
+          <FormattedPlural
+            value={timeLeft.seconds}
+            one={intl.formatMessage({ id: "secondSingle" })}
+            few={intl.formatMessage({ id: "secondFew" })}
+            other={intl.formatMessage({ id: "secondPlural" })}
+          />{" "}
+        </span>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default Timer
+export default Timer;

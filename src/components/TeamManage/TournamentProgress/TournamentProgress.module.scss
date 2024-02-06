@@ -1,318 +1,325 @@
-@import '../../../settings.scss';
+@import "../../../settings.scss";
 
 .tournamentProgressBlock {
+  display: flex;
+  flex-direction: column;
+  .tournamentProgress {
+    margin-top: 9px;
     display: flex;
     flex-direction: column;
-    .tournamentProgress {
-        margin-top: 9px;
+    align-items: center;
+    gap: 20px;
+
+    .tournament {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 600px;
+      border: 1px solid $clrRed;
+      border-radius: 20px;
+      align-items: center;
+
+      .tournamentHeader {
+        position: relative;
+        background: radial-gradient(
+          circle,
+          rgb(154, 27, 27) 30%,
+          rgb(115, 29, 29) 85%
+        );
+        border-radius: 20px 20px 0 0;
+        padding: 20px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+
+        .HeaderText {
+          border-bottom: 1px solid $clrLight;
+          width: 200px;
+          text-align: center;
+        }
+
+        .HeaderScore {
+          width: 50px;
+        }
+
+        .button {
+          cursor: pointer;
+          right: 50px;
+          background-color: $clrLight;
+          width: 35px;
+          height: 35px;
+          border-radius: 50%;
+          border: 1px solid $clrRed;
+        }
+      }
+
+      .tourBlock {
+        display: flex;
+        flex-direction: column;
+        .match {
+          margin-bottom: 20px;
+          border-bottom: 1px solid $clrRed;
+          .matchLineTop {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            .select {
+              background: $clrDark;
+              color: $clrLight;
+              font-size: 20px;
+              width: 200px;
+              text-align: center;
+              border: 0;
+              border-bottom: 1px solid $clrLight;
+            }
+
+            .vs {
+              text-align: center;
+              width: 50px;
+            }
+
+            .plug {
+              width: 35px;
+            }
+          }
+
+          .matchLineBottom {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            padding-bottom: 20px;
+            .input {
+              background: $clrDark;
+              color: $clrLight;
+              font-size: 20px;
+              width: 200px;
+              text-align: center;
+              border: 0;
+              border-bottom: 1px solid $clrLight;
+            }
+
+            .select {
+              background: $clrDark;
+              color: $clrLight;
+              font-size: 20px;
+              width: 200px;
+              text-align: center;
+              border: 0;
+              border-bottom: 1px solid $clrLight;
+            }
+
+            .plug1 {
+              width: 50px;
+            }
+
+            .plug2 {
+              width: 35px;
+            }
+          }
+        }
+
+        .buttonBlock {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 25px;
+          margin-bottom: 20px;
+          .finishTournamentsMessages {
+            width: 70%;
+          }
+          .button {
+            color: $clrLight;
+            align-self: center;
+          }
+        }
+      }
+    }
+  }
+
+  .finishedTournamentsTitle {
+    display: flex;
+    align-self: center;
+    margin-top: 25px;
+  }
+
+  .notRunning {
+    display: flex;
+    gap: 25px;
+
+    .notRunningBlock {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+
+      .finishedTournament {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 20px;
-
-
-        .tournament {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            width: 600px;
-            border: 1px solid $clr_red;
-            border-radius: 20px;
-            align-items: center;
-
-            .tournamentHeader {
-                position: relative;
-                background: radial-gradient(circle, rgb(154, 27, 27) 30%, rgb(115, 29, 29) 85%);
-                border-radius: 20px 20px 0 0;
-                padding: 20px;
-                width: 100%;
-                display: flex;
-                justify-content: center;
-                gap: 25px;
-
-                .HeaderText {
-                    border-bottom: 1px solid $clr_light;
-                    width: 200px;
-                    text-align: center;
-                }
-
-                .HeaderScore {
-                    width: 50px;
-                }
-
-                .button {
-                    cursor: pointer;
-                    right: 50px;
-                    background-color: $clr_light;
-                    width: 35px;
-                    height: 35px;
-                    border-radius: 50%;
-                    border: 1px solid $clr_red;
-                }
-            }
-
-
-            .tourBlock  {
-                display: flex;
-                flex-direction: column;
-                .match {
-                    margin-bottom: 20px;
-                    border-bottom: 1px solid $clr_red;
-                    .matchLineTop {
-                        display: flex;
-                        justify-content: center;
-                        gap: 25px;
-                        .select {
-                            background: $clr_dark;
-                            color: $clr_light;
-                            font-size: 20px;
-                            width: 200px;
-                            text-align: center;
-                            border: 0;
-                            border-bottom: 1px solid $clr_light;
-                        }
-
-                        .vs {
-                            text-align: center;
-                            width: 50px;
-                        }
-
-                        .plug {
-                            width: 35px;
-                        }
-                    }
-
-                    .matchLineBottom {
-                        display: flex;
-                        justify-content: center;
-                        gap: 25px;
-                        padding-bottom: 20px;
-                        .input {
-                            background: $clr_dark;
-                            color: $clr_light;
-                            font-size: 20px;
-                            width: 200px;
-                            text-align: center;
-                            border: 0;
-                            border-bottom: 1px solid $clr_light;
-                        }
-
-                        .select {
-                            background: $clr_dark;
-                            color: $clr_light;
-                            font-size: 20px;
-                            width: 200px;
-                            text-align: center;
-                            border: 0;
-                            border-bottom: 1px solid $clr_light;
-                        }
-
-                        .plug1 {
-                            width: 50px;
-                        }
-
-                        .plug2 {
-                            width: 35px;
-                        }
-                    }
-
-                }
-
-                
-                .buttonBlock {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 25px;
-                    margin-bottom: 20px;
-                    .finishTournamentsMessages {
-                        width: 70%;
-                    }
-                    .button {
-                        color: $clr_light;
-                        align-self: center;
-                    }
-                }
-
-
-            }
-        }
-    }
-
-    .finishedTournamentsTitle {
-        display: flex;
         align-self: center;
-        margin-top: 25px;
-    }
+        width: 400px;
+        border: 1px solid $clrRed;
+        border-radius: 20px;
 
-    .notRunning {
-        display: flex;
-        gap: 25px;
-
-        .notRunningBlock {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-
-            .finishedTournament {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                align-self: center;
-                width: 400px;
-                border: 1px solid $clr_red;
-                border-radius: 20px;
-
-                &:not(:last-child) {
-                    margin-bottom: 25px;
-                }
-
-                .finishedTournamentMatchesContainer {
-                    display: flex;
-                    flex-direction: column;
-                    width: 100%;
-                }
-
-                .finishedTournamentHeader {
-                    display: flex;
-                    justify-content: center;
-                    gap: 25px;
-                    width: 100%;
-                    padding: 25px;
-                    font-size: 20px;
-                    border-bottom: 1px solid $clr_red;
-                    background: radial-gradient(circle, rgb(154, 27, 27) 30%, rgb(115, 29, 29) 85%);
-                    border-radius: 20px 20px 0 0;
-
-                    .winner {
-                        text-shadow: 0 0 10px rgba(41, 228, 235, 0.8) , 0 0 10px rgba(41, 228, 235, 0.8) , 0 0 10px rgba(41, 228, 235, 0.8) ;
-                        min-width: 100px;
-                    }
-
-                    .participant {
-                        color: rgba(255, 255, 255, 0.7);
-                        min-width: 100px;
-                    }
-
-                    .leftTeam {
-                        text-align: right;
-                    }
-
-                }
-
-                .matchesResults {
-                    display: flex;
-                    align-items: center;
-                    width: 100%;
-                    padding-left: 25px;
-                    font-size: 20px;
-                    color: $clr_light;
-                    text-align: left;
-                    cursor: pointer;
-                    transition: text-shadow 0.3s ease-in-out;
-
-                    &.show {
-                        transition: border-bottom 0.3s ease-in-out;
-                        border-bottom: 1px solid $clr_red;
-                    }
-
-                    .matchesResultsTitle {
-                        margin-right: 2px;
-                    }
-
-                    .arrow {
-                        transition: transform 0.3s ease-in-out;
-                        font-weight: bold;
-                        font-size: 20px;
-                        &.rotate {
-                            transform: rotate(90deg);
-                        }
-                    }
-
-                    &:hover {
-                        text-shadow: 0 0 10px rgba(255, 255, 255, 0.4) , 0 0 10px rgba(255, 255, 255, 0.4) , 0 0 10px rgba(41, 228, 235, 0.4);
-                    }
-                }
-
-                .finishedTournamentMatches {
-                    transition: max-height 0.3s cubic-bezier(1, 0, 1, 0);
-                    max-height: 1000px;
-                    overflow: hidden;
-
-                    &.hide {
-                        transition: max-height 0.3s cubic-bezier(1, 0, 1, 0);
-                        max-height: 0;
-                    }
-
-                    .finishedTournamentMatchContainer {
-                        transition: opacity 0.3s ease-in-out;
-                        opacity: 1;
-                        display: flex;
-                        width: 100%;
-                        flex-direction: column;
-                        align-items: center;
-                        padding: 10px;
-
-                            &:not(:last-child) {
-                                border-bottom: 1px solid $clr_red;
-                            }
-
-                            .finishedTournamentMatch {
-                                display: flex;
-                                gap: 25px;
-                                justify-content: center;
-                                .player {
-                                    min-width: 120px;
-                                    font-size: 20px;
-                                }
-
-                                .winner {
-                                    text-shadow: 0 0 10px rgba(41, 228, 235, 0.3) , 0 0 10px rgba(41, 228, 235, 0.3) , 0 0 10px rgba(41, 228, 235, 0.3);
-                                }
-
-                                .playerOne {
-                                    text-align: right;
-                                }
-                            }
-
-                            .map {
-                                font-size: 16px;
-                            }
-
-                    }
-                }
-
-
-            }
-
-            .upcomingTournament {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                align-self: center;
-                width: 400px;
-                border: 1px solid $clr_red;
-                border-radius: 20px;
-                
-                .upcomingTournamentHeader {
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    gap: 25px;
-                    width: 100%;
-                    padding: 25px;
-                    font-size: 20px;
-                    border-bottom: 1px solid $clr_red;
-                    background: radial-gradient(circle, rgb(154, 27, 27) 30%, rgb(115, 29, 29) 85%);
-                    border-radius: 20px 20px 0 0;
-                }
-                .button {
-                    color: $clr_light;
-                    margin-top: 10px;
-                    margin-bottom: 10px;
-                }
-            }
+        &:not(:last-child) {
+          margin-bottom: 25px;
         }
+
+        .finishedTournamentMatchesContainer {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+        }
+
+        .finishedTournamentHeader {
+          display: flex;
+          justify-content: center;
+          gap: 25px;
+          width: 100%;
+          padding: 25px;
+          font-size: 20px;
+          border-bottom: 1px solid $clrRed;
+          background: radial-gradient(
+            circle,
+            rgb(154, 27, 27) 30%,
+            rgb(115, 29, 29) 85%
+          );
+          border-radius: 20px 20px 0 0;
+
+          .winner {
+            text-shadow: 0 0 10px rgba(41, 228, 235, 0.8),
+              0 0 10px rgba(41, 228, 235, 0.8), 0 0 10px rgba(41, 228, 235, 0.8);
+            min-width: 100px;
+          }
+
+          .participant {
+            color: rgba(255, 255, 255, 0.7);
+            min-width: 100px;
+          }
+
+          .leftTeam {
+            text-align: right;
+          }
+        }
+
+        .matchesResults {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          padding-left: 25px;
+          font-size: 20px;
+          color: $clrLight;
+          text-align: left;
+          cursor: pointer;
+          transition: text-shadow 0.3s ease-in-out;
+
+          &.show {
+            transition: border-bottom 0.3s ease-in-out;
+            border-bottom: 1px solid $clrRed;
+          }
+
+          .matchesResultsTitle {
+            margin-right: 2px;
+          }
+
+          .arrow {
+            transition: transform 0.3s ease-in-out;
+            font-weight: bold;
+            font-size: 20px;
+            &.rotate {
+              transform: rotate(90deg);
+            }
+          }
+
+          &:hover {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.4),
+              0 0 10px rgba(255, 255, 255, 0.4),
+              0 0 10px rgba(41, 228, 235, 0.4);
+          }
+        }
+
+        .finishedTournamentMatches {
+          transition: max-height 0.3s cubic-bezier(1, 0, 1, 0);
+          max-height: 1000px;
+          overflow: hidden;
+
+          &.hide {
+            transition: max-height 0.3s cubic-bezier(1, 0, 1, 0);
+            max-height: 0;
+          }
+
+          .finishedTournamentMatchContainer {
+            transition: opacity 0.3s ease-in-out;
+            opacity: 1;
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+
+            &:not(:last-child) {
+              border-bottom: 1px solid $clrRed;
+            }
+
+            .finishedTournamentMatch {
+              display: flex;
+              gap: 25px;
+              justify-content: center;
+              .player {
+                min-width: 120px;
+                font-size: 20px;
+              }
+
+              .winner {
+                text-shadow: 0 0 10px rgba(41, 228, 235, 0.3),
+                  0 0 10px rgba(41, 228, 235, 0.3),
+                  0 0 10px rgba(41, 228, 235, 0.3);
+              }
+
+              .playerOne {
+                text-align: right;
+              }
+            }
+
+            .map {
+              font-size: 16px;
+            }
+          }
+        }
+      }
+
+      .upcomingTournament {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        align-self: center;
+        width: 400px;
+        border: 1px solid $clrRed;
+        border-radius: 20px;
+
+        .upcomingTournamentHeader {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 25px;
+          width: 100%;
+          padding: 25px;
+          font-size: 20px;
+          border-bottom: 1px solid $clrRed;
+          background: radial-gradient(
+            circle,
+            rgb(154, 27, 27) 30%,
+            rgb(115, 29, 29) 85%
+          );
+          border-radius: 20px 20px 0 0;
+        }
+        .button {
+          color: $clrLight;
+          margin-top: 10px;
+          margin-bottom: 10px;
+        }
+      }
     }
+  }
 }

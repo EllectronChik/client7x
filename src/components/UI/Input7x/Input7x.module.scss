@@ -1,13 +1,13 @@
-@import '../../../settings.scss';
+@import "../../../settings.scss";
 
 .input {
-    color: $clr_dark;
-    font-size: 30px;
-    border: 2px solid $clr_red;
-    border-radius: 20px;
+  color: $clrDark;
+  font-size: 30px;
+  border: 2px solid $clrRed;
+  border-radius: 20px;
+  text-align: center;
+
+  &::placeholder {
     text-align: center;
-    
-    &::placeholder {
-        text-align: center;
-    }
+  }
 }

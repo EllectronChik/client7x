@@ -1,120 +1,118 @@
-@import '../../settings.scss';
+@import "../../settings.scss";
 
 .container {
-    @include container();
-    align-items: center;
-    flex-direction: column;
-    justify-content: space-around;
-    margin-top: 75px;
+  @include container();
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-around;
+  margin-top: 75px;
 
-    .block {
+  .block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid $clrRed;
+    border-radius: 20px;
+    padding: 30px;
+    .bttns {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 30px;
+
+      .btn {
+        padding: 15px 40px;
+        border: 2px solid $clrRed;
+        font-size: 20px;
+        text-transform: uppercase;
+        transition: background-color 0.3s;
+        color: $clrLight;
+      }
+
+      .active {
+        background-color: $clrRed;
+      }
+    }
+
+    .form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 500px;
+      height: 210px;
+      transition: height 0.3s ease;
+
+      &.signUp {
+        animation: heightChange 0.3s ease;
+        height: 350px;
+      }
+
+      &.errorForm {
+        height: 500px;
+      }
+
+      .input {
+        margin-bottom: 20px;
+      }
+
+      .re_password {
+        animation: repField 0.6s ease;
+      }
+
+      .error {
         display: flex;
-        flex-direction: column;
+        color: $clrRed;
+        margin-bottom: 20px;
+        align-items: center;
+        .errorIcon {
+          height: 40px;
+        }
+      }
+
+      .important {
+        display: flex;
         align-items: center;
         justify-content: center;
-        border: 2px solid $clr_red;
-        border-radius: 20px;
-        padding: 30px;
-        .bttns {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 30px;
-
-            .btn {
-                padding: 15px 40px; 
-                border: 2px solid $clr_red;
-                font-size: 20px;
-                text-transform: uppercase;
-                transition: background-color 0.3s;
-                color: $clr_light;
-            }
-
-            .active {
-                background-color: $clr_red;
-            }
+        color: $clrLight;
+        width: 70%;
+        margin-top: 30px;
+        .important_img {
+          width: 50px;
         }
-
-        .form {
-            
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 500px;
-            height: 210px;
-            transition: height 0.3s ease;
-
-            &.signUp {
-                animation: heightChange 0.3s ease;
-                height: 350px;
-            }
-
-            &.errorForm {
-                height: 500px;
-            }
-            
-            .input {
-                margin-bottom: 20px;
-            }
-
-            .re_password {
-                animation: repField 0.6s ease;
-            }
-
-            .error {
-                display: flex;
-                color: $clr_red;
-                margin-bottom: 20px;
-                align-items: center;
-                .errorIcon {
-                    height: 40px;
-                }
-            }
-
-            .important {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: $clr_light;
-                width: 70%;
-                margin-top: 30px;
-                .important_img {
-                    width: 50px;
-                }
-                p {
-                    margin-left: 15px;
-                }
-            }
-            
-            .sub_btn {
-                color: $clr_light;
-                font-size: 30px;
-            }
+        p {
+          margin-left: 15px;
         }
+      }
+
+      .sub_btn {
+        color: $clrLight;
+        font-size: 30px;
+      }
     }
+  }
 }
 
-
 @keyframes repField {
-    0% {
-        opacity: 0;
-        transform: translateY(100px);
-    }
-    50% {
-        opacity: 0;
-        transform: translateY(100px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0px);
-    }
+  0% {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  50% {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
 }
 
 @keyframes heightChange {
-    0% {
-        height: 210px;
-    }
-    100% {
-        height: 350px;
-    }
+  0% {
+    height: 210px;
+  }
+  100% {
+    height: 350px;
+  }
 }
