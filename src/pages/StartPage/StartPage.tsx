@@ -1,49 +1,82 @@
-import { FC, useEffect, useRef, useState } from 'react';
-import classes from './StartPage.module.scss';
-import { FormattedMessage } from 'react-intl';
-import { useCookies } from 'react-cookie';
-import Loader7x from 'components/UI/Loader7x/Loader7x';
+import { FC, useEffect, useRef } from "react";
+import classes from "./StartPage.module.scss";
+import { FormattedMessage } from "react-intl";
+import { useCookies } from "react-cookie";
+import Loader7x from "components/UI/Loader7x/Loader7x";
+import SeasonInfo from "components/SeasonInfo/SeasonInfo";
+import diamond from "@assets/images/leagueMarks/5.webp";
+import master from "@assets/images/leagueMarks/6.webp";
+import grandmaster from "@assets/images/leagueMarks/7.webp";
+import { Link } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "hooks/reduxHooks";
+import {
+  selectSeasonState,
+  selectTours,
+  selectSeasonNumber,
+  selectGridRow,
+  selectPreviusSeasons,
+  selectLeaguesCnt,
+  setSeasonState,
+  setTours,
+  setSeasonNumber,
+  setGridRow,
+  setPreviusSeasons,
+  setLeaguesCnt,
+} from "store/reducers/StartPageSlice";
+import Link7x from "components/UI/Link7x/Link7x";
 
-interface ITours {
-  groups: {
-    [key: string]: {
-      [key: string]: number
-    }
-  },
-  playoff: {
-    [key: number]: {
-      [key: number]: {
-        teamOne: string,
-        teamTwo: string,
-        teamOneWins: number,
-        teamTwoWins: number,
-        winner: string | null
-      }
-    }
-  },
+interface IPrevSeasons {
+  [key: string]: {
+    tournamentsCount: number;
+    winner: string | null;
+  };
+}
+
+interface ILeagueCnt {
+  [key: string]: number;
 }
 
 interface IInfo {
-  state: number,
-  season?: number
-  startedSeason?: ITours
+  state: number;
+  season?: number;
+  startedSeason?: IInfoTours;
+  previusSeasons: IPrevSeasons;
+  playersByLeague: ILeagueCnt;
 }
 
 const StartPage: FC = () => {
   const infoWebSocketRef = useRef<WebSocket | null>();
-  const [seasonState, setSeasonState] = useState<number>(-1);
-  const [cookies, ] = useCookies(['userId', 'have_account']);
-  const [tours, setTours] = useState<ITours>({} as ITours);
-  const [seasonNumber, setSeasonNumber] = useState<number>(0);
-  const [gridRow, setGridRow] = useState<number>(0);
+  const [cookies] = useCookies(["userId", "have_account"]);
+  const seasonState = useAppSelector(selectSeasonState);
+  const tours = useAppSelector(selectTours);
+  const seasonNumber = useAppSelector(selectSeasonNumber);
+  const gridRow = useAppSelector(selectGridRow);
+  const previusSeasons = useAppSelector(selectPreviusSeasons);
+  const leaguesCnt = useAppSelector(selectLeaguesCnt);
+  const dispatch = useAppDispatch();
+  const leagueImgs: { [key: number]: { src: string; alt: string } } = {
+    5: {
+      src: diamond,
+      alt: "diamond",
+    },
+    6: {
+      src: master,
+      alt: "master",
+    },
+    7: {
+      src: grandmaster,
+      alt: "grandmaster",
+    },
+  };
 
   const infoWebSocketFunc = () => {
-    const infoWebSocket = new WebSocket(`${import.meta.env.VITE_SERVER_WS_URL}information/`);
+    const infoWebSocket = new WebSocket(
+      `${import.meta.env.VITE_SERVER_WS_URL}information/`
+    );
     infoWebSocketRef.current = infoWebSocket;
 
     infoWebSocket.onmessage = (event) => {
       const message: IInfo = JSON.parse(event.data);
-      console.log(message);
       if (message.state === 9) {
         if (infoWebSocketRef.current) {
           infoWebSocketRef.current.close();
@@ -51,30 +84,47 @@ const StartPage: FC = () => {
           infoWebSocketFunc();
         }
       } else if (message.state === 0) {
-        setSeasonState(0);
+        dispatch(setSeasonState(0));
+        dispatch(setSeasonNumber(0));
+        dispatch(setGridRow(0));
+        dispatch(setTours({} as IInfoTours));
       } else if (message.state === 1) {
-        setSeasonState(1);
-        setSeasonNumber(message.season ? message.season : 0);
+        dispatch(setSeasonState(1));
+        dispatch(setSeasonState(0));
+        dispatch(setGridRow(0));
+        dispatch(setTours({} as IInfoTours));
+        if (message.season) dispatch(setSeasonNumber(message.season));
       } else if (message.state === 2) {
-        setSeasonState(2);
-        setTours(message.startedSeason ? message.startedSeason : {} as ITours);
-        setSeasonNumber(message.season ? message.season : 0);
-        if (message.startedSeason && Object.keys(message.startedSeason.playoff).length > 0) {
-          const maxKey = Math.max(...Object.keys(message.startedSeason.playoff[1]).map((key) => parseInt(key)));
-          setGridRow(Math.ceil(Math.log2(maxKey + 1) + 1));
+        dispatch(setSeasonState(2));
+        if (message.startedSeason) dispatch(setTours(message.startedSeason));
+        if (message.season) dispatch(setSeasonNumber(message.season));
+        if (
+          message.startedSeason &&
+          Object.keys(message.startedSeason.playoff).length > 0
+        ) {
+          const maxKey = Math.max(
+            ...Object.keys(message.startedSeason.playoff[1]).map((key) =>
+              parseInt(key)
+            )
+          );
+          dispatch(setGridRow(Math.ceil(Math.log2(maxKey + 1) + 1)));
         }
       }
-      
-    }
+      if (message.previusSeasons)
+        dispatch(setPreviusSeasons(message.previusSeasons));
+      if (message.playersByLeague) {
+        dispatch(setLeaguesCnt(message.playersByLeague));
+      }
+    };
 
     infoWebSocket.onclose = () => {
       setTimeout(() => {
         if (infoWebSocketRef.current) {
           infoWebSocketFunc();
         }
-        }, 2000);
-    }
-  }
+      }, 2000);
+    };
+  };
 
   useEffect(() => {
     infoWebSocketFunc();
@@ -84,147 +134,111 @@ const StartPage: FC = () => {
         infoWebSocketRef.current.close();
         infoWebSocketRef.current = null;
       }
-    }
-  }, [])
-
+    };
+  }, []);
 
   return (
     <div className={classes.container}>
-      {seasonState === -1 && <Loader7x/>}
+      {seasonState === -1 && <Loader7x className={classes.loader} />}
       {seasonState === 0 && <h1>Турнир еще не начался</h1>}
-      {seasonState === 1 && <h1>Турнир {seasonNumber} начался, регистрация открыта</h1>}
-      {seasonState === 2 && <div className={classes.season}>
-        <h1>Season {seasonNumber} is now underway</h1>
-        <div className={classes.seasonContent}>
-          <div className={classes.groups}>
-            {tours.groups && Object.keys(tours.groups).map((key) => 
-            <div className={classes.group} key={key}>
-              <div className={classes.groupName}>
-                <h3>
-                  <FormattedMessage id="group"/> 
-                </h3>
-                <h3>
-                  {key}
-                </h3>
-              </div>
-              <table className={classes.table}>
-                <thead>
-                  <tr>
-                    <th className={classes.team}>
-                      <h3>
-                        <FormattedMessage id="team" />
-                      </h3>
-                    </th>
-                    <th className={classes.wins}>
-                      <h3>
-                        <FormattedMessage id="wins" />
-                      </h3>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Array.from(Object.keys(tours.groups[key])).map((key2) => (
-                  <tr key={key2}>
-                    <th className={classes.team}>
-                      <h4>
-                        {key2}
-                      </h4>
-                    </th>
-                    <th className={classes.wins}>
-                      <h4>
-                        {tours.groups[key][key2]}
-                      </h4>
-                    </th>
-                  </tr>
-                ))}
-                </tbody>
-              </table>
-            </div>)}
-          </div>
-          <div className={classes.gridBox}>
-            <h3 className={classes.playOffLabel}><FormattedMessage id="playoff" />:</h3>
-            <div className={classes.grid}>
-              {Array.from(Array(gridRow).keys()).map((row) => (
-                <div key={row} className={classes.row}>
-                  {Array.from(Array(2 ** (row)).keys()).map((col) => (
-                    <div key={col} style={{width: `${(200 * 2 ** (gridRow - 1)) / Array(2 ** (row)).length + 20 * (gridRow - row - 1)}px`}} className={classes.col}>
-                      {row === 0 && <h3 className={classes.team}><FormattedMessage id="final" /></h3>}
-                      {tours.playoff && tours.playoff[gridRow - row] && tours.playoff[gridRow - row][col] && 
-                        <div className={classes.teamBox}>
-                          <h3 className={`${classes.team} ${tours.playoff[gridRow - row][col].winner === tours.playoff[gridRow - row][col].teamOne ? classes.winner : ''}`}>
-                            {tours.playoff[gridRow - row][col].teamOne}
-                          </h3>
-                          <h3 className={`${classes.score} ${tours.playoff[gridRow - row][col].winner === tours.playoff[gridRow - row][col].teamOne ? classes.winner : ''}`}>
-                            {tours.playoff[gridRow - row][col].teamOneWins}
-                          </h3>
-                        </div>}
-                      {tours.playoff && tours.playoff[gridRow - row] && tours.playoff[gridRow - row][col] && 
-                        <div className={classes.teamBox}>
-                          <h3 className={`${classes.team} ${tours.playoff[gridRow - row][col].winner === tours.playoff[gridRow - row][col].teamTwo ? classes.winner : ''}`}>
-                            {tours.playoff[gridRow - row][col].teamTwo}
-                          </h3>
-                          <h3 className={`${classes.score} ${tours.playoff[gridRow - row][col].winner === tours.playoff[gridRow - row][col].teamTwo ? classes.winner : ''}`}>
-                            {tours.playoff[gridRow - row][col].teamTwoWins}
-                          </h3>
-                        </div>}
-                      {(!tours.playoff[gridRow - row] || !tours.playoff[gridRow - row][col]) && <div>
-                        {tours.playoff[gridRow - row - 1] && 
-                            tours.playoff[gridRow - row - 1][col * 2] && tours.playoff[gridRow - row - 1][col * 2]?.winner !== null ?
-                            <div className={classes.teamBox}>
-                              <h3 className={classes.team}>
-                                {tours.playoff[gridRow - row - 1][col * 2]?.winner}
-                              </h3>
-                              <h3 className={classes.score}>
-                                0
-                              </h3>
-                            </div> 
-                          : <div className={classes.teamBox}>
-                              <h3 className={classes.team}>
-                              </h3>
-                              <h3 className={classes.score}>
-                                0
-                              </h3>
-                            </div>}
-                            {tours.playoff[gridRow - row - 1] &&
-                            tours.playoff[gridRow - row - 1][col * 2 + 1] && tours.playoff[gridRow - row - 1][col * 2 + 1]?.winner !== null ? 
-                            <div className={classes.teamBox}>
-                              <h3 className={classes.team}>
-                                {tours.playoff[gridRow - row - 1][col * 2 + 1]?.winner}
-                              </h3>
-                              <h3 className={classes.score}>
-                                0
-                              </h3>
-                            </div>
-                            : <div className={classes.teamBox}>
-                                <h3 className={classes.team}>
-                                </h3>
-                                <h3 className={classes.score}>
-                                  0
-                                </h3>
-                              </div>}
-                      </div>}
-                      {row + 1 !== gridRow && <div>
-                        <div className={classes.line_1}>
-                          <div className={classes.col_1} style={{width: `${100 * 2 ** (gridRow - row - 2) + 20}px`}}></div>
-                          <div className={classes.col_2} style={{width: `${100 * 2 ** (gridRow - row - 2) + 20}px`}}></div>
-                        </div>
-                        <div className={classes.line_2} style={{width: `${200 * 2 ** (gridRow - row - 2) + 40}px`}}></div>
-                      </div>}
-                    </div>
-                  ))}
+      {seasonState === 1 && (
+        <h1>Турнир {seasonNumber} начался, регистрация открыта</h1>
+      )}
+      {seasonState === 2 && (
+        <div className={classes.season}>
+          <h1>
+            <FormattedMessage
+              id="seasonIsNowUnderway"
+              values={{ num: seasonNumber }}
+            />
+          </h1>
+          <SeasonInfo tours={tours} gridRow={gridRow} />
+        </div>
+      )}
+      <div className={classes.infoBox}>
+        {Object.keys(previusSeasons).length > 0 && (
+          <div className={classes.prevSeasons}>
+            <div className={classes.prevSeasonsContent}>
+              <h2>
+                <FormattedMessage id="previousSeasons" />
+              </h2>
+              {Object.keys(previusSeasons).map((key) => (
+                <div className={classes.prevSeason} key={key}>
+                  <div>
+                    <h3>
+                      <FormattedMessage
+                        id="manageStartedSeason"
+                        values={{ season: key }}
+                      />
+                    </h3>
+                    <p>
+                      <FormattedMessage id="games" />:{" "}
+                      {previusSeasons[key].tournamentsCount}
+                    </p>
+                  </div>
+                  <h3>
+                    <FormattedMessage id="winner" />:{" "}
+                    {previusSeasons[key].winner
+                      ? previusSeasons[key].winner
+                      : "None"}
+                  </h3>
                 </div>
               ))}
             </div>
-            <div></div>
+            <div className={classes.showMoreBox}>
+              <h3>
+                <Link className={classes.showMore} to="/arhive">
+                  &rarr;
+                  <FormattedMessage id="showMore" />
+                  &larr;
+                </Link>
+              </h3>
+            </div>
           </div>
+        )}
+        {Object.keys(leaguesCnt).length > 0 && (
+          <div className={classes.leaguesCnt}>
+            <h2>
+              <FormattedMessage id="statistic" />
+            </h2>
+            <div className={classes.leaguesCntContent}>
+              {Object.keys(leaguesCnt).map((key) => (
+                <div className={classes.leagueCnt} key={key}>
+                  <img
+                    src={leagueImgs[Number(key)].src}
+                    alt={leagueImgs[Number(key)].alt}
+                    className={classes.leagueImg}
+                  />
+                  <p>
+                    <FormattedMessage id="players" />: {leaguesCnt[key]}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <h3 className={classes.showMoreBox}>
+              <Link className={classes.showMore} to="/statistics">
+                &rarr;
+                <FormattedMessage id="showMore" />
+                &larr;
+              </Link>
+            </h3>
+          </div>
+        )}
+      </div>
+      {!cookies.userId && seasonState !== -1 && (
+        <div className={classes.participateBox}>
+          <h3>
+            <FormattedMessage id="registerTeam" />
+          </h3>
+          <Link7x to="/login">
+            <h3>
+              <FormattedMessage id="login" />
+            </h3>
+          </Link7x>
         </div>
-        </div>}
-        {!cookies.userId &&
-        <div>
-          Register your team and participate in the upcoming tournaments!
-        </div>}
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default StartPage
+export default StartPage;
