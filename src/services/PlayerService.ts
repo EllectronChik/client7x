@@ -8,12 +8,6 @@ export const PlayerApi = createApi({
   }),
   tagTypes: ["players"],
   endpoints: (builder) => ({
-    fetchPlayers: builder.query<IPlayer[], number>({
-      query: (id) => ({
-        url: `/players/${id}/`,
-        method: "GET",
-      }),
-    }),
     fetchPlayersByClan: builder.query<IPlayer[], number>({
       query: (id) => ({
         url: `/players?team=${id}`,
