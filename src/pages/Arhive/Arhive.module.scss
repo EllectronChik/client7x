@@ -1,0 +1,48 @@
+@import '../../settings.scss';
+
+.container {
+    @include container();
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
+    color: $clrLight;
+    margin-top: 35px;
+
+    .table {
+        width: 500px;
+        padding: 25px 50px;
+        border: 2px solid $clrRed;
+        border-radius: 30px;
+        background-image: linear-gradient(200deg, #121212, #525357, #121212);
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid $clrRed;
+        }
+    
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            border-bottom: 1px solid $clrRed;
+
+            &:hover {
+                .col {
+                    color: $clrLight;
+                    text-shadow: 0 0 10px rgba(41, 228, 235, 0.5),
+                    0 0 10px rgba(41, 228, 235, 0.5),
+                    0 0 10px rgba(41, 228, 235, 0.5);
+                }
+            }
+            
+            .col {
+                transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+                color: rgb(20, 216, 206);
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.8)
+            }
+        }
+    }
+
+}
