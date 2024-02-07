@@ -42,6 +42,9 @@ const Login: React.FC = () => {
   }, [isLogin]);
 
   useEffect(() => {
+    if (Cookie.userId) {
+      navigate("/account");
+    }
     setIsLogin(Cookie.have_account ? false : true);
   }, []);
 
