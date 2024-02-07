@@ -90,7 +90,6 @@ const StartPage: FC = () => {
         dispatch(setTours({} as IInfoTours));
       } else if (message.state === 1) {
         dispatch(setSeasonState(1));
-        dispatch(setSeasonState(0));
         dispatch(setGridRow(0));
         dispatch(setTours({} as IInfoTours));
         if (message.season) dispatch(setSeasonNumber(message.season));
@@ -128,6 +127,7 @@ const StartPage: FC = () => {
 
   useEffect(() => {
     infoWebSocketFunc();
+    document.title = "7x league";
 
     return () => {
       if (infoWebSocketRef.current) {
@@ -140,9 +140,49 @@ const StartPage: FC = () => {
   return (
     <div className={classes.container}>
       {seasonState === -1 && <Loader7x className={classes.loader} />}
-      {seasonState === 0 && <h1>Турнир еще не начался</h1>}
+      {seasonState === 0 && (
+        <div className={classes.noSeason}>
+          <h1>
+            <FormattedMessage id="noTournaments" />
+          </h1>
+        </div>
+      )}
       {seasonState === 1 && (
-        <h1>Турнир {seasonNumber} начался, регистрация открыта</h1>
+        <div className={classes.seasonReg}>
+          <h1>
+            <FormattedMessage
+              id="registrationOpen"
+              values={{ season: seasonNumber }}
+            />
+          </h1>
+          {cookies.userId && (
+            <Link to="/account">
+              <h3 className={classes.switch}>
+                &rarr;
+                <FormattedMessage id="switchToParticipate" />
+                &larr;
+              </h3>
+            </Link>
+          )}
+          {!cookies.userId && cookies.have_account && (
+            <Link to="/login">
+              <h3 className={classes.switch}>
+                &rarr;
+                <FormattedMessage id="signinToParticipate" />
+                &larr;
+              </h3>
+            </Link>
+          )}
+          {!cookies.userId && !cookies.have_account && (
+            <Link to="/login">
+              <h3 className={classes.switch}>
+                &rarr;
+                <FormattedMessage id="signupToParticipate" />
+                &larr;
+              </h3>
+            </Link>
+          )}
+        </div>
       )}
       {seasonState === 2 && (
         <div className={classes.season}>
