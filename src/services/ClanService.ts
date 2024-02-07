@@ -25,7 +25,7 @@ export const ClanApi = createApi({
     }),
     fetchClan: builder.query<IClan, string>({
       query: (tag) => ({
-        url: `/teams?${tag}/`,
+        url: `/teams/?tag=${tag}`,
         method: "GET",
       }),
     }),
