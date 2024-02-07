@@ -156,6 +156,12 @@ export const MESSAGES = {
     winner: "Winner",
     games: "Games",
     players: "Players",
+    noTournaments: "There are no tournaments at this time",
+    registrationOpen: "Registration is now open for the {season}",
+    switchToParticipate: "Switch to your account to participate",
+    signupToParticipate: "Register your team to participate",
+    signinToParticipate: "Sign in to your account to participate",
+    
   },
   [LOCALES.RUSSIAN]: {
     statistic: "Статистика",
@@ -312,6 +318,11 @@ export const MESSAGES = {
     winner: "Победитель",
     games: "Игр",
     players: "Игроков",
+    noTournaments: "В данный момент турниры не проводятся",
+    registrationOpen: "Открыта регистрация на участие в сезоне {season}",
+    switchToParticipate: "Перейдите в свой аккаунт, чтобы принять участие",
+    signupToParticipate: "Зарегестрируйте свою команду, чтобы принять участие",
+    signinToParticipate: "Войдите в свой аккаунт, чтобы принять участие",
   },
   [LOCALES.UKRAINIAN]: {
     statistic: "Статистика",
@@ -468,5 +479,10 @@ export const MESSAGES = {
     winner: "Переможець",
     games: "Ігор",
     players: "Гравців",
+    noTournaments: "Наразі турніри не проводяться",
+    registrationOpen: "Відкрито реєстрацію на участь у сезоні {season}",
+    switchToParticipate: "Перейдіть у свій аккаунт, щоб узяти участь",
+    signupToParticipate: "Зареєструйте свою команду, щоб узяти участь",
+    signinToParticipate: "Увійдіть у свій акаунт, щоб узяти участь",
   },
 };
