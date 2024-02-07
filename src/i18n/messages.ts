@@ -161,7 +161,6 @@ export const MESSAGES = {
     switchToParticipate: "Switch to your account to participate",
     signupToParticipate: "Register your team to participate",
     signinToParticipate: "Sign in to your account to participate",
-    
   },
   [LOCALES.RUSSIAN]: {
     statistic: "Статистика",
