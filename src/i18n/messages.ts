@@ -161,6 +161,7 @@ export const MESSAGES = {
     switchToParticipate: "Switch to your account to participate",
     signupToParticipate: "Register your team to participate",
     signinToParticipate: "Sign in to your account to participate",
+    season: "Season",
   },
   [LOCALES.RUSSIAN]: {
     statistic: "Статистика",
@@ -322,6 +323,7 @@ export const MESSAGES = {
     switchToParticipate: "Перейдите в свой аккаунт, чтобы принять участие",
     signupToParticipate: "Зарегестрируйте свою команду, чтобы принять участие",
     signinToParticipate: "Войдите в свой аккаунт, чтобы принять участие",
+    season: "Сезон",
   },
   [LOCALES.UKRAINIAN]: {
     statistic: "Статистика",
@@ -483,5 +485,6 @@ export const MESSAGES = {
     switchToParticipate: "Перейдіть у свій аккаунт, щоб узяти участь",
     signupToParticipate: "Зареєструйте свою команду, щоб узяти участь",
     signinToParticipate: "Увійдіть у свій акаунт, щоб узяти участь",
+    season: "Сезон",
   },
 };
