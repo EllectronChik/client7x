@@ -7,12 +7,6 @@ export const SeasonApi = createApi({
     baseUrl: import.meta.env.VITE_API_URL,
   }),
   endpoints: (builder) => ({
-    fetchAllSeasons: builder.query<void, void>({
-      query: () => ({
-        url: `/seasons/`,
-        method: "GET",
-      }),
-    }),
     fetchCurrentSeason: builder.query<ISeason, void>({
       query: () => ({
         url: `/get_current_season/`,
@@ -90,6 +84,12 @@ export const SeasonApi = createApi({
           body: body,
         };
       },
+    }),
+    fetchSeasonData: builder.query<IInfoTours, number>({
+      query: (season) => ({
+        url: `/getSeasonData/${season}/`,
+        method: "GET",
+      }),
     }),
   }),
 });
