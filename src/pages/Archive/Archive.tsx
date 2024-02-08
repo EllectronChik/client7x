@@ -1,5 +1,8 @@
 import { useEffect, FC } from "react";
-import { setFetching, selectNextPage } from "store/reducers/ArchiveSeasonsSlice";
+import {
+  setFetching,
+  selectNextPage,
+} from "store/reducers/ArchiveSeasonsSlice";
 import { useAppDispatch, useAppSelector } from "hooks/reduxHooks";
 
 import classes from "./Archive.module.scss";

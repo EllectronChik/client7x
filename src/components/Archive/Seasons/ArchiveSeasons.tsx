@@ -83,7 +83,12 @@ const ArchiveSeasons: FC = () => {
           `${import.meta.env.VITE_API_URL}seasons/?_limit=20&page=${page}`
         )
         .then((res) => {
-          dispatch(setSeasons([...seasons, ...res.data.results.filter((s) => s.is_finished === true)]));
+          dispatch(
+            setSeasons([
+              ...seasons,
+              ...res.data.results.filter((s) => s.is_finished === true),
+            ])
+          );
           dispatch(setPage(page + 1));
           dispatch(setNextPage(res.data.next));
         })

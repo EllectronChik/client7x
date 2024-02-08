@@ -56,7 +56,7 @@ const Header7x: FC = () => {
                 </Link7x>
               </li>
               <li className={classes.nav_item}>
-                <Link7x to="/arhive">
+                <Link7x to="/archive">
                   <FormattedMessage id="archive" />
                 </Link7x>
               </li>
