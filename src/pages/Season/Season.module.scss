@@ -1,0 +1,10 @@
+@import "../../settings.scss";
+
+.container {
+  @include container();
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-around;
+  color: $clrLight;
+  margin-top: 35px;
+}
