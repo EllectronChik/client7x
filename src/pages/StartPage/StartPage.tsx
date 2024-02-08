@@ -227,7 +227,7 @@ const StartPage: FC = () => {
             </div>
             <div className={classes.showMoreBox}>
               <h3>
-                <Link className={classes.showMore} to="/arhive">
+                <Link className={classes.showMore} to="/archive">
                   &rarr;
                   <FormattedMessage id="showMore" />
                   &larr;
