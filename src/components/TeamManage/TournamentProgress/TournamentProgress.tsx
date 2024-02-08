@@ -1,5 +1,5 @@
 import moment from "moment";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef, FC } from "react";
 import { useCookies } from "react-cookie";
 import { IMatch } from "../../../models/IMatch";
 import { ClanApi } from "services/ClanService";
@@ -30,7 +30,7 @@ import {
   selectPlayers,
 } from "store/reducers/ClanSlice";
 
-const TournamentProgress: React.FC = () => {
+const TournamentProgress: FC = () => {
   const [cookies] = useCookies(["token", "userId"]);
   const { data: myTeam } = ClanApi.useFetchClanByManagerQuery(cookies.userId);
   const { data: regPlayers } = PlayerApi.useGetRegForSeasonPlayersQuery({

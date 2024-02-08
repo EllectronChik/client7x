@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, FC } from "react";
 import ClanInfo from "./ClanInfo/ClanInfo";
 import Participate from "./Participate/Participate";
 import classes from "./TeamManage.module.scss";
@@ -9,7 +9,7 @@ import { useCookies } from "react-cookie";
 import TournamentProgress from "./TournamentProgress/TournamentProgress";
 import { useIntl } from "react-intl";
 
-const TeamManage: React.FC = () => {
+const TeamManage: FC = () => {
   const [cookies] = useCookies(["userId", "token"]);
   const intl = useIntl();
   const { data: currentTournament } = SeasonApi.useFetchCurrentSeasonQuery();

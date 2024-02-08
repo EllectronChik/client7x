@@ -1,5 +1,5 @@
 import { ITournamentApiResponse } from "models/ITournamentApiResponse";
-import React, { useState } from "react";
+import { useState, HTMLProps, FC } from "react";
 import classes from "./TournamentCard.module.scss";
 import teamDefault from "@assets/images/team/teamDefault.webp";
 import moment from "moment";
@@ -8,11 +8,11 @@ import Button7x from "components/UI/Button7x/Button7x";
 import { TournamentApi } from "services/TournamentService";
 import { useCookies } from "react-cookie";
 
-interface TournamentCardProps extends React.HTMLProps<HTMLDivElement> {
+interface TournamentCardProps extends HTMLProps<HTMLDivElement> {
   tournament: ITournamentApiResponse;
 }
 
-const TournamentCard: React.FC<TournamentCardProps> = ({ ...props }) => {
+const TournamentCard: FC<TournamentCardProps> = ({ ...props }) => {
   const [askForChange, setAskForChange] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>(
     props.tournament.startTime

@@ -1,4 +1,4 @@
-import React from "react";
+import { JSX, Dispatch, SetStateAction } from "react";
 import { IPlayer } from "models/IPlayer";
 import axios from "axios";
 import { updatePlayerField } from "store/reducers/PlayerListSlice";
@@ -6,12 +6,12 @@ import classes from "./ManualPlayer.module.scss";
 import { FormattedMessage, IntlShape } from "react-intl";
 
 export const handleAddPlayerForm = (
-  playerForms: React.JSX.Element[],
-  setPlayerForms: React.Dispatch<React.SetStateAction<React.JSX.Element[]>>,
+  playerForms: JSX.Element[],
+  setPlayerForms: Dispatch<SetStateAction<JSX.Element[]>>,
   manualPlayers: IPlayer[],
-  setManualPlayers: React.Dispatch<React.SetStateAction<IPlayer[]>>,
+  setManualPlayers: Dispatch<SetStateAction<IPlayer[]>>,
   players: IPlayer[],
-  dispatch: React.Dispatch<any>,
+  dispatch: Dispatch<any>,
   cookies: any,
   intl: IntlShape
 ) => {

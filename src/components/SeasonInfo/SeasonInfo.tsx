@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 import { FormattedMessage } from "react-intl";
 import classes from "./SeasonInfo.module.scss";
 
@@ -7,7 +7,7 @@ interface IProps {
   gridRow: number;
 }
 
-const SeasonInfo: React.FC<IProps> = ({ tours, gridRow }) => {
+const SeasonInfo: FC<IProps> = ({ tours, gridRow }) => {
   return (
     <div className={classes.seasonContent}>
       <div className={classes.groups}>

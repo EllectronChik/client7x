@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import { useEffect, FC } from "react";
 import TourManage from "./TournamentManagement/TourManage";
 import { useIntl } from "react-intl";
 
-const StaffPanel: React.FC = () => {
+const StaffPanel: FC = () => {
   const intl = useIntl();
 
   useEffect(() => {

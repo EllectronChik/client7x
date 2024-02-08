@@ -1,8 +1,8 @@
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, FC, HTMLAttributes } from "react";
 import { FormattedPlural, useIntl } from "react-intl";
 
-interface TimerProps extends React.HTMLAttributes<HTMLDivElement> {
+interface TimerProps extends HTMLAttributes<HTMLDivElement> {
   datetime: string;
 }
 
@@ -13,7 +13,7 @@ interface ITimeLeft {
   seconds: number;
 }
 
-const Timer: React.FC<TimerProps> = ({ ...props }) => {
+const Timer: FC<TimerProps> = ({ ...props }) => {
   const intl = useIntl();
   const calculateTimeLeft = () => {
     const now = moment.utc();

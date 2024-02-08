@@ -1,6 +1,6 @@
 import Button7x from "components/UI/Button7x/Button7x";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, Dispatch, SetStateAction, FC } from "react";
 import { useCookies } from "react-cookie";
 import { SeasonApi } from "services/SeasonService";
 import classes from "./StartedSeasonManage.module.scss";
@@ -19,13 +19,11 @@ import { useAppDispatch, useAppSelector } from "hooks/reduxHooks";
 import Timer from "components/Timer/Timer";
 
 interface StartedSeasonManageProps {
-  setSeasonStarted: React.Dispatch<React.SetStateAction<boolean | undefined>>;
+  setSeasonStarted: Dispatch<SetStateAction<boolean | undefined>>;
   timeZoneOffsetString: string;
 }
 
-const StartedSeasonManage: React.FC<StartedSeasonManageProps> = ({
-  ...props
-}) => {
+const StartedSeasonManage: FC<StartedSeasonManageProps> = ({ ...props }) => {
   const { data: currentSeason } = SeasonApi.useFetchCurrentSeasonQuery();
   const [seasonNumber, setSeasonNumber] = useState<number | undefined>(
     undefined

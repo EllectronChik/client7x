@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, FC, DragEvent } from "react";
 import { useCookies } from "react-cookie";
 import { ClanApi } from "services/ClanService";
 import teamDefault from "@assets/images/team/teamDefault.webp";
@@ -27,7 +27,7 @@ import { useAppDispatch, useAppSelector } from "hooks/reduxHooks";
 import { FormattedMessage } from "react-intl";
 import { PlayerApi } from "services/PlayerService";
 
-const ClanInfo: React.FC = () => {
+const ClanInfo: FC = () => {
   const [cookies] = useCookies(["userId", "token"]);
   const { data: myTeam } = ClanApi.useFetchClanByManagerQuery(cookies.userId);
   const [race, setRace] = useState<JSX.Element[]>([]);
@@ -228,7 +228,7 @@ const ClanInfo: React.FC = () => {
   };
 
   const handleDragStartPlayer = (
-    e: React.DragEvent<HTMLDivElement>,
+    e: DragEvent<HTMLDivElement>,
     index: number
   ) => {
     if (e.target !== e.currentTarget) {
@@ -239,7 +239,7 @@ const ClanInfo: React.FC = () => {
     dispatch(setDragPlayer(myTeam ? myTeam.players[index] : null));
   };
 
-  const handleDragEndPlayer = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragEndPlayer = (e: DragEvent<HTMLDivElement>) => {
     e.currentTarget.classList.remove(classes.drag);
     dispatch(setDragPlayer(null));
   };

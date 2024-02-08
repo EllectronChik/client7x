@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import { useEffect, FC } from "react";
 
-const ReloadinWarning: React.FC = () => {
+const ReloadinWarning: FC = () => {
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, FC, FormEvent } from "react";
 import classes from "./Login.module.scss";
 import Button7x from "components/UI/Button7x/Button7x";
 import important_svg from "@assets/images/techImages/important.svg";
@@ -16,7 +16,7 @@ interface IErrorData {
   re_password: string[];
 }
 
-const Login: React.FC = () => {
+const Login: FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [isError, setIsError] = useState<string | null>(null);
   const [errorData, setErrorData] = useState<IErrorData | null>(null);
@@ -59,13 +59,13 @@ const Login: React.FC = () => {
     }
   }, [errorCreate]);
 
-  const verify_registration = async (e: React.FormEvent<HTMLFormElement>) => {
+  const verify_registration = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await createUser(data);
     await verify_login(e);
   };
 
-  const verify_login = async (e: React.FormEvent<HTMLFormElement>) => {
+  const verify_login = async (e: FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
       const exp_date = new Date();

@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "hooks/reduxHooks";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, FC } from "react";
 import { useCookies } from "react-cookie";
 import { TournamentApi } from "services/TournamentService";
 import { selectLocalTime } from "store/reducers/AccountSlice";
@@ -16,7 +16,7 @@ import Button7x from "components/UI/Button7x/Button7x";
 import { Tooltip } from "react-tooltip";
 import { FormattedMessage } from "react-intl";
 
-const MatchDistribution: React.FC = () => {
+const MatchDistribution: FC = () => {
   const [slideGroupIndex, setSlideGroupIndex] = useState<number>(0);
   const [slideStageIndex, setSlideStageIndex] = useState<number>(0);
   const [additionalStages, setAdditionalStages] = useState<number[]>([]);

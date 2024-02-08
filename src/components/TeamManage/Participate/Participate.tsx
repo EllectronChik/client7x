@@ -1,6 +1,6 @@
 import Button7x from "components/UI/Button7x/Button7x";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, HTMLProps, FC, JSX } from "react";
 import { useCookies } from "react-cookie";
 import { FormattedMessage, useIntl } from "react-intl";
 import { ClanApi } from "services/ClanService";
@@ -33,18 +33,14 @@ import { IPlayer } from "models/IPlayer";
 import { TournamentApi } from "services/TournamentService";
 import TournamentCard from "./TournamentCard/TournamentCard";
 
-const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({
-  ...props
-}) => {
+const Participate: FC<HTMLProps<HTMLDivElement>> = ({ ...props }) => {
   const intl = useIntl();
   const [cookies] = useCookies(["token", "userId", "locale"]);
   const canRegister = useAppSelector(selectCanRegister);
   const [parsedDate, setParsedDate] = useState<String | null>(null);
   const [parsedTime, setParsedTime] = useState<String | null>(null);
-  const [dragZoneText, setDragZoneText] = useState<React.JSX.Element>();
-  const [dragZonePlayers, setDragZonePlayers] = useState<React.JSX.Element[]>(
-    []
-  );
+  const [dragZoneText, setDragZoneText] = useState<JSX.Element>();
+  const [dragZonePlayers, setDragZonePlayers] = useState<JSX.Element[]>([]);
   const [deletePlayer, setDeletePlayer] = useState<number>(-1);
   const [participate, {}] = ClanApi.useParticipateInSeasonMutation();
   const dispatch = useAppDispatch();
@@ -157,7 +153,7 @@ const Participate: React.FC<React.HTMLProps<HTMLDivElement>> = ({
   useEffect(() => {
     if (droppedPlayer) {
       setDragZonePlayers(() => {
-        const newDragZonePlayers: React.JSX.Element[] = [];
+        const newDragZonePlayers: JSX.Element[] = [];
         droppedPlayer.map((player) => {
           if (player) {
             const index = dragZonePlayers.findIndex(

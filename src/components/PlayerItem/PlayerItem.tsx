@@ -1,5 +1,5 @@
 import { IPlayer } from "models/IPlayer";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, MouseEvent, FC } from "react";
 import classes from "./PlayerItem.module.scss";
 import { PlayerLogoApi } from "services/PlayerLogoService";
 import defaultPlayer from "../../assets/images/player/default.svg";
@@ -20,11 +20,11 @@ import { FormattedMessage } from "react-intl";
 
 interface PlayerItemProps {
   player: IPlayer;
-  onClick?: (e: React.MouseEvent) => void;
+  onClick?: (e: MouseEvent) => void;
   title?: string;
 }
 
-const PlayerItem: React.FC<PlayerItemProps> = ({ player, onClick, title }) => {
+const PlayerItem: FC<PlayerItemProps> = ({ player, onClick, title }) => {
   const dispatch = useAppDispatch();
   const [playerLeagueLogo, setPlayerLeagueLogo] = useState<string>("");
   const [playerRegionFlag, setPlayerRegionFlag] = useState<

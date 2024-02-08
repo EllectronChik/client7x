@@ -1,11 +1,11 @@
-import React from "react";
+import { FC } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { PublicRoutes } from "../../router/routes";
 import Header7x from "../UI/Header7x/Header7x";
 import Footer from "../Footer/Footer";
 import classes from "./AppRouter.module.scss";
 
-const AppRouter: React.FC = () => {
+const AppRouter: FC = () => {
   return (
     <BrowserRouter>
       <div className={classes.appContainer}>

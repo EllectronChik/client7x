@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, MutableRefObject, Dispatch, SetStateAction } from "react";
 import deleteWhite from "assets/images/techImages/deleteWhite.svg";
 import { Tooltip } from "react-tooltip";
 import editWhite from "assets/images/techImages/editWhite.svg";
@@ -21,11 +21,11 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 interface IProps {
   tournament: ITournamentAdmin;
-  tournamentsWebSocketRef: React.MutableRefObject<WebSocket | undefined>;
-  matchesWebSocketsRef: React.MutableRefObject<{ [key: number]: WebSocket }>;
+  tournamentsWebSocketRef: MutableRefObject<WebSocket | undefined>;
+  matchesWebSocketsRef: MutableRefObject<{ [key: number]: WebSocket }>;
   matchesWebSocketFunc: (tournament: ITournamentAdmin) => void;
   deletedMatches: number[];
-  setDeletedMatches: React.Dispatch<React.SetStateAction<number[]>>;
+  setDeletedMatches: Dispatch<SetStateAction<number[]>>;
 }
 
 const GameAProgress: FC<IProps> = ({

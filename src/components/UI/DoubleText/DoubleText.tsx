@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 import classes from "./DoubleText.module.scss";
 
 interface DoubleTextProps {
@@ -6,7 +6,7 @@ interface DoubleTextProps {
   text: string;
 }
 
-const DoubleText: React.FC<DoubleTextProps> = ({ text, className }) => {
+const DoubleText: FC<DoubleTextProps> = ({ text, className }) => {
   const textArray = [...text];
   return (
     <div className={`${classes.double_text} ${className}`}>

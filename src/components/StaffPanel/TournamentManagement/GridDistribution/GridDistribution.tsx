@@ -1,5 +1,12 @@
 import { IGroup } from "models/IGroup";
-import { FC, useEffect, useRef, useState } from "react";
+import {
+  FC,
+  useEffect,
+  useRef,
+  useState,
+  MutableRefObject,
+  ChangeEvent,
+} from "react";
 import { useCookies } from "react-cookie";
 import { GroupApi } from "services/GroupService";
 import classes from "./GridDistribution.module.scss";
@@ -19,7 +26,7 @@ interface ITeamDict {
 }
 
 interface IProps {
-  tournamentsWebSocketRef: React.MutableRefObject<WebSocket | undefined>;
+  tournamentsWebSocketRef: MutableRefObject<WebSocket | undefined>;
 }
 
 interface ILevelsTournaments {
@@ -80,7 +87,7 @@ const GridDistribution: FC<IProps> = ({ tournamentsWebSocketRef }) => {
   };
 
   const handleSelectFirstTeam = (
-    event: React.ChangeEvent<HTMLSelectElement>,
+    event: ChangeEvent<HTMLSelectElement>,
     col: number,
     stage: number
   ) => {
@@ -132,7 +139,7 @@ const GridDistribution: FC<IProps> = ({ tournamentsWebSocketRef }) => {
   };
 
   const handleSelectSecondTeam = (
-    event: React.ChangeEvent<HTMLSelectElement>,
+    event: ChangeEvent<HTMLSelectElement>,
     col: number,
     stage: number
   ) => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, FC } from "react";
 import { useCookies } from "react-cookie";
 import { useAppDispatch, useAppSelector } from "hooks/reduxHooks";
 import classes from "./TournamentAdminProgress.module.scss";
@@ -20,7 +20,7 @@ import GameAProgress from "./GameAProgress";
 import GridDistribution from "../GridDistribution/GridDistribution";
 import { FormattedMessage } from "react-intl";
 
-const TournamentAdminProgress: React.FC = () => {
+const TournamentAdminProgress: FC = () => {
   const [cookies] = useCookies(["token", "userId"]);
   const matches = useAppSelector(selectMatches);
   const tournamentsData = useAppSelector(selectTournamentsData);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, HTMLProps, FC, Dispatch, SetStateAction } from "react";
 import { SeasonApi } from "services/SeasonService";
 import { useCookies } from "react-cookie";
 import important from "assets/images/techImages/important.svg";
@@ -6,12 +6,12 @@ import classes from "./StartSeason.module.scss";
 import { FormattedMessage } from "react-intl";
 import Button7x from "components/UI/Button7x/Button7x";
 
-interface StartSeasonProps extends React.HTMLProps<HTMLFormElement> {
-  setSeasonStarted: React.Dispatch<React.SetStateAction<boolean | undefined>>;
+interface StartSeasonProps extends HTMLProps<HTMLFormElement> {
+  setSeasonStarted: Dispatch<SetStateAction<boolean | undefined>>;
   timeZoneOffsetString: string;
 }
 
-const StartSeason: React.FC<StartSeasonProps> = ({ ...props }) => {
+const StartSeason: FC<StartSeasonProps> = ({ ...props }) => {
   const [startSeason, { error: seasonStartError }] =
     SeasonApi.useStartSeasonMutation();
   const { data: lastSeasonNumber } = SeasonApi.useFetchLastSeasonNumberQuery();

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, FC, JSX, DragEvent } from "react";
 import axios from "axios";
 import { ClanApi } from "services/ClanService";
 import { IPlayer } from "models/IPlayer";
@@ -34,7 +34,7 @@ interface PlayersListProps {
   tag: string;
 }
 
-const PlayersList: React.FC<PlayersListProps> = ({ tag }) => {
+const PlayersList: FC<PlayersListProps> = ({ tag }) => {
   const dispatch = useAppDispatch();
   const clan = useAppSelector(selectClan);
   const playersSliceList = useAppSelector(selectPlayerList);
@@ -46,8 +46,8 @@ const PlayersList: React.FC<PlayersListProps> = ({ tag }) => {
   const [clanLogo, setClanLogo] = useState<File | null>(null);
   const [resorces, setResorces] = useState<IResorce[]>([]);
   const [manualPlayers, setManualPlayers] = useState<IPlayer[]>([]);
-  const [resForms, setResForms] = useState<React.JSX.Element[]>([]);
-  const [playerForms, setPlayerForms] = useState<React.JSX.Element[]>([]);
+  const [resForms, setResForms] = useState<JSX.Element[]>([]);
+  const [playerForms, setPlayerForms] = useState<JSX.Element[]>([]);
   const [isClanCreating, setIsClanCreating] = useState<boolean>(false);
   const {
     data: players,
@@ -242,18 +242,18 @@ const PlayersList: React.FC<PlayersListProps> = ({ tag }) => {
     }
   };
 
-  const handleLogoDivDrop = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleLogoDivDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setClanLogo(e.dataTransfer.files[0]);
     setDrag(false);
   };
 
-  const handleLogoDivDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleLogoDivDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setDrag(true);
   };
 
-  const handleLogoDivDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleLogoDivDragLeave = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setDrag(false);
   };

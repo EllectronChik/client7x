@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, FC } from "react";
 import classes from "./Header7x.module.scss";
 import { Link } from "react-router-dom";
 import logo from "@assets/images/techImages/favicon.svg";
@@ -11,7 +11,7 @@ import Button7x from "components/UI/Button7x/Button7x";
 import { useNavigate } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
 
-const Header7x: React.FC = () => {
+const Header7x: FC = () => {
   const [cookie] = useCookies(["token", "userId"]);
   const logout = useLogoutUser();
   const navigate = useNavigate();

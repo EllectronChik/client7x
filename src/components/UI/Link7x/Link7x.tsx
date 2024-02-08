@@ -1,13 +1,13 @@
-import React from "react";
+import { FC, ReactNode } from "react";
 import { Link } from "react-router-dom";
 import classes from "./Link7x.module.scss";
 
 interface Button7xProps {
   to: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
-const Link7x: React.FC<Button7xProps> = ({ to, children }) => {
+const Link7x: FC<Button7xProps> = ({ to, children }) => {
   return (
     <Link to={to}>
       <div className={`${classes.button} ${classes.v8}`}>

@@ -1,5 +1,5 @@
 import Loader7x from "components/UI/Loader7x/Loader7x";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, FC } from "react";
 import StartSeason from "./StartSeason/StartSeason";
 import { SeasonApi } from "services/SeasonService";
 import StartedSeasonManage from "./StartedSeasonManage/StartedSeasonManage";
@@ -9,7 +9,7 @@ import MatchDistribution from "./MatchDistribution/MatchDistribution";
 import moment from "moment";
 import TournamentAdminProgress from "./TournamentAdminProgress/TournamentAdminProgress";
 
-const TourManage: React.FC = () => {
+const TourManage: FC = () => {
   const {
     data: currentSeason,
     isLoading: currentSeasonLoading,

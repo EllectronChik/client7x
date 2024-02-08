@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, FC, useRef } from "react";
 import { useCookies } from "react-cookie";
 import { GroupApi } from "services/GroupService";
 import classes from "./GroupDistribution.module.scss";
@@ -23,7 +23,7 @@ import {
 } from "store/reducers/AccountSlice";
 import { SeasonApi } from "services/SeasonService";
 
-const GroupDistribution: React.FC = () => {
+const GroupDistribution: FC = () => {
   const [cookies] = useCookies(["token"]);
   const { data: registredTeams, isLoading: registredTeamsLoading } =
     GroupApi.useFetchRegistredTeamsQuery(cookies.token);
@@ -37,7 +37,7 @@ const GroupDistribution: React.FC = () => {
   ] = GroupApi.useRandmizeGroupsMutation();
   const [draggedTeam, setDraggedTeam] = useState<IClan | null>(null);
   const [groupsCnt, setGroupsCnt] = useState<number>(0);
-  const cntInputRef = React.useRef<HTMLInputElement>(null);
+  const cntInputRef = useRef<HTMLInputElement>(null);
   const groups = useAppSelector(selectGroups);
   const undistributedTeams = useAppSelector(selectUndistributedTeams);
   const isInitialLoad = useAppSelector(selectIsInitialLoad);

@@ -1,11 +1,11 @@
-import React from "react";
+import { FC, HTMLProps } from "react";
 import { LOCALES } from "i18n/locales";
 import { useCookies } from "react-cookie";
 import classes from "./Footer.module.scss";
 import blizzardLogo from "assets/images/campaignsLogos/Blizzard.webp";
 import { FormattedMessage } from "react-intl";
 
-const Footer: React.FC<React.HTMLProps<HTMLDivElement>> = ({ ...props }) => {
+const Footer: FC<HTMLProps<HTMLDivElement>> = ({ ...props }) => {
   const languages = [
     { name: "English", value: LOCALES.ENGLISH },
     { name: "Русский", value: LOCALES.RUSSIAN },

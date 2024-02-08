@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, FC, FormEvent } from "react";
 import { useCookies } from "react-cookie";
 import { StatusApi } from "services/StatusService";
 import { useNavigate } from "react-router";
@@ -25,7 +25,7 @@ import {
   selectIsStaff,
 } from "store/reducers/AccountSlice";
 
-const Account: React.FC = () => {
+const Account: FC = () => {
   const dispatch = useAppDispatch();
   const pageManager = useAppSelector(selectManagerPage);
   const [clanTag, setClanTag] = useState<string>("");
@@ -89,7 +89,7 @@ const Account: React.FC = () => {
               <div>
                 <form
                   className={classes.tag_form}
-                  onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+                  onSubmit={(e: FormEvent<HTMLFormElement>) => {
                     e.preventDefault();
                     setRenderList(true);
                   }}
