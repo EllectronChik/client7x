@@ -1,0 +1,9 @@
+@import "../../settings.scss";
+
+.container {
+  @include container();
+  align-items: center;
+  justify-content: space-around;
+  color: $clrLight;
+  margin-top: 35px;
+}
