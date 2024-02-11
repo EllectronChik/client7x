@@ -8,6 +8,31 @@ interface IPlayersInTeams {
   };
 }
 
+interface ITournamentData {
+  tournament: {
+    id: number;
+    season: number;
+    matchStartTime: string;
+    teamOne: string;
+    teamOneId: number;
+    teamOneLogo: string;
+    teamTwo: string;
+    teamTwoId: number;
+    teamTwoLogo: string;
+    teamOneWins: number;
+    teamTwoWins: number;
+  };
+  matches: {
+    id: number;
+    map: string | null;
+    playerOne: string;
+    playerOneId: number;
+    playerTwo: string;
+    playerTwoId: number;
+    winner: boolean | null;
+  }[];
+}
+
 export const TournamentApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_URL }),
   endpoints: (builder) => ({
@@ -85,6 +110,12 @@ export const TournamentApi = createApi({
         headers: {
           Authorization: `Token ${token}`,
         },
+      }),
+    }),
+    fetchTournamentById: builder.query<ITournamentData, number>({
+      query: (id) => ({
+        url: `/getTournamentData/${id}/`,
+        method: "GET",
       }),
     }),
   }),
