@@ -119,20 +119,15 @@ const Account: FC = () => {
                       <FormattedMessage id="search" />
                     </Button7x>
                   </div>
-                  <a
-                    className={classes.link}
-                    href="https://sc2pulse.nephest.com"
-                  >
-                    <FormattedMessage
-                      id="apiMention"
-                      values={{
-                        inLink: (
-                          <span className={classes.inLink}>SC2 PULSE</span>
-                        ),
-                      }}
-                    />
-                  </a>
                 </form>
+                <a className={classes.link} href="https://sc2pulse.nephest.com">
+                  <FormattedMessage
+                    id="apiMention"
+                    values={{
+                      inLink: <span className={classes.inLink}>SC2 PULSE</span>,
+                    }}
+                  />
+                </a>
               </div>
             )}
             {renderList && (
