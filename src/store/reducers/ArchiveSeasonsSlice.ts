@@ -44,12 +44,14 @@ const archiveSeasonsSlice = createSlice({
   },
 });
 
-export const selectSeasons = (state: RootState) => state.archive.seasons;
-export const selectPage = (state: RootState) => state.archive.page;
-export const selectFetching = (state: RootState) => state.archive.fetching;
-export const selectNextPage = (state: RootState) => state.archive.nextPage;
+export const selectSeasons = (state: RootState) => state.archiveSeasons.seasons;
+export const selectPage = (state: RootState) => state.archiveSeasons.page;
+export const selectFetching = (state: RootState) =>
+  state.archiveSeasons.fetching;
+export const selectNextPage = (state: RootState) =>
+  state.archiveSeasons.nextPage;
 export const selectSortDirection = (state: RootState) =>
-  state.archive.sortDirection;
+  state.archiveSeasons.sortDirection;
 
 export const {
   setSeasons,
