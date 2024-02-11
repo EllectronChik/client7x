@@ -1,6 +1,18 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 import { IPlayer } from "models/IPlayer";
 
+interface IPlayerData {
+  player: IPlayer;
+  matches: {
+    id: number;
+    map: string | null;
+    opponent: string;
+    opponentTag: string;
+    opponentId: number;
+    winner: boolean;
+  }[];
+}
+
 export const PlayerApi = createApi({
   reducerPath: "playerApi",
   baseQuery: fetchBaseQuery({
@@ -74,6 +86,12 @@ export const PlayerApi = createApi({
         headers: {
           Authorization: `Token ${token}`,
         },
+      }),
+    }),
+    fetchPlayerById: builder.query<IPlayerData, number>({
+      query: (id) => ({
+        url: `/getPlayerData/${id}/`,
+        method: "GET",
       }),
     }),
   }),
