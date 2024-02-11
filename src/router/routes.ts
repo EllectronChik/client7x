@@ -3,11 +3,17 @@ import Archive from "../pages/Archive/Archive";
 import Login from "../pages/Login/Login";
 import Account from "./../pages/Account/Account";
 import Season from "pages/Season/Season";
+import Team from "pages/Team/Team";
+import Player from "pages/Player/Player";
+import Tournament from "pages/Tournament/Tournament";
 
 export const PublicRoutes = [
   { path: "/archive", Element: Archive },
   { path: "/login", Element: Login },
   { path: "/account", Element: Account },
   { path: "/season/:season/", Element: Season },
+  { path: "/team/:team/", Element: Team },
+  { path: "/player/:player/", Element: Player },
+  { path: "/tour/:tour/", Element: Tournament },
   { path: "/", Element: StartPage },
 ];
