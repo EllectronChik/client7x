@@ -1,0 +1,123 @@
+@import "../../settings.scss";
+
+.container {
+  @include container();
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  color: $clrLight;
+  margin-top: 35px;
+
+  .player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 675px;
+    border: 2px solid $clrRed;
+    border-radius: 20px;
+    box-sizing: border-box;
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      background: radial-gradient(
+        circle,
+        rgba(154, 27, 27, 1) 30%,
+        rgba(115, 29, 29, 1) 85%
+      );
+      border-radius: 20px 20px 0 0;
+      padding: 15px;
+      justify-content: space-between;
+      color: $clrLight;
+
+      .playerInfoLeft {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        .teachImgs {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          .leagueMark {
+            width: 40px;
+            height: 40px;
+          }
+
+          .race {
+            width: 40px;
+            height: 40px;
+          }
+        }
+
+        .avatar {
+          width: 80px;
+          height: 80px;
+          border: 2px solid $clrRed;
+          border-radius: 50%;
+        }
+      }
+
+      .playerInfo {
+        text-align: right;
+      }
+    }
+    .content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: $clrLight;
+      width: 100%;
+      .title {
+        padding-top: 15px;
+      }
+
+      .matchHead {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        line-height: 2;
+        border-top: 1px solid $clrRed;
+        border-bottom: 1px solid $clrRed;
+        gap: 20px;
+        .matchLine {
+          width: 200px;
+
+          &:not(:last-child) {
+            border-right: 1px solid $clrRed;
+          }
+        }
+      }
+
+      .match {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        color: $clrLight;
+
+        .matchLine {
+          width: 200px;
+          height: 100%;
+          color: $clrLight;
+          &:not(:last-child) {
+            border-right: 1px solid $clrRed;
+          }
+        }
+
+        .opponentLine {
+          word-wrap: break-word;
+          &:hover {
+            cursor: pointer;
+            font-style: italic;
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+}
