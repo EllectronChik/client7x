@@ -27,9 +27,32 @@ export const handleAddMediaForm = (
                 updatedResources[newId] = {
                   id: newId,
                   url: newValue,
+                  name: "",
                 };
               } else {
                 updatedResources[newId].url = newValue;
+              }
+              return updatedResources;
+            });
+          }}
+        />
+        <label>
+          <FormattedMessage id="media" /> {resForms.length + 1} name:
+        </label>
+        <Input7x
+          type="text"
+          onChange={(e) => {
+            const newValue = e.target.value;
+            setResorces((resorces) => {
+              const updatedResources = [...resorces];
+              if (!updatedResources[newId]) {
+                updatedResources[newId] = {
+                  id: newId,
+                  url: "",
+                  name: newValue,
+                };
+              } else {
+                updatedResources[newId].name = newValue;
               }
               return updatedResources;
             });
