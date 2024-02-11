@@ -2,9 +2,9 @@ import { ISeason } from "models/ISeason";
 import { useEffect, FC } from "react";
 import classes from "./ArchiveSeasons.module.scss";
 import { useAppDispatch, useAppSelector } from "hooks/reduxHooks";
-import { useNavigate } from "react-router";
 import {
   selectFetching,
+  selectNextPage,
   selectPage,
   selectSeasons,
   selectSortDirection,
@@ -18,6 +18,8 @@ import SortUp from "assets/images/techImages/sortUp.svg";
 import SortDown from "assets/images/techImages/sortDown.svg";
 import sort from "assets/images/techImages/sort.svg";
 import axios from "axios";
+import { useIntl } from "react-intl";
+import { Link } from "react-router-dom";
 
 interface ISeasonData extends ISeason {
   winner: string;
@@ -36,7 +38,27 @@ const ArchiveSeasons: FC = () => {
   const page = useAppSelector(selectPage);
   const fetching = useAppSelector(selectFetching);
   const sortDirection = useAppSelector(selectSortDirection);
-  const navigate = useNavigate();
+
+  const nextPage = useAppSelector(selectNextPage);
+  const intl = useIntl();
+
+  const scrollHandler = () => {
+    if (
+      document.documentElement.scrollHeight -
+        (document.documentElement.scrollTop + window.innerHeight) <
+        100 &&
+      nextPage
+    ) {
+      dispatch(setFetching(true));
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("scroll", scrollHandler);
+    document.title = intl.formatMessage({ id: "archive" });
+
+    return () => document.removeEventListener("scroll", scrollHandler);
+  }, [nextPage]);
 
   const handleSortByWinner = () => {
     const newSeasons = [...seasons];
@@ -134,14 +156,14 @@ const ArchiveSeasons: FC = () => {
         </div>
         <div className={classes.body}>
           {seasons.map((season) => (
-            <div
-              onClick={() => navigate(`/season/${season.number}`)}
+            <Link
+              to={`/season/${season.number}`}
               className={classes.row}
               key={season.number}
             >
               <h3 className={classes.col}>Season {season.number}</h3>
               <h3 className={classes.col}>{season.winner}</h3>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
