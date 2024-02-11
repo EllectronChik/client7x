@@ -1,0 +1,249 @@
+@import "../../settings.scss";
+
+.container {
+  @include container();
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+  color: $clrLight;
+  margin-top: 35px;
+
+  .team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 800px;
+    border: 2px solid $clrRed;
+    border-radius: 20px;
+    box-sizing: border-box;
+    .header {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: radial-gradient(
+        circle,
+        rgb(154, 27, 27) 30%,
+        rgb(115, 29, 29) 85%
+      );
+      border-radius: 20px 20px 0 0;
+      width: 100%;
+
+      .teamInfo {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        justify-content: space-between;
+
+        .teamData {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          .teamLogo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid $clrRed;
+          }
+        }
+
+        .teamFlag {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          object-fit: cover;
+          object-position: left;
+          border: 2px solid #ddda10;
+        }
+      }
+
+      .teamResources {
+        display: flex;
+        align-self: center;
+        width: 90%;
+        justify-content: space-between;
+
+        .teamResourceBox {
+          .teamResource {
+            color: $clrLight;
+
+            &:hover {
+              font-style: italic;
+              text-decoration: underline;
+              cursor: pointer;
+            }
+          }
+        }
+
+        .empty {
+          width: 150px;
+        }
+      }
+      .teamLinks {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        align-items: center;
+        right: -155px;
+        width: 150px;
+        bottom: 0px;
+        border: 1px solid $clrRed;
+        border-radius: 15px;
+        padding: 10px;
+        .teamResource {
+          color: $clrLight;
+
+          &:hover {
+            font-style: italic;
+            text-decoration: underline;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+
+    .buttons {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      .button {
+        width: 50%;
+        height: 50px;
+        border-bottom: 2px solid $clrRed;
+        color: $clrLight;
+        &:hover {
+          cursor: pointer;
+          font-style: italic;
+          text-decoration: underline;
+        }
+
+        &:not(:last-child) {
+          border-right: 2px solid $clrRed;
+        }
+
+        &.active {
+          background-color: $clrRed;
+        }
+      }
+    }
+
+    .players {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      gap: 20px;
+      padding: 10px;
+
+      .player {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px;
+        width: 100%;
+        border: 1px solid $clrRed;
+        border-radius: 15px;
+        color: $clrLight;
+
+        &:hover {
+          border: 2px solid $clrRed;
+          width: 101%;
+          cursor: pointer;
+          font-style: italic;
+          text-decoration: underline;
+        }
+
+        .playerAvatarBox {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          .playerAvatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 15px;
+            object-fit: cover;
+            border: 1px solid $clrRed;
+          }
+
+          .playerInfo {
+            display: flex;
+            flex-direction: column;
+          }
+        }
+
+        .playerStats {
+          justify-self: flex-end;
+          text-align: right;
+        }
+      }
+    }
+
+    .tours {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      padding: 10px;
+      .tourHeader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: 1px solid $clrRed;
+        border-radius: 15px;
+        width: 100%;
+
+        .col {
+          width: 258px;
+          padding: 0 10px;
+          line-height: 2;
+          &:not(:last-child) {
+            border-right: 1px solid $clrRed;
+          }
+        }
+      }
+
+      .tour {
+        display: flex;
+        padding-left: 1px;
+        color: $clrLight;
+        .col {
+          width: 258px;
+          padding: 0 10px;
+          line-height: 2.5;
+          &:not(:last-child) {
+            border-right: 1px solid $clrRed;
+          }
+        }
+
+        &:hover {
+          cursor: pointer;
+          font-style: italic;
+          text-decoration: underline;
+        }
+        &:last-child {
+          border-bottom: 1px solid $clrRed;
+        }
+      }
+    }
+
+    .teamManager {
+      display: flex;
+      align-items: start;
+      justify-content: space-around;
+      width: 90%;
+      padding: 10px;
+
+      .contact {
+        color: $clrLight;
+        padding-left: 20px;
+
+        &:hover {
+          font-style: italic;
+          text-decoration: underline;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
