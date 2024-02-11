@@ -2,12 +2,40 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 import { IClan } from "models/IClan";
 import { IClanByManager } from "models/IClanByManager";
 import { IPlayer } from "models/IPlayer";
+import { IClanData } from "../store/reducers/ArchiveTeamsSlice";
+import { IResorce } from "models/IResorce";
 
 interface IRegistrationData {
   token: string;
   season: number;
   user: number;
   team: number;
+}
+
+interface IManagerContacts {
+  id: number;
+  url: string;
+  user: number;
+}
+
+interface IFetchedClanData {
+  team: IClanData;
+  teamRegion: {
+    url: string;
+    name: string;
+  };
+  teamResources: IResorce[];
+  manager: string;
+  managerContacts: IManagerContacts[];
+  players: IPlayer[];
+  tournaments: {
+    id: number;
+    season: number;
+    matchStartTime: string;
+    wins: number;
+    opponent: string;
+    opponentWins: number;
+  }[];
 }
 
 export const ClanApi = createApi({
@@ -112,6 +140,12 @@ export const ClanApi = createApi({
         headers: {
           Authorization: `Token ${token}`,
         },
+      }),
+    }),
+    fetchClanData: builder.query<IFetchedClanData, number>({
+      query: (id) => ({
+        url: `/getTeamData/${id}/`,
+        method: "GET",
       }),
     }),
   }),
