@@ -31,14 +31,14 @@
     color: $clrLight;
     margin-left: 50px;
   }
-  .link {
-    color: $clrLight;
-    display: inline-block;
-    margin-top: 5px;
-    &:hover {
-      .inLink {
-        color: $clrRed;
-      }
+}
+.link {
+  color: $clrLight;
+  display: inline-block;
+  margin-top: 5px;
+  &:hover {
+    .inLink {
+      color: $clrRed;
     }
   }
 }
