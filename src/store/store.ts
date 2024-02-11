@@ -21,6 +21,7 @@ import TournamentsSlice from "./reducers/TournamentsSlice";
 import TournamentsAdminSlice from "./reducers/TournamentsAdminSlice";
 import StartPageSlice from "./reducers/StartPageSlice";
 import ArchiveSeasonsSlice from "./reducers/ArchiveSeasonsSlice";
+import ArchiveTeamsSlice from "./reducers/ArchiveTeamsSlice";
 
 const rootReducer = combineReducers({
   [UsersApi.reducerPath]: UsersApi.reducer,
@@ -44,7 +45,8 @@ const rootReducer = combineReducers({
   tournaments: TournamentsSlice,
   tournamentsAdmin: TournamentsAdminSlice,
   startPage: StartPageSlice,
-  archive: ArchiveSeasonsSlice,
+  archiveSeasons: ArchiveSeasonsSlice,
+  archiveTeams: ArchiveTeamsSlice,
 });
 
 export const setupStore = () => {
