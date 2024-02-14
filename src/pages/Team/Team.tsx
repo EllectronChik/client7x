@@ -5,6 +5,7 @@ import { ClanApi } from "services/ClanService";
 import { IResorce } from "models/IResorce";
 import playerDefault from "assets/images/player/default.svg";
 import { Link } from "react-router-dom";
+import { FormattedMessage } from "react-intl";
 
 const Team: FC = () => {
   const params = useParams();
@@ -101,7 +102,9 @@ const Team: FC = () => {
               }`}
               onClick={() => setPage(1)}
             >
-              <h3>Players</h3>
+              <h3>
+                <FormattedMessage id="players" />
+              </h3>
             </button>
             <button
               className={`${page === 2 ? classes.active : ""} ${
@@ -109,7 +112,9 @@ const Team: FC = () => {
               }`}
               onClick={() => setPage(2)}
             >
-              <h3>Tournaments</h3>
+              <h3>
+                <FormattedMessage id="tournaments" />
+              </h3>
             </button>
           </div>
           {page === 1 && (
@@ -146,8 +151,12 @@ const Team: FC = () => {
                     </div>
                   </div>
                   <div className={classes.playerStats}>
-                    <h3>Total games: {player.total_games}</h3>
-                    <h3>Wins: {player.wins}</h3>
+                    <h3>
+                      <FormattedMessage id="totalGames" />: {player.total_games}
+                    </h3>
+                    <h3>
+                      <FormattedMessage id="wins" />: {player.wins}
+                    </h3>
                   </div>
                 </Link>
               ))}
@@ -156,9 +165,15 @@ const Team: FC = () => {
           {page === 2 && (
             <div className={classes.tours}>
               <div className={classes.tourHeader}>
-                <h3 className={classes.col}>Opponent</h3>
-                <h3 className={classes.col}>Score</h3>
-                <h3 className={classes.col}>Date</h3>
+                <h3 className={classes.col}>
+                  <FormattedMessage id="opponentLabel" />
+                </h3>
+                <h3 className={classes.col}>
+                  <FormattedMessage id="score" />
+                </h3>
+                <h3 className={classes.col}>
+                  <FormattedMessage id="date" />
+                </h3>
               </div>
               {teamData.tournaments.map((tour) => (
                 <Link
@@ -178,10 +193,14 @@ const Team: FC = () => {
             </div>
           )}
           <div className={classes.teamManager}>
-            <h3>TeamManager: {teamData.manager}</h3>
+            <h3>
+              <FormattedMessage id="teamManager" />: {teamData.manager}
+            </h3>
             {Object.keys(teamData.managerContacts).length > 0 && (
               <div>
-                <h3>Manager contacts:</h3>
+                <h3>
+                  <FormattedMessage id="managerContacts" />:
+                </h3>
                 {teamData.managerContacts.map((contact) => (
                   <a
                     key={contact.id}
