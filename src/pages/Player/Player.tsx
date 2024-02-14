@@ -14,9 +14,11 @@ import diamond from "assets/images/leagueMarks/5.webp";
 import master from "assets/images/leagueMarks/6.webp";
 import grandmaster from "assets/images/leagueMarks/7.webp";
 import { Link } from "react-router-dom";
+import { FormattedMessage, useIntl } from "react-intl";
 
 const Player: FC = () => {
   const params = useParams();
+  const intl = useIntl();
   const { data: playerData } = PlayerApi.useFetchPlayerByIdQuery(
     params.player ? parseInt(params.player) : 1
   );
@@ -72,16 +74,29 @@ const Player: FC = () => {
             </div>
           </div>
           <div className={classes.playerInfo}>
-            <h3>Total games: {playerData?.player.total_games}</h3>
-            <h3>Wins: {playerData?.player.wins}</h3>
+            <h3>
+              <FormattedMessage id="totalGames" />:{" "}
+              {playerData?.player.total_games}
+            </h3>
+            <h3>
+              <FormattedMessage id="wins" />: {playerData?.player.wins}
+            </h3>
           </div>
         </div>
         <div className={classes.content}>
-          <h2 className={classes.title}>Matches</h2>
+          <h2 className={classes.title}>
+            <FormattedMessage id="matches" />
+          </h2>
           <div className={classes.matchHead}>
-            <h3 className={classes.matchLine}>Opponent</h3>
-            <h3 className={classes.matchLine}>Result</h3>
-            <h3 className={classes.matchLine}>Map</h3>
+            <h3 className={classes.matchLine}>
+              <FormattedMessage id="opponentLabel" />
+            </h3>
+            <h3 className={classes.matchLine}>
+              <FormattedMessage id="result" />
+            </h3>
+            <h3 className={classes.matchLine}>
+              <FormattedMessage id="mapLabel" />
+            </h3>
           </div>
           {playerData?.matches.map((match) => (
             <div className={classes.match} key={match.id}>
@@ -91,7 +106,9 @@ const Player: FC = () => {
                 </h3>
               </Link>
               <h3 className={classes.matchLine}>
-                {match.winner ? "Win" : "Lose"}
+                {match.winner
+                  ? intl.formatMessage({ id: "win" })
+                  : intl.formatMessage({ id: "lose" })}
               </h3>
               <h3 className={classes.matchLine}>{match.map}</h3>
             </div>
