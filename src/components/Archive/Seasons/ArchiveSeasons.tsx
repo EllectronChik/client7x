@@ -18,7 +18,7 @@ import SortUp from "assets/images/techImages/sortUp.svg";
 import SortDown from "assets/images/techImages/sortDown.svg";
 import sort from "assets/images/techImages/sort.svg";
 import axios from "axios";
-import { useIntl } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
 import { Link } from "react-router-dom";
 
 interface ISeasonData extends ISeason {
@@ -122,11 +122,11 @@ const ArchiveSeasons: FC = () => {
 
   return (
     <div className={classes.container}>
-      <h2>Seasons</h2>
+      <h2><FormattedMessage id="seasons" /></h2>
       <div className={classes.table}>
         <div className={classes.header}>
           <div className={classes.col} onClick={() => handleSortBySeason()}>
-            <h3>Seasons</h3>
+            <h3><FormattedMessage id="season" /></h3>
             <img
               className={classes.sort}
               src={
@@ -140,7 +140,7 @@ const ArchiveSeasons: FC = () => {
             />
           </div>
           <div className={classes.col} onClick={() => handleSortByWinner()}>
-            <h3>Winner</h3>
+            <h3><FormattedMessage id="winner" /></h3>
             <img
               className={classes.sort}
               src={
@@ -161,7 +161,7 @@ const ArchiveSeasons: FC = () => {
               className={classes.row}
               key={season.number}
             >
-              <h3 className={classes.col}>Season {season.number}</h3>
+              <h3 className={classes.col}><FormattedMessage id="season" /> {season.number}</h3>
               <h3 className={classes.col}>{season.winner}</h3>
             </Link>
           ))}
