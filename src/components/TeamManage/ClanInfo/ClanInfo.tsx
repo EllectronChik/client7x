@@ -1,47 +1,36 @@
-import { useEffect, useRef, useState, FC, DragEvent } from "react";
+import { useEffect, useRef, useState, FC } from "react";
 import { useCookies } from "react-cookie";
 import { ClanApi } from "services/ClanService";
 import teamDefault from "@assets/images/team/teamDefault.webp";
 import classes from "./ClanInfo.module.scss";
-import zerg from "@assets/images/races/zerg.svg";
-import terran from "@assets/images/races/terran.svg";
-import protoss from "@assets/images/races/protoss.svg";
-import random from "@assets/images/races/random.svg";
-import bronze from "@assets/images/leagueMarks/1.webp";
-import silver from "@assets/images/leagueMarks/2.webp";
-import gold from "@assets/images/leagueMarks/3.webp";
-import platinum from "@assets/images/leagueMarks/4.webp";
-import diamond from "@assets/images/leagueMarks/5.webp";
-import master from "@assets/images/leagueMarks/6.webp";
-import grandmaster from "@assets/images/leagueMarks/7.webp";
-import leagueDefault from "@assets/images/leagueMarks/0.svg";
-import playerDefault from "@assets/images/player/default.svg";
 import {
-  setDragPlayer,
-  selectDraggable,
-  setDraggable,
-} from "store/reducers/DragPlayerSlice";
-import { selectTeamRegistred } from "store/reducers/AccountSlice";
+  selectTeamRegistred,
+  addRegPlayer,
+  selectRegPlayers,
+} from "store/reducers/AccountSlice";
 import { selectPlayers, setPlayers } from "store/reducers/ClanSlice";
 import { useAppDispatch, useAppSelector } from "hooks/reduxHooks";
-import { FormattedMessage } from "react-intl";
 import { PlayerApi } from "services/PlayerService";
+import Button7x from "components/UI/Button7x/Button7x";
+import AddPlayers from "./AddPlayers/AddPlayers";
+import InClanPlayerBox from "components/InClanPlayerBox/InClanPlayerBox";
+import EditLinks from "./EditLinks/EditLinks";
+import { SeasonApi } from "services/SeasonService";
+import { FormattedMessage } from "react-intl";
 
 const ClanInfo: FC = () => {
   const [cookies] = useCookies(["userId", "token"]);
   const { data: myTeam } = ClanApi.useFetchClanByManagerQuery(cookies.userId);
-  const [race, setRace] = useState<JSX.Element[]>([]);
-  const [leagues, setLeagues] = useState<JSX.Element[]>([]);
   const logoInputRef = useRef<HTMLInputElement>(null);
   const tagInputRef = useRef<HTMLInputElement>(null);
   const [changeLogo, {}] = ClanApi.useChangeLogoMutation();
   const [changeName, {}] = ClanApi.useChangeNameMutation();
   const [changeTag, {}] = ClanApi.useChangeTagMutation();
+  const regPlayers = useAppSelector(selectRegPlayers);
   const teamRegistred = useAppSelector(selectTeamRegistred);
-  const { data: playerToSeason } = PlayerApi.useGetRegForSeasonPlayersQuery({
-    token: cookies.token,
-  });
-  const draggable = useAppSelector(selectDraggable);
+  const { data: currentTournament } = SeasonApi.useFetchCurrentSeasonQuery();
+  const [managePage, setManagePage] = useState<number>(0);
+  const [setPlayerToSeason, {}] = PlayerApi.usePostPlayerToSeasonMutation();
   const players = useAppSelector(selectPlayers);
   const [teamLogoUrl, setTeamLogoUrl] = useState<string | null>(null);
   const dispatch = useAppDispatch();
@@ -51,173 +40,13 @@ const ClanInfo: FC = () => {
   useEffect(() => {
     if (myTeam) {
       dispatch(setPlayers(myTeam.players));
-      setRace(() => {
-        return myTeam.players.map((player) => {
-          if (player.race === 1) {
-            return (
-              <img
-                key={player.id}
-                draggable={false}
-                src={zerg}
-                alt="zerg"
-                className={classes.race}
-              />
-            );
-          } else if (player.race === 2) {
-            return (
-              <img
-                key={player.id}
-                draggable={false}
-                src={terran}
-                alt="terran"
-                className={classes.race}
-              />
-            );
-          } else if (player.race === 3) {
-            return (
-              <img
-                key={player.id}
-                draggable={false}
-                src={protoss}
-                alt="protoss"
-                className={classes.race}
-              />
-            );
-          } else if (player.race === 4) {
-            return (
-              <img
-                key={player.id}
-                draggable={false}
-                src={random}
-                alt="random"
-                className={classes.race}
-              />
-            );
-          } else {
-            return (
-              <img
-                key={player.id}
-                draggable={false}
-                src={teamDefault}
-                alt="default"
-                className={classes.race}
-              />
-            );
-          }
-        });
-      });
-      setLeagues(() => {
-        return myTeam.players.map((player) => {
-          if (player.league === 1) {
-            return (
-              <img
-                key={player.id}
-                draggable={false}
-                src={bronze}
-                alt="bronze"
-                className={classes.league}
-              />
-            );
-          } else if (player.league === 2) {
-            return (
-              <img
-                key={player.id}
-                draggable={false}
-                src={silver}
-                alt="silver"
-                className={classes.league}
-              />
-            );
-          } else if (player.league === 3) {
-            return (
-              <img
-                key={player.id}
-                draggable={false}
-                src={gold}
-                alt="gold"
-                className={classes.league}
-              />
-            );
-          } else if (player.league === 4) {
-            return (
-              <img
-                key={player.id}
-                draggable={false}
-                src={platinum}
-                alt="platinum"
-                className={classes.league}
-              />
-            );
-          } else if (player.league === 5) {
-            return (
-              <img
-                key={player.id}
-                draggable={false}
-                src={diamond}
-                alt="diamond"
-                className={classes.league}
-              />
-            );
-          } else if (player.league === 6) {
-            return (
-              <img
-                key={player.id}
-                draggable={false}
-                src={master}
-                alt="master"
-                className={classes.league}
-              />
-            );
-          } else if (player.league === 7) {
-            return (
-              <img
-                key={player.id}
-                draggable={false}
-                src={grandmaster}
-                alt="grandmaster"
-                className={classes.league}
-              />
-            );
-          } else {
-            return (
-              <img
-                key={player.id}
-                draggable={false}
-                src={leagueDefault}
-                alt="default"
-                className={classes.league}
-              />
-            );
-          }
-        });
-      });
-      setTeamLogoUrl(
-        `${import.meta.env.VITE_SERVER_URL}${myTeam.team_logo_url}`
-      );
+      setTeamLogoUrl(`${import.meta.env.VITE_SERVER_URL}${myTeam.teamLogoUrl}`);
       if (tagInputRef.current) {
-        const textWidth = getTextWidth(myTeam.team_tag);
+        const textWidth = getTextWidth(myTeam.teamTag);
         tagInputRef.current.style.width = `${textWidth}px`;
       }
     }
   }, [myTeam]);
-
-  useEffect(() => {
-    if (myTeam) {
-      if (teamRegistred) {
-        myTeam.players.forEach((player) => {
-          if (playerToSeason?.some((p) => p.player === player.id)) {
-            dispatch(setDraggable([player.id, false]));
-          } else {
-            dispatch(setDraggable([player.id, true]));
-          }
-        });
-      } else {
-        myTeam.players.forEach((player) => {
-          dispatch(setDraggable([player.id, false]));
-        });
-      }
-    }
-  }, [playerToSeason, myTeam, teamRegistred]);
 
   const getTextWidth = (text: string) => {
     const canvas = document.createElement("canvas");
@@ -225,23 +54,6 @@ const ClanInfo: FC = () => {
     context!.font = window.getComputedStyle(tagInputRef.current!).font;
     const width = context!.measureText(text).width;
     return width;
-  };
-
-  const handleDragStartPlayer = (
-    e: DragEvent<HTMLDivElement>,
-    index: number
-  ) => {
-    if (e.target !== e.currentTarget) {
-      e.stopPropagation();
-      return;
-    }
-    e.currentTarget.classList.add(classes.drag);
-    dispatch(setDragPlayer(myTeam ? myTeam.players[index] : null));
-  };
-
-  const handleDragEndPlayer = (e: DragEvent<HTMLDivElement>) => {
-    e.currentTarget.classList.remove(classes.drag);
-    dispatch(setDragPlayer(null));
   };
 
   return (
@@ -255,7 +67,7 @@ const ClanInfo: FC = () => {
             >
               <img
                 src={teamDefault}
-                alt={myTeam.team_name}
+                alt={myTeam.teamName}
                 className={classes.teamLogo}
                 onLoad={(e) => {
                   e.currentTarget.src = teamLogoUrl ? teamLogoUrl : teamDefault;
@@ -267,7 +79,7 @@ const ClanInfo: FC = () => {
                 className={classes.editLogo}
                 onChange={(e) => {
                   changeLogo({
-                    teamId: myTeam.team_id,
+                    teamId: myTeam.teamId,
                     logo: e.target.files![0],
                     token: cookies.token,
                   });
@@ -278,14 +90,14 @@ const ClanInfo: FC = () => {
             <div>
               <input
                 className={classes.teamName}
-                defaultValue={myTeam.team_name}
+                defaultValue={myTeam.teamName}
                 onChange={(e) => {
                   if (changeNameTimeout) {
                     clearTimeout(changeNameTimeout);
                   }
                   changeNameTimeout = setTimeout(() => {
                     changeName({
-                      teamId: myTeam.team_id,
+                      teamId: myTeam.teamId,
                       name: e.target.value,
                       token: cookies.token,
                     });
@@ -297,14 +109,14 @@ const ClanInfo: FC = () => {
                 <input
                   ref={tagInputRef}
                   className={classes.teamTag}
-                  defaultValue={myTeam.team_tag}
+                  defaultValue={myTeam.teamTag}
                   onChange={(e) => {
                     if (changeTagTimeout) {
                       clearTimeout(changeTagTimeout);
                     }
                     changeTagTimeout = setTimeout(() => {
                       changeTag({
-                        teamId: myTeam.team_id,
+                        teamId: myTeam.teamId,
                         tag: e.target.value,
                         token: cookies.token,
                       });
@@ -322,76 +134,70 @@ const ClanInfo: FC = () => {
               <img
                 draggable={false}
                 src={`${import.meta.env.VITE_SERVER_URL}${
-                  myTeam.team_region_flag
+                  myTeam.teamRegionFlag
                 }`}
-                alt={myTeam.team_region_name}
+                alt={myTeam.teamRegionName}
               />
             </div>
           </div>
         )}
         <div className={classes.teamContent}>
           <div className={classes.playersInfo}>
+            {teamRegistred && (
+              <h3 className={classes.playersInfoTitle}>
+                <FormattedMessage id="clickOnPlayerToAdd" />
+              </h3>
+            )}
             {players &&
-              draggable &&
               players.map((player, index) => (
-                <div
-                  draggable={draggable[index] && draggable[index][1]}
-                  onDragStart={(e) => {
-                    handleDragStartPlayer(e, index);
-                  }}
-                  onDragEnd={(e) => {
-                    handleDragEndPlayer(e);
-                  }}
-                  className={classes.playerInfo}
+                <InClanPlayerBox
+                  className={`${
+                    regPlayers.find((p) => p.id === player.id)
+                      ? ""
+                      : classes.playerNotRegistred
+                  }`}
                   key={index}
-                >
-                  <div className={classes.playerInfoBox}>
-                    <div className={classes.infoImages}>
-                      <div>{leagues[index]}</div>
-                      <div>{race[index]}</div>
-                    </div>
-                    <img
-                      draggable={false}
-                      src={playerDefault}
-                      alt={player.username}
-                      className={classes.playerLogo}
-                      onLoad={(e) => {
-                        if (!e.currentTarget.classList.contains("error")) {
-                          player.avatar
-                            ? (e.currentTarget.src = player.avatar)
-                            : (e.currentTarget.src = playerDefault);
-                        }
-                      }}
-                      onError={(e) => {
-                        if (!e.currentTarget.classList.contains("error")) {
-                          e.currentTarget.classList.add("error");
-                          e.currentTarget.src = playerDefault;
-                        }
-                      }}
-                    />
-                    <div>
-                      <h2 className={classes.playerName}>{player.username}</h2>
-                      <h3 className={classes.playerMMR}>MMR: {player.mmr}</h3>
-                    </div>
-                  </div>
-                  <div className={classes.playerStats}>
-                    <div className={classes.playerStat}>
-                      <h4>
-                        <FormattedMessage id="totalGames" />:{" "}
-                      </h4>
-                      <h4 className={classes.playerWins}>
-                        {player.total_games}
-                      </h4>
-                    </div>
-                    <div className={classes.playerStat}>
-                      <h4>
-                        <FormattedMessage id="wins" />:{" "}
-                      </h4>
-                      <h4 className={classes.playerWins}>{player.wins}</h4>
-                    </div>
-                  </div>
-                </div>
+                  player={player}
+                  onClick={() => {
+                    {
+                      if (
+                        teamRegistred &&
+                        !regPlayers.find((p) => p.id === player.id)
+                      ) {
+                        setPlayerToSeason({
+                          player_id: player.id,
+                          token: cookies.token,
+                          season: currentTournament?.number ?? 0,
+                        });
+                        dispatch(addRegPlayer(player));
+                      }
+                    }
+                  }}
+                />
               ))}
+            <div className={classes.manageBtns}>
+              <Button7x
+                className={classes.manageBtn}
+                onClick={() => setManagePage(managePage === 1 ? 0 : 1)}
+              >
+                <FormattedMessage id="addPlayers" />
+              </Button7x>
+              <Button7x
+                className={classes.manageBtn}
+                onClick={() => setManagePage(managePage === 2 ? 0 : 2)}
+              >
+                <FormattedMessage id="editLinks" />
+              </Button7x>
+            </div>
+            {managePage === 1 && myTeam && myTeam.teamTag && (
+              <AddPlayers clantag={myTeam.teamTag} />
+            )}
+            {managePage === 2 && myTeam && (
+              <EditLinks
+                managerResources={myTeam.managerResources}
+                teamResources={myTeam.teamResources}
+              />
+            )}
           </div>
         </div>
       </div>
