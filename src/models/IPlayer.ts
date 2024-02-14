@@ -6,6 +6,7 @@ export interface IPlayer {
   avatar: string;
   mmr: number;
   wins: number;
+  battlenet_id?: number;
   total_games: number;
   race: number;
   team: number;
