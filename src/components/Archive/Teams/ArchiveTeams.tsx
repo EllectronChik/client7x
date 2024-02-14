@@ -12,9 +12,9 @@ import {
   setTeams,
 } from "store/reducers/ArchiveTeamsSlice";
 import axios from "axios";
-import { useIntl } from "react-intl";
 import { IClanData } from "store/reducers/ArchiveTeamsSlice";
 import { Link } from "react-router-dom";
+import { FormattedMessage } from "react-intl";
 
 interface ITeamsApiResponse {
   count: number;
@@ -30,7 +30,6 @@ const ArchiveTeams: FC = () => {
   const fetching = useAppSelector(selectFetching);
 
   const nextPage = useAppSelector(selectNextPage);
-  const intl = useIntl();
 
   const scrollHandler = () => {
     if (
@@ -45,7 +44,6 @@ const ArchiveTeams: FC = () => {
 
   useEffect(() => {
     document.addEventListener("scroll", scrollHandler);
-    document.title = intl.formatMessage({ id: "archive" });
 
     return () => document.removeEventListener("scroll", scrollHandler);
   }, [nextPage]);
@@ -69,7 +67,7 @@ const ArchiveTeams: FC = () => {
 
   return (
     <div className={classes.container}>
-      <h2>Teams</h2>
+      <h2><FormattedMessage id="teams" /></h2>
       <div className={classes.table}>
         <div className={classes.header}></div>
         <div className={classes.body}>
