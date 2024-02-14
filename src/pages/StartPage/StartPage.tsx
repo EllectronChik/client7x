@@ -250,7 +250,7 @@ const StartPage: FC = () => {
                     className={classes.leagueImg}
                   />
                   <p>
-                    <FormattedMessage id="players" />: {leaguesCnt[key]}
+                    <FormattedMessage id="playersCnt" />: {leaguesCnt[key]}
                   </p>
                 </div>
               ))}
