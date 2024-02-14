@@ -216,7 +216,7 @@ const TournamentProgress: FC = () => {
                     {tournament?.teamInTournament === 1 ? (
                       <div className={classes.tournamentHeader}>
                         <h2 className={classes.HeaderText}>
-                          {myTeam?.team_name}
+                          {myTeam?.teamName}
                         </h2>
                         <h2 className={classes.HeaderScore}>
                           {tournament.teamOneWins +
@@ -254,7 +254,7 @@ const TournamentProgress: FC = () => {
                             tournament?.teamTwoWins}
                         </h2>
                         <h2 className={classes.HeaderText}>
-                          {myTeam?.team_name}
+                          {myTeam?.teamName}
                         </h2>
                         <Tooltip id={key} border="1px solid red">
                           <h3>
@@ -678,12 +678,12 @@ const TournamentProgress: FC = () => {
                         <h3
                           className={`${
                             tournament.winner !== undefined &&
-                            tournament.winner === myTeam?.team_id
+                            tournament.winner === myTeam?.teamId
                               ? classes.winner
                               : classes.participant
                           } ${classes.leftTeam}`}
                         >
-                          {myTeam?.team_name}
+                          {myTeam?.teamName}
                         </h3>
                         <h3>
                           {tournament.teamTwoWins !== undefined &&
@@ -695,7 +695,7 @@ const TournamentProgress: FC = () => {
                           tournament.teamTwoWins === 0 &&
                           tournament.teamOneWins === 0 &&
                           tournament.winner &&
-                          tournament.winner === myTeam?.team_id
+                          tournament.winner === myTeam?.teamId
                             ? "TW"
                             : null}
                           {tournament.teamTwoWins !== undefined &&
@@ -722,7 +722,7 @@ const TournamentProgress: FC = () => {
                           tournament.teamOneWins === 0 &&
                           tournament.teamTwoWins === 0 &&
                           tournament.winner &&
-                          tournament.winner === myTeam?.team_id
+                          tournament.winner === myTeam?.teamId
                             ? "TL"
                             : null}
                         </h3>
@@ -775,7 +775,7 @@ const TournamentProgress: FC = () => {
                           tournament.teamOneWins === 0 &&
                           tournament.teamTwoWins === 0 &&
                           tournament.winner &&
-                          tournament.winner === myTeam?.team_id
+                          tournament.winner === myTeam?.teamId
                             ? "TL"
                             : null}
                           :
@@ -788,7 +788,7 @@ const TournamentProgress: FC = () => {
                           tournament.teamTwoWins === 0 &&
                           tournament.teamOneWins === 0 &&
                           tournament.winner &&
-                          tournament.winner === myTeam?.team_id
+                          tournament.winner === myTeam?.teamId
                             ? "TW"
                             : null}
                           {tournament.teamTwoWins !== undefined &&
@@ -802,12 +802,12 @@ const TournamentProgress: FC = () => {
                         <h3
                           className={`${
                             tournament.winner !== undefined &&
-                            tournament.winner === myTeam?.team_id
+                            tournament.winner === myTeam?.teamId
                               ? classes.winner
                               : classes.participant
                           }`}
                         >
-                          {myTeam?.team_name}
+                          {myTeam?.teamName}
                         </h3>
                       </div>
                     )}
