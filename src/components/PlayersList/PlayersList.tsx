@@ -49,6 +49,8 @@ const PlayersList: FC<PlayersListProps> = ({ tag }) => {
   const [resForms, setResForms] = useState<JSX.Element[]>([]);
   const [playerForms, setPlayerForms] = useState<JSX.Element[]>([]);
   const [isClanCreating, setIsClanCreating] = useState<boolean>(false);
+  const [managerLinksCnt, setManagerLinksCnt] = useState<number>(1);
+  const [managerUrls, setManagerUrls] = useState<{ [key: number]: string }>({});
   const {
     data: players,
     isLoading,
@@ -60,7 +62,9 @@ const PlayersList: FC<PlayersListProps> = ({ tag }) => {
   const [postPlayer, {}] = PlayerApi.usePostPlayerMutation();
   const [postResource, {}] = ClanResourcesApi.usePostClanResourceMutation();
   const [postManager, {}] = ManagerApi.usePostManagerMutation();
+  const [postManagerContacts, {}] = ManagerApi.usePostManagerContactsMutation();
   const intl = useIntl();
+
 
   useEffect(() => {
     dispatch(
@@ -228,6 +232,11 @@ const PlayersList: FC<PlayersListProps> = ({ tag }) => {
             },
             token: cookies.token,
           });
+          
+          await postManagerContacts({
+            token: cookies.token,
+            urls: Object.values(managerUrls),
+          })
         dispatch(setIsManager(true));
         dispatch(setPageManager(1));
       }
@@ -285,7 +294,7 @@ const PlayersList: FC<PlayersListProps> = ({ tag }) => {
                       updateClanField({ field: "tag", value: e.target.value })
                     )
                   }
-                  placeholder="Enter clan tag"
+                  placeholder={intl.formatMessage({ id: "enterClanTag" })}
                 />
               </div>
               <div className={classes.clanInput}>
@@ -301,7 +310,7 @@ const PlayersList: FC<PlayersListProps> = ({ tag }) => {
                       updateClanField({ field: "name", value: e.target.value })
                     )
                   }
-                  placeholder="Enter clan name"
+                  placeholder={intl.formatMessage({ id: "enterClanName" })}
                 />
               </div>
             </div>
@@ -420,6 +429,18 @@ const PlayersList: FC<PlayersListProps> = ({ tag }) => {
                 {resForms.map((form) => form)}
               </div>
             </div>
+            <div className={classes.managerBox}>
+              <h3><FormattedMessage id="enterManagerContacts" />:</h3>
+              {Array(managerLinksCnt).fill(0).map((_, key) => (
+                <Input7x className={classes.managerInput} type="text" key={key} placeholder={intl.formatMessage({ id: "enterLink" })} onChange={(e) => setManagerUrls({
+                  ...managerUrls,
+                  [key]: e.target.value
+                })} />
+              ))}
+              <button className={classes.addButton} onClick={(e) => {
+                e.preventDefault();
+                setManagerLinksCnt(managerLinksCnt + 1);}}>+</button>
+              </div>
           </form>
           <ReloadinWarning />
           <div className={classes.selectedList}>
@@ -440,7 +461,7 @@ const PlayersList: FC<PlayersListProps> = ({ tag }) => {
                   .filter((player) => player.selected)
                   .map((player) => (
                     <PlayerItem
-                      title="Click to remove a player"
+                      title={intl.formatMessage({ id: "removePlayerLabel" })}
                       onClick={() => {
                         dispatch(
                           updatePlayerField({
@@ -514,7 +535,7 @@ const PlayersList: FC<PlayersListProps> = ({ tag }) => {
                 .filter((player) => player.selected === false)
                 ?.map((player) => (
                   <PlayerItem
-                    title="Click to add a player"
+                    title={intl.formatMessage({ id: "addPlayerLabel" })}
                     onClick={() => {
                       dispatch(
                         updatePlayerField({
