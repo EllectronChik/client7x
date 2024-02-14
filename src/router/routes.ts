@@ -6,6 +6,7 @@ import Season from "pages/Season/Season";
 import Team from "pages/Team/Team";
 import Player from "pages/Player/Player";
 import Tournament from "pages/Tournament/Tournament";
+import Statistics from "pages/Statistics/Statistics";
 
 export const PublicRoutes = [
   { path: "/archive", Element: Archive },
@@ -15,5 +16,6 @@ export const PublicRoutes = [
   { path: "/team/:team/", Element: Team },
   { path: "/player/:player/", Element: Player },
   { path: "/tour/:tour/", Element: Tournament },
+  { path: "/statistics/", Element: Statistics },
   { path: "/", Element: StartPage },
 ];
