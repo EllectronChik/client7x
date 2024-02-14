@@ -10,11 +10,11 @@ import { DeviceCntApi } from "services/DeviceCntService";
 import { SeasonApi } from "services/SeasonService";
 import { GroupApi } from "../services/GroupService";
 import { TournamentApi } from "services/TournamentService";
+import { StatisticsApi } from "services/StatisticsService";
 import clanSlice from "store/reducers/ClanSlice";
 import playerListSlice from "./reducers/PlayerListSlice";
 import pageManagerSlice from "./reducers/pageManagerSlice";
 import accountSlice from "./reducers/AccountSlice";
-import DragPlayerSlice from "./reducers/DragPlayerSlice";
 import GroupsSlice from "./reducers/GroupsSlice";
 import MatchesSlice from "./reducers/MatchesSlice";
 import TournamentsSlice from "./reducers/TournamentsSlice";
@@ -35,11 +35,11 @@ const rootReducer = combineReducers({
   [SeasonApi.reducerPath]: SeasonApi.reducer,
   [GroupApi.reducerPath]: GroupApi.reducer,
   [TournamentApi.reducerPath]: TournamentApi.reducer,
+  [StatisticsApi.reducerPath]: StatisticsApi.reducer,
   clan: clanSlice,
   players: playerListSlice,
   pageManager: pageManagerSlice,
   account: accountSlice,
-  dragPlayer: DragPlayerSlice,
   groupsManager: GroupsSlice,
   matches: MatchesSlice,
   tournaments: TournamentsSlice,
@@ -64,7 +64,8 @@ export const setupStore = () => {
         .concat(DeviceCntApi.middleware)
         .concat(SeasonApi.middleware)
         .concat(GroupApi.middleware)
-        .concat(TournamentApi.middleware),
+        .concat(TournamentApi.middleware)
+        .concat(StatisticsApi.middleware),
   });
 };
 
