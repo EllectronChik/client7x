@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
+import { IPlayer } from "models/IPlayer";
 
 interface IAccountSlice {
   teamRegistred: boolean | null;
@@ -10,6 +11,7 @@ interface IAccountSlice {
   initLoadSum: number;
   isStaff: boolean | null;
   isManager: boolean | null;
+  regPlayers: IPlayer[];
 }
 
 const initialState: IAccountSlice = {
@@ -21,6 +23,7 @@ const initialState: IAccountSlice = {
   initLoadSum: 0,
   isStaff: null,
   isManager: null,
+  regPlayers: [],
 };
 
 const accountSlice = createSlice({
@@ -57,6 +60,17 @@ const accountSlice = createSlice({
     setIsManager: (state, action) => {
       state.isManager = action.payload;
     },
+    setRegPlayers: (state, action) => {
+      state.regPlayers = action.payload;
+    },
+    addRegPlayer: (state, action) => {
+      state.regPlayers.push(action.payload);
+    },
+    removeRegPlayer: (state, action) => {
+      state.regPlayers = state.regPlayers.filter(
+        (player) => player.id !== action.payload
+      );
+    },
   },
 });
 
@@ -72,6 +86,7 @@ export const selectInitLoadSum = (state: RootState) =>
   state.account.initLoadSum;
 export const selectIsStaff = (state: RootState) => state.account.isStaff;
 export const selectIsManager = (state: RootState) => state.account.isManager;
+export const selectRegPlayers = (state: RootState) => state.account.regPlayers;
 
 export const {
   setTeamRegistred,
@@ -84,5 +99,8 @@ export const {
   setInitLoadSum,
   setIsManager,
   setIsStaff,
+  setRegPlayers,
+  addRegPlayer,
+  removeRegPlayer,
 } = accountSlice.actions;
 export default accountSlice.reducer;
