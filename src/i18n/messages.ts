@@ -90,8 +90,6 @@ export const MESSAGES = {
     totalGames: "Total games",
     totalPlayers: "Total players",
     wins: "Wins",
-    onParticipantsNotEmpty:
-      "Season participants {br} (Click on a player to delete them)",
     undistributedTeams: "Undistributed teams",
     groupStageDistribution: "Grouping of teams for the group stage",
     group: "Group",
@@ -289,8 +287,6 @@ export const MESSAGES = {
     totalGames: "Всего игр",
     totalPlayers: "Всего игроков",
     wins: "Побед",
-    onParticipantsNotEmpty:
-      "Участники сезона {br} (Нажмите на игрока чтобы удалить его)",
     undistributedTeams: "Нераспределенные команды",
     groupStageDistribution: "Распределение команд для группового этапа",
     group: "Группа",
@@ -487,8 +483,6 @@ export const MESSAGES = {
     totalGames: "Всього ігор",
     totalPlayers: "Всього гравців",
     wins: "Перемог",
-    onParticipantsNotEmpty:
-      "Учасники сезону {br} (Натисніть на гравця, щоб видалити його)",
     undistributedTeams: "Нерозподілені команди",
     groupStageDistribution: "Розподіл команд для групового етапу",
     group: "Група",
