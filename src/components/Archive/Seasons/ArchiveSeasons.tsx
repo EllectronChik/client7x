@@ -122,11 +122,15 @@ const ArchiveSeasons: FC = () => {
 
   return (
     <div className={classes.container}>
-      <h2><FormattedMessage id="seasons" /></h2>
+      <h2>
+        <FormattedMessage id="seasons" />
+      </h2>
       <div className={classes.table}>
         <div className={classes.header}>
           <div className={classes.col} onClick={() => handleSortBySeason()}>
-            <h3><FormattedMessage id="season" /></h3>
+            <h3>
+              <FormattedMessage id="season" />
+            </h3>
             <img
               className={classes.sort}
               src={
@@ -140,7 +144,9 @@ const ArchiveSeasons: FC = () => {
             />
           </div>
           <div className={classes.col} onClick={() => handleSortByWinner()}>
-            <h3><FormattedMessage id="winner" /></h3>
+            <h3>
+              <FormattedMessage id="winner" />
+            </h3>
             <img
               className={classes.sort}
               src={
@@ -161,7 +167,9 @@ const ArchiveSeasons: FC = () => {
               className={classes.row}
               key={season.number}
             >
-              <h3 className={classes.col}><FormattedMessage id="season" /> {season.number}</h3>
+              <h3 className={classes.col}>
+                <FormattedMessage id="season" /> {season.number}
+              </h3>
               <h3 className={classes.col}>{season.winner}</h3>
             </Link>
           ))}

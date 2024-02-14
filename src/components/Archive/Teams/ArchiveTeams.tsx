@@ -67,7 +67,9 @@ const ArchiveTeams: FC = () => {
 
   return (
     <div className={classes.container}>
-      <h2><FormattedMessage id="teams" /></h2>
+      <h2>
+        <FormattedMessage id="teams" />
+      </h2>
       <div className={classes.table}>
         <div className={classes.header}></div>
         <div className={classes.body}>

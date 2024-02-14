@@ -65,7 +65,6 @@ const PlayersList: FC<PlayersListProps> = ({ tag }) => {
   const [postManagerContacts, {}] = ManagerApi.usePostManagerContactsMutation();
   const intl = useIntl();
 
-
   useEffect(() => {
     dispatch(
       setClan({
@@ -232,11 +231,11 @@ const PlayersList: FC<PlayersListProps> = ({ tag }) => {
             },
             token: cookies.token,
           });
-          
-          await postManagerContacts({
-            token: cookies.token,
-            urls: Object.values(managerUrls),
-          })
+
+        await postManagerContacts({
+          token: cookies.token,
+          urls: Object.values(managerUrls),
+        });
         dispatch(setIsManager(true));
         dispatch(setPageManager(1));
       }
@@ -430,17 +429,35 @@ const PlayersList: FC<PlayersListProps> = ({ tag }) => {
               </div>
             </div>
             <div className={classes.managerBox}>
-              <h3><FormattedMessage id="enterManagerContacts" />:</h3>
-              {Array(managerLinksCnt).fill(0).map((_, key) => (
-                <Input7x className={classes.managerInput} type="text" key={key} placeholder={intl.formatMessage({ id: "enterLink" })} onChange={(e) => setManagerUrls({
-                  ...managerUrls,
-                  [key]: e.target.value
-                })} />
-              ))}
-              <button className={classes.addButton} onClick={(e) => {
-                e.preventDefault();
-                setManagerLinksCnt(managerLinksCnt + 1);}}>+</button>
-              </div>
+              <h3>
+                <FormattedMessage id="enterManagerContacts" />:
+              </h3>
+              {Array(managerLinksCnt)
+                .fill(0)
+                .map((_, key) => (
+                  <Input7x
+                    className={classes.managerInput}
+                    type="text"
+                    key={key}
+                    placeholder={intl.formatMessage({ id: "enterLink" })}
+                    onChange={(e) =>
+                      setManagerUrls({
+                        ...managerUrls,
+                        [key]: e.target.value,
+                      })
+                    }
+                  />
+                ))}
+              <button
+                className={classes.addButton}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setManagerLinksCnt(managerLinksCnt + 1);
+                }}
+              >
+                +
+              </button>
+            </div>
           </form>
           <ReloadinWarning />
           <div className={classes.selectedList}>

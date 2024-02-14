@@ -50,13 +50,12 @@
     &:not(:last-child) {
       margin-bottom: 20px;
     }
-
   }
-  
+
   .managerBox {
     display: flex;
-    flex-direction: column;   
-    width: 100%; 
+    flex-direction: column;
+    width: 100%;
     .managerInput {
       width: 100%;
       margin-top: 10px;
