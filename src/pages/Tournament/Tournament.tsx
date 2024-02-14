@@ -3,6 +3,7 @@ import classes from "./Tournament.module.scss";
 import { useParams } from "react-router";
 import { TournamentApi } from "services/TournamentService";
 import { Link } from "react-router-dom";
+import { FormattedMessage } from "react-intl";
 
 const Tournament: FC = () => {
   const params = useParams();
@@ -80,7 +81,9 @@ const Tournament: FC = () => {
                   </h3>
                 </Link>
               </div>
-              <h3>Map: {match.map}</h3>
+              <h3>
+                <FormattedMessage id="mapLabel" />: {match.map}
+              </h3>
             </div>
           ))}
         </div>
