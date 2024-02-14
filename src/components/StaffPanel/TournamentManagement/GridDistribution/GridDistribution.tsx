@@ -546,7 +546,16 @@ const GridDistribution: FC<IProps> = ({ tournamentsWebSocketRef }) => {
                     <FormattedMessage id="thirdPlace" />
                   </p>
                   <select
-                    className={classes.select}
+                    className={`${classes.select} ${
+                      lvlsTournaments[999] &&
+                      lvlsTournaments[999][0] &&
+                      lvlsTournaments[999][0].teamOne &&
+                      lvlsTournaments[999][0].winner &&
+                      lvlsTournaments[999][0].teamOne ==
+                        lvlsTournaments[999][0].winner
+                        ? classes.winner
+                        : ""
+                    }`}
                     value={
                       lvlsTournaments[999] && lvlsTournaments[999][0]
                         ? lvlsTournaments[999][0].teamOne
@@ -565,7 +574,16 @@ const GridDistribution: FC<IProps> = ({ tournamentsWebSocketRef }) => {
                       ))}
                   </select>
                   <select
-                    className={classes.select}
+                    className={`${classes.select} ${
+                      lvlsTournaments[999] &&
+                      lvlsTournaments[999][0] &&
+                      lvlsTournaments[999][0].teamTwo &&
+                      lvlsTournaments[999][0].winner &&
+                      lvlsTournaments[999][0].teamTwo ==
+                        lvlsTournaments[999][0].winner
+                        ? classes.winner
+                        : ""
+                    }`}
                     value={
                       lvlsTournaments[999] && lvlsTournaments[999][0]
                         ? lvlsTournaments[999][0].teamTwo
