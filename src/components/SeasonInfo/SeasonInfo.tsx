@@ -57,7 +57,9 @@ const SeasonInfo: FC<IProps> = ({ tours, gridRow }) => {
         </h2>
         <div className={classes.grid}>
           {gridRow === 0 && (
-            <h3>The tournament grid has not yet been determined</h3>
+            <h3>
+              <FormattedMessage id="gridNotDetermined" />
+            </h3>
           )}
           {Array.from(Array(gridRow).keys()).map((row) => (
             <div key={row} className={classes.row}>
