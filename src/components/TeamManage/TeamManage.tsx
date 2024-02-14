@@ -26,7 +26,7 @@ const TeamManage: FC = () => {
   useEffect(() => {
     if (
       myTeam &&
-      myTeam.is_reg_to_current_season &&
+      myTeam.isRegToCurrentSeason &&
       currentTournament &&
       moment(currentDateTime).isAfter(currentTournament.start_datetime)
     ) {
@@ -45,7 +45,7 @@ const TeamManage: FC = () => {
           <Participate />
         )}
       {myTeam &&
-        myTeam.is_reg_to_current_season &&
+        myTeam.isRegToCurrentSeason &&
         currentTournament &&
         moment(currentDateTime).isAfter(currentTournament.start_datetime) && (
           <div>
