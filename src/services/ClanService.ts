@@ -148,5 +148,61 @@ export const ClanApi = createApi({
         method: "GET",
       }),
     }),
+    patchClanResUrl: builder.mutation<
+      void,
+      { token: string; id: number; data: string }
+    >({
+      query: ({ token, id, data }) => ({
+        url: `/patchTeamResourceUrl/`,
+        method: "PATCH",
+        body: {
+          id: id,
+          data: data,
+        },
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      }),
+    }),
+    patchClanResName: builder.mutation<
+      void,
+      { token: string; id: number; data: string }
+    >({
+      query: ({ token, id, data }) => ({
+        url: `/patchTeamResourceName/`,
+        method: "PATCH",
+        body: {
+          id: id,
+          data: data,
+        },
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      }),
+    }),
+    deleteClanRes: builder.mutation<void, { token: string; id: number }>({
+      query: ({ token, id }) => ({
+        url: `/deleteTeamResource/`,
+        method: "DELETE",
+        body: {
+          id: id,
+        },
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      }),
+    }),
+    postClanRes: builder.mutation<
+      { id: number; teamId: number },
+      { token: string }
+    >({
+      query: ({ token }) => ({
+        url: `/postTeamResource/`,
+        method: "POST",
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      }),
+    }),
   }),
 });
