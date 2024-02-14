@@ -168,6 +168,11 @@
               border-bottom: 0;
             }
           }
+
+          .winner {
+            text-shadow: 0 0 10px rgba(41, 228, 235, 0.8),
+              0 0 10px rgba(41, 228, 235, 0.8), 0 0 10px rgba(41, 228, 235, 0.8);
+          }
         }
       }
     }
