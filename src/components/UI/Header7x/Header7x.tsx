@@ -1,4 +1,4 @@
-import { useEffect, FC } from "react";
+import { useEffect, FC, useState } from "react";
 import classes from "./Header7x.module.scss";
 import { Link } from "react-router-dom";
 import logo from "@assets/images/techImages/favicon.svg";
@@ -13,6 +13,7 @@ import { FormattedMessage } from "react-intl";
 
 const Header7x: FC = () => {
   const [cookie] = useCookies(["token", "userId"]);
+  const [boorgerOpen, setBoorgerOpen] = useState(false);
   const logout = useLogoutUser();
   const navigate = useNavigate();
   let timeoutId: NodeJS.Timeout;
@@ -32,42 +33,60 @@ const Header7x: FC = () => {
   }, []);
 
   return (
-    <div>
-      <header className={classes.header}>
-        <div className={classes.container}>
-          <Link className={classes.logo_link} to="/">
-            <img
-              className={classes.logo}
-              src={logo}
-              alt="Logo_7x"
-              draggable="false"
-            />
-          </Link>
-          <DoubleText className={classes.title} text="Team-League" />
-          <nav>
-            <ul
-              className={`${classes.nav} ${
-                cookie.token ? classes.nav_after_log : ""
-              }`}
-            >
-              <li className={classes.nav_item}>
-                <Link7x to="/statistics">
-                  <FormattedMessage id="statistic" />
-                </Link7x>
-              </li>
-              <li className={classes.nav_item}>
-                <Link7x to="/archive">
-                  <FormattedMessage id="archive" />
-                </Link7x>
-              </li>
-              {cookie.token ? (
-                <div
+    <header className={classes.header}>
+      <div className={classes.container}>
+        <Link className={classes.logo_link} to="/">
+          <img
+            className={classes.logo}
+            src={logo}
+            alt="Logo_7x"
+            draggable="false"
+          />
+        </Link>
+        <DoubleText className={classes.title} text="Team-League" />
+        <nav>
+          <ul
+            className={`${classes.nav} ${
+              cookie.token ? classes.nav_after_log : ""
+            }`}
+          >
+            <li className={classes.nav_item}>
+              <Link7x to="/statistics">
+                <FormattedMessage id="statistic" />
+              </Link7x>
+            </li>
+            <li className={classes.nav_item}>
+              <Link7x to="/archive">
+                <FormattedMessage id="archive" />
+              </Link7x>
+            </li>
+            {cookie.token ? (
+              <div
+                onMouseEnter={() => {
+                  if (timeoutId) {
+                    clearTimeout(timeoutId);
+                  }
+                  const logout = document.getElementById("logout");
+                  logout?.classList.add(classes.active);
+                }}
+                onMouseLeave={() => {
+                  const logout = document.getElementById("logout");
+                  timeoutId = setTimeout(() => {
+                    logout?.classList.remove(classes.active);
+                  }, 500);
+                }}
+                className={classes.nav_item}
+              >
+                <li>
+                  <Link7x to="/account">
+                    <FormattedMessage id="myAccount" />
+                  </Link7x>
+                </li>
+                <li
                   onMouseEnter={() => {
                     if (timeoutId) {
                       clearTimeout(timeoutId);
                     }
-                    const logout = document.getElementById("logout");
-                    logout?.classList.add(classes.active);
                   }}
                   onMouseLeave={() => {
                     const logout = document.getElementById("logout");
@@ -75,53 +94,106 @@ const Header7x: FC = () => {
                       logout?.classList.remove(classes.active);
                     }, 500);
                   }}
-                  className={classes.nav_item}
+                  className={classes.logout}
+                  id="logout"
                 >
-                  <li>
-                    <Link7x to="/account">
-                      <FormattedMessage id="myAccount" />
-                    </Link7x>
-                  </li>
-                  <li
-                    onMouseEnter={() => {
-                      if (timeoutId) {
-                        clearTimeout(timeoutId);
-                      }
+                  <Button7x
+                    className={classes.logout_btn}
+                    type="button"
+                    onClick={() => {
+                      logout();
+                      navigate("/login");
                     }}
-                    onMouseLeave={() => {
-                      const logout = document.getElementById("logout");
-                      timeoutId = setTimeout(() => {
-                        logout?.classList.remove(classes.active);
-                      }, 500);
-                    }}
-                    className={classes.logout}
-                    id="logout"
                   >
-                    <Button7x
-                      className={classes.logout_btn}
-                      type="button"
-                      onClick={() => {
-                        logout();
-                        navigate("/login");
-                      }}
-                    >
-                      <FormattedMessage id="logout" />
-                    </Button7x>
-                  </li>
-                </div>
-              ) : (
-                <li className={classes.nav_item}>
-                  <Link7x to="/login">
-                    <FormattedMessage id="login" />
-                  </Link7x>
+                    <FormattedMessage id="logout" />
+                  </Button7x>
                 </li>
-              )}
-            </ul>
-          </nav>
+              </div>
+            ) : (
+              <li className={classes.nav_item}>
+                <Link7x to="/login">
+                  <FormattedMessage id="login" />
+                </Link7x>
+              </li>
+            )}
+          </ul>
+        </nav>
+        <div className={classes.boorger}>
+          <div
+            className={`${classes.btn} ${boorgerOpen ? classes.open : ""}`}
+            onClick={() => setBoorgerOpen(!boorgerOpen)}
+          >
+            <div className={classes.icon}></div>
+          </div>
         </div>
-      </header>
+      </div>
       <div className={classes.line}></div>
-    </div>
+      <nav
+        className={`${classes.boorgerContent} ${
+          boorgerOpen ? classes.activeMenu : ""
+        }`}
+      >
+        <ul className={classes.nav}>
+          <li className={classes.nav_item}>
+            <Link
+              className={classes.nav_link}
+              onClick={() => setBoorgerOpen(false)}
+              to="/"
+            >
+              Home
+            </Link>
+          </li>
+          <li className={classes.nav_item}>
+            <Link
+              className={classes.nav_link}
+              onClick={() => setBoorgerOpen(false)}
+              to="/statistics"
+            >
+              <FormattedMessage id="statistic" />
+            </Link>
+          </li>
+          <li className={classes.nav_item}>
+            <Link
+              className={classes.nav_link}
+              onClick={() => setBoorgerOpen(false)}
+              to="/archive"
+            >
+              <FormattedMessage id="archive" />
+            </Link>
+          </li>
+          {cookie.userId ? (
+            <li className={classes.nav_item}>
+              <Link className={classes.nav_link} to="/account">
+                <FormattedMessage id="myAccount" />
+              </Link>
+            </li>
+          ) : (
+            <li className={classes.nav_item}>
+              <Link
+                className={classes.nav_link}
+                onClick={() => setBoorgerOpen(false)}
+                to="/login"
+              >
+                <FormattedMessage id="login" />
+              </Link>
+            </li>
+          )}
+          {cookie.userId && (
+            <li className={classes.nav_item}>
+              <p
+                className={classes.nav_link}
+                onClick={() => {
+                  logout();
+                  navigate("/login");
+                }}
+              >
+                <FormattedMessage id="logout" />
+              </p>
+            </li>
+          )}
+        </ul>
+      </nav>
+    </header>
   );
 };
 
