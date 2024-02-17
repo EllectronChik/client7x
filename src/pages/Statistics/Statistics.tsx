@@ -35,22 +35,24 @@ const Statistics: FC = () => {
               </h3>
               <h3>{statistics.inSeasonTeams[key]}</h3>
               {statistics.maxTeamsInSeasonCnt !== 0 && (
-                <div
-                  className={classes.line}
-                  style={{
-                    width: `${
-                      (550 * statistics.inSeasonTeams[key]) /
-                      statistics.maxTeamsInSeasonCnt
-                    }px`,
-                  }}
-                ></div>
+                <div className={classes.lineBox}>
+                  <div
+                    className={classes.line}
+                    style={{
+                      width: `${
+                        (100 * statistics.inSeasonTeams[key]) /
+                        statistics.maxTeamsInSeasonCnt
+                      }%`,
+                    }}
+                  ></div>
+                </div>
               )}
             </div>
           ))}
       </div>
       {statistics && (
         <div className={classes.playerStats}>
-          <div>
+          <div className={classes.playerStatsTitle}>
             <div className={classes.totalPlayers}>
               <h3>
                 <FormattedMessage id="totalPlayers" />:
@@ -64,37 +66,41 @@ const Statistics: FC = () => {
               <h3>{statistics.otherLeaguesCnt}</h3>
             </div>
           </div>
-          <div className={classes.playerBox}>
-            <img className={classes.techImg} src={zerg} alt="zerg" />
-            <h3>{statistics.playerZergCnt}</h3>
+          <div className={classes.playerStatsBox}>
+            <div className={classes.playerBox}>
+              <img className={classes.techImg} src={zerg} alt="zerg" />
+              <h3>{statistics.playerZergCnt}</h3>
+            </div>
+            <div className={classes.playerBox}>
+              <img className={classes.techImg} src={terran} alt="terran" />
+              <h3>{statistics.playerTerranCnt}</h3>
+            </div>
+            <div className={classes.playerBox}>
+              <img className={classes.techImg} src={protoss} alt="protoss" />
+              <h3>{statistics.playerProtossCnt}</h3>
+            </div>
+            <div className={classes.playerBox}>
+              <img className={classes.techImg} src={random} alt="random" />
+              <h3>{statistics.playerRandomCnt}</h3>
+            </div>
           </div>
-          <div className={classes.playerBox}>
-            <img className={classes.techImg} src={terran} alt="terran" />
-            <h3>{statistics.playerTerranCnt}</h3>
-          </div>
-          <div className={classes.playerBox}>
-            <img className={classes.techImg} src={protoss} alt="protoss" />
-            <h3>{statistics.playerProtossCnt}</h3>
-          </div>
-          <div className={classes.playerBox}>
-            <img className={classes.techImg} src={random} alt="random" />
-            <h3>{statistics.playerRandomCnt}</h3>
-          </div>
-          <div className={classes.playerBox}>
-            <img
-              className={classes.techImg}
-              src={grandmaster}
-              alt="grandmaster"
-            />
-            <h3>{statistics.playerGmLeagueCnt}</h3>
-          </div>
-          <div className={classes.playerBox}>
-            <img className={classes.techImg} src={master} alt="master" />
-            <h3>{statistics.playerMLeagueCnt}</h3>
-          </div>
-          <div className={classes.playerBox}>
-            <img className={classes.techImg} src={diamond} alt="diamond" />
-            <h3>{statistics.playerDmLeagueCnt}</h3>
+          <div className={classes.playerStatsBox}>
+            <div className={classes.playerBox}>
+              <img
+                className={classes.techImg}
+                src={grandmaster}
+                alt="grandmaster"
+              />
+              <h3>{statistics.playerGmLeagueCnt}</h3>
+            </div>
+            <div className={classes.playerBox}>
+              <img className={classes.techImg} src={master} alt="master" />
+              <h3>{statistics.playerMLeagueCnt}</h3>
+            </div>
+            <div className={classes.playerBox}>
+              <img className={classes.techImg} src={diamond} alt="diamond" />
+              <h3>{statistics.playerDmLeagueCnt}</h3>
+            </div>
           </div>
         </div>
       )}
