@@ -204,14 +204,14 @@ const StartPage: FC = () => {
               </h2>
               {Object.keys(previusSeasons).map((key) => (
                 <div className={classes.prevSeason} key={key}>
-                  <div>
+                  <div className={classes.prevSeasonInfo}>
                     <h3>
                       <FormattedMessage
                         id="manageStartedSeason"
                         values={{ season: key }}
                       />
                     </h3>
-                    <p>
+                    <p className={classes.games}>
                       <FormattedMessage id="games" />:{" "}
                       {previusSeasons[key].tournamentsCount}
                     </p>
