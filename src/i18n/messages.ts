@@ -540,7 +540,7 @@ export const MESSAGES = {
     blizzardOwnership: "належать компанії",
     language: "Мова",
     seasonIsNowUnderway: "Сезон {num} зараз в процесі",
-    previousSeasons: "Попередні сезоны",
+    previousSeasons: "Попередні сезони",
     registerTeam: "Зареєструйте свій клан та участвуйте у майбутніх турнірах!",
     showMore: "Показати більше",
     winner: "Переможець",
