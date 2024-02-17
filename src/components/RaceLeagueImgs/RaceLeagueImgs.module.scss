@@ -6,3 +6,11 @@
     height: 40px;
   }
 }
+
+@media (max-width: 576px) {
+  .infoImages {
+    .infoImg {
+      height: 30px;
+    }
+  }
+} 

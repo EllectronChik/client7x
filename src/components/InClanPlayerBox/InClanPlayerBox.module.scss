@@ -10,6 +10,11 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    .playerNameBox {
+      .playerName {
+        text-align: left;
+      }
+    }
   }
   &:not(:last-child) {
     border-bottom: 1px solid $clrRed;
@@ -42,4 +47,25 @@
   height: 80px;
   border: 1px solid $clrRed;
   border-radius: 20px;
+}
+
+
+@media (max-width: 576px) {
+  .playerInfo {
+    font-size: 13px;
+    .playerInfoBox {
+      gap: 5px;
+      .playerLogo {
+        height: 50px;
+      }
+      .playerNameBox {
+        .playerName {
+          font-size: 14px;
+        }
+        .playerMMR {
+          font-size: 12px;
+        }
+      }
+    }
+  }
 }

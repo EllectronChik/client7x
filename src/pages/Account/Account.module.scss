@@ -88,3 +88,19 @@
 .bttns {
   margin-bottom: 30px;
 }
+
+
+@media (max-width: 576px) {
+  .container {
+    width: 90%;
+    font-size: 13px;
+    align-items: center;
+    .bttns {
+      display: flex;
+      .btn {
+        padding: 10px 30px;
+        font-size: 15px;
+      }
+    }
+  }
+}

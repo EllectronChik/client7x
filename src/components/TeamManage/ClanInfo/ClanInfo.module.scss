@@ -80,6 +80,7 @@
       width: 100%;
 
       .playersInfoTitle {
+        text-align: center;
         align-self: center;
       }
 
@@ -100,6 +101,45 @@
           color: $clrLight;
           margin-top: 5px;
           margin-bottom: 5px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .teamManage {
+    width: 100%;
+    .teamInfo {
+      gap: 5px;
+      .teamLogoBox {
+        .teamLogo {
+          width: 60px;
+          height: 60px;
+        }
+      }
+      .teamName {
+        font-size: 16px;
+        width: 50vw;
+      }
+      .teamTag {
+        font-size: 14px;
+      }
+      .regionFlag {
+        height: 25px;
+        width: 40px;
+      }
+    }
+
+    .teamContent {
+      .playersInfo {
+        .manageBtns {
+          flex-direction: column;
+          margin-top: 15px;
+          margin-bottom: 15px;
+          .manageBtn {
+            font-size: 12px;
+          }
         }
       }
     }
