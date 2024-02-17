@@ -73,7 +73,7 @@ const Footer: FC<HTMLProps<HTMLDivElement>> = ({ ...props }) => {
           <p>&copy;2002-{new Date().getFullYear()} 7x.ru sc2 Team</p>
         </div>
         <div className={classes.copyright}>
-          <div>
+          <div className={classes.copyrightText}>
             <p>
               <FormattedMessage id="starcraftTrademark" />
             </p>
