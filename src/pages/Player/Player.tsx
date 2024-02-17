@@ -100,8 +100,11 @@ const Player: FC = () => {
           </div>
           {playerData?.matches.map((match) => (
             <div className={classes.match} key={match.id}>
-              <Link to={`/player/${match.opponentId}`}>
-                <h3 className={`${classes.matchLine} ${classes.opponentLine}`}>
+              <Link
+                className={`${classes.matchLine} ${classes.opponentLine}`}
+                to={`/player/${match.opponentId}`}
+              >
+                <h3>
                   &lt;{match.opponentTag}&gt;{match.opponent}
                 </h3>
               </Link>
