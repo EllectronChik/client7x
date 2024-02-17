@@ -1,8 +1,51 @@
 @import "../../../settings.scss";
 
+@mixin btn($right, $top) {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: $top;
+  right: $right;
+  transition-duration: 0.5s;
+}
+
+@mixin icon($height, $width) {
+  transition-duration: 0.5s;
+  position: absolute;
+  height: $height;
+  width: $width;
+  top: 15px;
+  background-color: $clrLight;
+}
+
+@mixin icon-before($height, $width, $top) {
+  transition-duration: 0.5s;
+  position: absolute;
+  width: $width;
+  height: $height;
+  background-color: $clrLight;
+  content: "";
+  top: $top;
+}
+
+@mixin icon-after($height, $width, $top) {
+  transition-duration: 0.5s;
+  position: absolute;
+  width: $width;
+  height: $height;
+  background-color: $clrLight;
+  content: "";
+  top: $top;
+}
+
 .container {
   @include container();
+  width: 1400px;
   align-items: center;
+}
+
+.boorgerContent {
+  display: none;
 }
 
 .logo_link {
@@ -56,4 +99,114 @@
 
 .title {
   margin-left: 30px;
+  font-size: 70px;
+}
+
+@media (max-width: 576px) {
+  .header {
+    .container {
+      width: 100%;
+      justify-content: center;
+      .title {
+        font-size: 30px;
+        margin-left: 0;
+      }
+      .logo_link {
+        width: 80px;
+        height: 80px;
+      }
+      .nav {
+        display: none;
+      }
+
+      .boorger {
+        width: 30px;
+        height: 30px;
+        margin-left: 10px;
+        .btn {
+          @include btn(15px, 35px);
+
+          .icon {
+            @include icon(4px, 30px);
+
+            &:before {
+              @include icon-before(4px, 30px, -10px);
+            }
+
+            &:after {
+              @include icon-after(4px, 30px, 10px);
+            }
+          }
+
+          &.open {
+            .icon {
+              width: 31px;
+              transition-duration: 0.5s;
+              transform: rotateZ(180deg);
+
+              &:before {
+                transform: rotateZ(45deg) scaleX(0.63) translate(20px, -6px);
+              }
+
+              &:after {
+                transform: rotateZ(-45deg) scaleX(0.63) translate(20px, 6px);
+              }
+            }
+          }
+          &:hover {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+    .boorgerContent {
+      display: flex;
+      position: absolute;
+      width: 0;
+      height: 100%;
+      top: 96px;
+      right: 0;
+      transition: max-width 0.3s ease;
+      max-width: 0;
+      .nav {
+        display: flex;
+        overflow: hidden;
+        flex-direction: column;
+        align-items: flex-end;
+        margin-left: 0;
+        margin-top: 30px;
+        width: 100%;
+        background-color: $clrDark;
+        z-index: 10;
+        .nav_item {
+          margin-right: 15px;
+          margin-bottom: 29px;
+          .nav_link {
+            font-size: 20px;
+            color: $clrLight;
+          }
+        }
+      }
+    }
+
+    .activeMenu {
+      width: 40%;
+      animation: border 0.6s ease;
+      border-left: 1px solid $clrRed;
+      border-bottom: 1px solid $clrRed;
+      max-width: 200px;
+    }
+  }
+}
+
+@keyframes border {
+  0% {
+    border-left: 0;
+  }
+  50% {
+    border-left: 0;
+  }
+  100% {
+    border-left: 1px solid $clrRed;
+  }
 }

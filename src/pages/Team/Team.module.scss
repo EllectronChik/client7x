@@ -3,6 +3,7 @@
 .container {
   @include container();
   align-items: center;
+  width: 1400px;
   justify-content: center;
   gap: 50px;
   color: $clrLight;
@@ -242,6 +243,61 @@
           font-style: italic;
           text-decoration: underline;
           cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    width: 90%;
+    .team {
+      .header {
+        .teamInfo {
+          .teamData {
+            gap: 10px;
+            .teamLogo {
+              width: 50px;
+              height: 50px;
+            }
+          }
+          .teamFlag {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddda10;
+          }
+        }
+        .teamLinks {
+          right: 0;
+          bottom: 20px;
+          background-color: $clrDark;
+          gap: 10px;
+        }
+      }
+      font-size: 13px;
+      .players {
+        .player {
+          .playerAvatarBox {
+            gap: 5px;
+            .playerAvatar {
+              width: 50px;
+              height: 50px;
+            }
+          }
+        }
+      }
+      .tours {
+        .tourHeader {
+          justify-content: start;
+          .col {
+            width: 27vw;
+          }
+        }
+        .tour {
+          .col {
+            width: 27vw;
+          }
         }
       }
     }

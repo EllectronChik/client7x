@@ -147,3 +147,23 @@
     }
   }
 }
+
+@media (max-width: 576px) {
+  .seasonContent {
+    flex-direction: column;
+
+    .groups {
+      .group {
+        width: 100%;
+      }
+    }
+
+    .gridBox {
+      width: 100%;
+      min-width: 0;
+      padding: 0;
+      overflow: scroll;
+      justify-content: flex-start;
+    }
+  }
+}

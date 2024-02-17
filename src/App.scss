@@ -30,3 +30,11 @@ body {
 a {
   text-decoration: none;
 }
+
+@media (max-width: 1400px) {
+  $containerWidth: 1000px;
+}
+
+@media (max-width: 768px) {
+  $containerWidth: 600px;
+}

@@ -2,9 +2,17 @@
 
 .container {
   @include container();
+  width: 1400px;
   align-items: center;
   flex-direction: column;
   justify-content: space-around;
   color: $clrLight;
   margin-top: 35px;
+}
+
+@media (max-width: 576px) {
+  .container {
+    width: 90%;
+    align-items: center;
+  }
 }

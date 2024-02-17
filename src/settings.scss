@@ -3,10 +3,8 @@ $clrDark: #1d1d1d;
 $clrLight: #eef5ff;
 $clrRed: #ff0000;
 $clrNotice: #fbecb3;
-$containerWidth: 1400px;
 
 @mixin container() {
-  width: $containerWidth;
   display: flex;
   margin: 0 auto;
 }

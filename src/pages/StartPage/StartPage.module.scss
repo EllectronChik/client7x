@@ -2,6 +2,7 @@
 
 .container {
   @include container();
+  width: 1400px;
   flex-direction: column;
   margin-top: 30px;
   color: $clrLight;
@@ -142,5 +143,45 @@
     border-radius: 20px;
     padding: 20px;
     margin-bottom: 30px;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    width: 90%;
+    text-align: center;
+
+    .infoBox {
+      flex-direction: column;
+
+      .prevSeasons {
+        width: 100%;
+        .prevSeasonsContent {
+          .prevSeason {
+            flex-direction: column;
+            align-items: center;
+
+            .prevSeasonInfo {
+              display: flex;
+              width: 100%;
+              justify-content: space-evenly;
+
+              .games {
+                font-weight: bold;
+                font-size: 18px;
+              }
+            }
+          }
+        }
+      }
+
+      .leaguesCnt {
+        width: 100%;
+      }
+    }
+
+    .participateBox {
+      width: 100%;
+    }
   }
 }

@@ -2,6 +2,7 @@
 
 .container {
   @include container();
+  width: 1400px;
   align-items: center;
   flex-direction: column;
   justify-content: space-around;
@@ -114,5 +115,35 @@
   }
   100% {
     height: 350px;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    width: 90%;
+    margin-top: 0;
+
+    .block {
+      border: 0;
+      .bttns {
+        .btn {
+          padding: 15px 20px;
+          font-size: 15px;
+        }
+      }
+
+      .form {
+        width: 90%;
+        .input {
+          font-size: 18px;
+        }
+        .sub_btn {
+          font-size: 18px;
+        }
+        .important {
+          width: 100%;
+        }
+      }
+    }
   }
 }

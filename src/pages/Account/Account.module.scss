@@ -3,6 +3,7 @@
 .container {
   padding-top: 40px;
   @include container();
+  width: 1400px;
   align-items: center;
   flex-direction: column;
   justify-content: space-around;

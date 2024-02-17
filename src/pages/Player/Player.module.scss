@@ -2,6 +2,7 @@
 
 .container {
   @include container();
+  width: 1400px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -115,6 +116,56 @@
             cursor: pointer;
             font-style: italic;
             text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    width: 95%;
+    .player {
+      width: 100%;
+      font-size: 12px;
+      .header {
+        .playerInfoLeft {
+          gap: 5px;
+          .teachImgs {
+            gap: 5px;
+            .leagueMark {
+              width: 30px;
+              height: 30px;
+            }
+            .race {
+              width: 30px;
+              height: 30px;
+            }
+          }
+          .avatar {
+            width: 50px;
+            height: 50px;
+          }
+        }
+      }
+      .content {
+        .title {
+          padding-top: 0;
+        }
+        .matchHead {
+          .matchLine {
+            width: 26vw;
+          }
+        }
+
+        .match {
+          .matchLine {
+            width: 26vw;
+            border: 0;
+            &:not(:last-child) {
+              border: 0;
+            }
           }
         }
       }

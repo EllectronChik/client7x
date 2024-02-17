@@ -7,6 +7,7 @@
   justify-content: space-around;
   color: $clrLight;
   margin-top: 35px;
+  width: 1400px;
 
   .tournament {
     display: flex;
@@ -99,6 +100,24 @@
       &:not(:last-child) {
         border-bottom: 1px solid $clrRed;
       }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    width: 90%;
+    .header {
+      .teamInfo {
+        width: 80px !important;
+        .teamLogo {
+          width: 50px !important;
+          height: 50px !important;
+        }
+      }
+    }
+    .tournament {
+      width: 100%;
     }
   }
 }
