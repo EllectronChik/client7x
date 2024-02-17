@@ -39,7 +39,7 @@ const InClanPlayerBox: FC<IProps> = ({ ...props }) => {
             }
           }}
         />
-        <div>
+        <div className={classes.playerNameBox}>
           <h2 className={classes.playerName}>{props.player.username}</h2>
           <h3 className={classes.playerMMR}>MMR: {props.player.mmr}</h3>
         </div>

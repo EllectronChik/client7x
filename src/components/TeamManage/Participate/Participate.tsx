@@ -148,7 +148,7 @@ const Participate: FC<HTMLProps<HTMLDivElement>> = ({ ...props }) => {
         myTeam &&
         canRegister &&
         teamRegistred === false && (
-          <div className={classes.team_manage}>
+          <div className={classes.teamManage}>
             <h2>
               <FormattedMessage
                 id="tournamentStartMessage"
@@ -210,12 +210,12 @@ const Participate: FC<HTMLProps<HTMLDivElement>> = ({ ...props }) => {
           {teamRegistred && (
             <div className={classes.dropZone}>
               {regPlayers.length === 0 && (
-                <h3>
+                <h3 className={classes.dropZoneText}>
                   <FormattedMessage id="clickOnPlayerToTournament" />
                 </h3>
               )}
               {regPlayers.length > 0 && (
-                <h3>
+                <h3 className={classes.dropZoneText}>
                   <FormattedMessage id="clickOnPlayerToRemove" />
                 </h3>
               )}
