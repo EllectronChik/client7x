@@ -8,6 +8,11 @@ import classes from "./TourManage.module.scss";
 import MatchDistribution from "./MatchDistribution/MatchDistribution";
 import moment from "moment";
 import TournamentAdminProgress from "./TournamentAdminProgress/TournamentAdminProgress";
+import { useIntl } from "react-intl";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { TouchBackend } from "react-dnd-touch-backend";
+import { isMobile } from "react-device-detect";
 
 const TourManage: FC = () => {
   const {
@@ -25,6 +30,7 @@ const TourManage: FC = () => {
     String(timeZoneOffset)
   );
   const [currentDateTime, setCurrentDateTime] = useState<Date>(new Date());
+  const intl = useIntl();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -57,28 +63,32 @@ const TourManage: FC = () => {
     }
   }, [currentSeasonError]);
 
+  useEffect(() => {
+    document.title = intl.formatMessage({ id: "staff" });
+  }, [intl]);
+
   return (
-    <div>
+    <div className={classes.tournamentManageContainer}>
       {seasonStarted === undefined ? (
         <Loader7x />
       ) : seasonStarted === false ? (
-        <div>
-          <StartSeason
-            setSeasonStarted={setSeasonStarted}
-            timeZoneOffsetString={timeZoneOffsetString}
-          />
-        </div>
+        <StartSeason
+          setSeasonStarted={setSeasonStarted}
+          timeZoneOffsetString={timeZoneOffsetString}
+        />
       ) : currentSeason &&
         moment(currentSeason.start_datetime).isAfter(currentDateTime) ? (
         <div className={classes.tournamentManage}>
-          <div>
+          <div className={classes.tournamentsAdmin}>
             <StartedSeasonManage
               setSeasonStarted={setSeasonStarted}
               timeZoneOffsetString={timeZoneOffsetString}
             />
             <MatchDistribution />
           </div>
-          <GroupDistribution />
+          <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
+            <GroupDistribution />
+          </DndProvider>
         </div>
       ) : (
         <div className={classes.tournamentsAdminProgress}>
