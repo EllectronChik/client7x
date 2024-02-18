@@ -160,7 +160,7 @@ const EditLinks: FC<IProps> = ({ ...props }) => {
                 handleUpdateTeamName(resource.id, e.target.value);
               }}
             />
-            <div>
+            <div className={classes.inputBox}>
               <input
                 className={classes.input}
                 type="text"
