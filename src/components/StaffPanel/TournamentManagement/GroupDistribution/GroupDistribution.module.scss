@@ -5,60 +5,65 @@
   width: 900px;
   flex-direction: column;
   align-items: center;
-  .randomizeBlock {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    width: 805px;
-    background-color: $clrNotice;
-    border: 2px solid $clrRed;
-    border-radius: 25px;
-    padding: 25px;
-    color: $clrDark;
-    margin-top: 15px;
-  }
-  .groupsList {
-    display: flex;
-    justify-content: center;
-    margin-top: 25px;
-    flex-wrap: wrap;
-    gap: 25px;
-    .group {
+  .randomizeContainer {
+    .randomizeBlock {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
-      min-height: 300px;
-      width: 390px;
-      padding: 20px;
-      border: 1px solid $clrRed;
+      text-align: center;
+      width: 805px;
+      background-color: $clrNotice;
+      border: 2px solid $clrRed;
       border-radius: 25px;
-      background-image: linear-gradient(315deg, #444444, #312f2f, #444444);
-
-      .groupTeams {
+      padding: 25px;
+      color: $clrDark;
+      margin-top: 15px;
+    }
+    .groupsList {
+      display: flex;
+      justify-content: center;
+      margin-top: 25px;
+      flex-wrap: wrap;
+      gap: 25px;
+      .group {
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 10px;
-      }
-    }
-    .team {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      width: 350px;
-      padding: 10px;
-      border: 1px solid $clrRed;
-      border-radius: 25px;
-      background-color: $clrDark;
-      color: $clrLight;
-      .teamLogo {
-        height: 80px;
-        width: 80px;
-        object-fit: cover;
-        border-radius: 50%;
+        min-height: 300px;
+        width: 390px;
+        padding: 20px;
         border: 1px solid $clrRed;
+        border-radius: 25px;
+        background-image: linear-gradient(315deg, #444444, #312f2f, #444444);
+
+        .groupTeams {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 10px;
+          .team {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 350px;
+            padding: 10px;
+            border: 1px solid $clrRed;
+            border-radius: 25px;
+            background-color: $clrDark;
+            color: $clrLight;
+            .teamLogo {
+              height: 80px;
+              width: 80px;
+              object-fit: cover;
+              border-radius: 50%;
+              border: 1px solid $clrRed;
+            }
+          }
+          .dragging {
+            opacity: 0.5;
+          }
+        }
       }
     }
   }
@@ -76,5 +81,49 @@
     border-bottom: 1px solid $clrRed;
     color: $clrDark;
     color-scheme: dark;
+  }
+}
+
+@media (max-width: 576px) {
+  .groupDistribution {
+    width: 100%;
+    text-align: center;
+    .randomizeContainer {
+      width: 100%;
+      .randomizeBlock {
+        width: 100%;
+        padding: 25px 10px;
+        .randomizeButton {
+          margin-right: 0;
+        }
+        .addGroupButton {
+          margin-top: 5px;
+        }
+      }
+      .groupsList {
+        .group {
+          width: 100%;
+          min-height: 0;
+          .groupTeams {
+            width: 100%;
+            flex-direction: row;
+            flex-wrap: wrap;
+            .team {
+              background: none;
+              border: none;
+              width: 60px;
+              padding: 0;
+              .teamLogo {
+                width: 60px;
+                height: 60px;
+              }
+              .teamInfo {
+                display: none;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

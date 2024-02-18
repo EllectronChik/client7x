@@ -1,11 +1,36 @@
-.tournamentManage {
-  width: 1400px;
-  justify-content: space-between;
-  display: flex;
+.tournamentManageContainer {
+  .tournamentManage {
+    width: 1400px;
+    justify-content: space-between;
+    display: flex;
+  }
+
+  .tournamentsAdminProgress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
-.tournamentsAdminProgress {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+@media (max-width: 576px) {
+  .tournamentManageContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .tournamentManage {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      .tournamentsAdmin {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  }
 }

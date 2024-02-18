@@ -52,3 +52,37 @@
     height: 40px;
   }
 }
+
+@media (max-width: 576px) {
+  .container {
+    .resource {
+      gap: 10%;
+      .title {
+        width: 33%;
+      }
+      .titleBox {
+        width: 60%;
+        .title {
+          width: 100%;
+        }
+        .titlePlaceholder {
+          width: 40%;
+        }
+      }
+      .input {
+        width: 100%;
+        font-size: 15px;
+      }
+      .inputBox {
+        display: flex;
+        width: 100%;
+        .input {
+          width: 100%;
+        }
+      }
+      .delete {
+        height: 30px;
+      }
+    }
+  }
+}

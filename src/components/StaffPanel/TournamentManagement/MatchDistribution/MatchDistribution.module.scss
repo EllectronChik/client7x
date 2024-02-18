@@ -102,3 +102,25 @@
     cursor: pointer;
   }
 }
+
+@media (max-width: 576px) {
+  .distrSlide {
+    width: 100%;
+    .distrSlideContent {
+      .distrSlideItems {
+        .distrSlideItem {
+          align-items: center;
+          .distrSlideItemBlock {
+            .distrSlideItemSelect {
+              width: 130px;
+              font-size: 15px;
+            }
+          }
+          .distrSlideItemInput {
+            font-size: 15px;
+          }
+        }
+      }
+    }
+  }
+}

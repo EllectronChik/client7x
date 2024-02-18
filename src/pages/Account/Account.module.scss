@@ -10,25 +10,25 @@
   color: $clrLight;
 }
 
-.logout_btn {
+.logoutBtn {
   margin-top: 30px;
   color: $clrLight;
 }
 
-.staff_btn {
+.staffBtn {
   margin-top: 30px;
   color: $clrLight;
   align-self: center;
 }
 
-.tag_form {
+.tagForm {
   display: flex;
   flex-direction: column;
-  .input_container {
+  .inputContainer {
     display: flex;
     align-items: center;
   }
-  .search_btn {
+  .searchBtn {
     color: $clrLight;
     margin-left: 50px;
   }
@@ -44,28 +44,11 @@
   }
 }
 
-.request_btn {
-  cursor: pointer;
-  margin-top: 30px;
-  padding: 10px;
-  width: 300px;
-  text-align: center;
-  align-self: center;
-  border: 1px solid $clrRed;
-  border-radius: 15px;
-  transition: padding 0.3s, width 0.3s;
-
-  &:hover {
-    width: 310px;
-    padding: 15px;
-  }
-}
-
-.players_list {
+.playersList {
   display: flex;
   flex-direction: column;
   align-items: center;
-  .return_btn {
+  .returnBtn {
     margin-top: 30px;
     align-self: center;
     color: $clrLight;
@@ -89,7 +72,6 @@
   margin-bottom: 30px;
 }
 
-
 @media (max-width: 576px) {
   .container {
     width: 90%;
@@ -101,6 +83,30 @@
         padding: 10px 30px;
         font-size: 15px;
       }
+    }
+    .clan {
+      width: 100%;
+      .clanBox {
+        width: 100%;
+        .tagForm {
+          .tooltip {
+            width: 90%;
+          }
+          .inputContainer {
+            gap: 20px;
+            .input {
+              font-size: 16px;
+            }
+            .searchBtn {
+              margin-left: 0;
+              margin-top: 10px;
+            }
+          }
+        }
+      }
+    }
+    .logoutBtn {
+      margin-top: 10px;
     }
   }
 }
