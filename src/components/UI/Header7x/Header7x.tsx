@@ -163,7 +163,11 @@ const Header7x: FC = () => {
           </li>
           {cookie.userId ? (
             <li className={classes.nav_item}>
-              <Link className={classes.nav_link} to="/account">
+              <Link
+                className={classes.nav_link}
+                onClick={() => setBoorgerOpen(false)}
+                to="/account"
+              >
                 <FormattedMessage id="myAccount" />
               </Link>
             </li>
@@ -183,6 +187,7 @@ const Header7x: FC = () => {
               <p
                 className={classes.nav_link}
                 onClick={() => {
+                  setBoorgerOpen(false);
                   logout();
                   navigate("/login");
                 }}
