@@ -201,9 +201,7 @@ const MatchDistribution: FC = () => {
     <div className={classes.distrSlide}>
       {groups && groups.length > 0 && (
         <div className={classes.distrSlideContent}>
-          <div
-            className={`${classes.distrGroupBttns} ${classes.DistrSelection}`}
-          >
+          <div className={classes.DistrSelection}>
             <button
               className={classes.button}
               onClick={handleDecreaseslideGroupIndex}
