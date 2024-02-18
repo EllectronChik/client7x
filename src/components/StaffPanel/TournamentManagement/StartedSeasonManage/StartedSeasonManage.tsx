@@ -74,7 +74,7 @@ const StartedSeasonManage: FC<StartedSeasonManageProps> = ({ ...props }) => {
           values={{ season: seasonNumber }}
         />
       </h2>
-      <div className={classes.form_content}>
+      <div className={classes.formContent}>
         <label className={classes.label} htmlFor="datetime">
           <FormattedMessage id="tournamentStart" />
           (UTC {props.timeZoneOffsetString}):{" "}
@@ -101,7 +101,7 @@ const StartedSeasonManage: FC<StartedSeasonManageProps> = ({ ...props }) => {
         />
       </div>
       {globalTime && <Timer datetime={globalTime} />}
-      <div className={classes.form_content}>
+      <div className={classes.formContentReg}>
         <label className={classes.label} htmlFor="can_register">
           <FormattedMessage id="openRegistration" />
         </label>
