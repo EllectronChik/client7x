@@ -16,7 +16,6 @@ import {
 import { Tooltip } from "react-tooltip";
 import TeamManage from "components/TeamManage/TeamManage";
 import { FormattedMessage, useIntl } from "react-intl";
-import StaffPanel from "components/StaffPanel/StaffPanel";
 import { setPlayerList } from "store/reducers/PlayerListSlice";
 import {
   setIsManager,
@@ -24,6 +23,7 @@ import {
   selectIsManager,
   selectIsStaff,
 } from "store/reducers/AccountSlice";
+import TourManage from "components/StaffPanel/TournamentManagement/TourManage";
 
 const Account: FC = () => {
   const dispatch = useAppDispatch();
@@ -86,15 +86,16 @@ const Account: FC = () => {
         {pageManager === 0 && !isLoading && (
           <div className={classes.clan}>
             {!renderList && (
-              <div>
+              <div className={classes.clanBox}>
                 <form
-                  className={classes.tag_form}
+                  className={classes.tagForm}
                   onSubmit={(e: FormEvent<HTMLFormElement>) => {
                     e.preventDefault();
                     setRenderList(true);
                   }}
                 >
                   <Tooltip
+                    className={classes.tooltip}
                     border="1px solid red"
                     id="tooltip-important-content"
                   >
@@ -107,15 +108,16 @@ const Account: FC = () => {
                       </p>
                     </div>
                   </Tooltip>
-                  <div className={classes.input_container}>
+                  <div className={classes.inputContainer}>
                     <Input7x
                       data-tooltip-id="tooltip-important-content"
                       data-tooltip-place="left"
                       type="text"
                       placeholder="ClanTag"
                       onChange={(e) => setClanTag(e.target.value)}
+                      className={classes.input}
                     />
-                    <Button7x className={classes.search_btn}>
+                    <Button7x className={classes.searchBtn}>
                       <FormattedMessage id="search" />
                     </Button7x>
                   </div>
@@ -131,10 +133,10 @@ const Account: FC = () => {
               </div>
             )}
             {renderList && (
-              <div className={classes.players_list}>
+              <div className={classes.playersList}>
                 <PlayersList tag={clanTag} />
                 <Button7x
-                  className={classes.return_btn}
+                  className={classes.returnBtn}
                   onClick={() => {
                     setRenderList(false);
                     dispatch(setPlayerList([]));
@@ -147,10 +149,10 @@ const Account: FC = () => {
           </div>
         )}
         {pageManager === 1 && !isLoading && <TeamManage />}
-        {pageManager === 2 && !isLoading && <StaffPanel />}
+        {pageManager === 2 && !isLoading && <TourManage />}
         {isStaff && !isManager && pageManager === 0 && (
           <Button7x
-            className={classes.staff_btn}
+            className={classes.staffBtn}
             onClick={() => {
               dispatch(setPageManager(2));
             }}
@@ -160,7 +162,7 @@ const Account: FC = () => {
         )}
         {isStaff && !isManager && pageManager === 2 && (
           <Button7x
-            className={classes.staff_btn}
+            className={classes.staffBtn}
             onClick={() => {
               dispatch(setPageManager(0));
               document.title = intl.formatMessage({ id: "team_manage" });
@@ -170,7 +172,7 @@ const Account: FC = () => {
           </Button7x>
         )}
         <Button7x
-          className={classes.logout_btn}
+          className={classes.logoutBtn}
           onClick={() => {
             logout();
             navigate("/login");
