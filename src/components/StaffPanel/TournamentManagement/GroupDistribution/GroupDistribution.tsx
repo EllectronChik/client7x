@@ -11,7 +11,6 @@ import { useAppDispatch, useAppSelector } from "hooks/reduxHooks";
 import {
   setGroups,
   addGroup,
-  updateGroupTeams,
   selectGroups,
   setUndistributedTeams,
   selectUndistributedTeams,
@@ -22,6 +21,8 @@ import {
   setIsInitialLoadThird,
 } from "store/reducers/AccountSlice";
 import { SeasonApi } from "services/SeasonService";
+import DraggableTeam from "./DraggableTeam";
+import GroupZone from "./GroupZone";
 
 const GroupDistribution: FC = () => {
   const [cookies] = useCookies(["token"]);
@@ -30,12 +31,10 @@ const GroupDistribution: FC = () => {
   const { data: fetchedGroups, isLoading: fetchedGroupsLoading } =
     GroupApi.useFetchGroupsQuery(cookies.token);
   const { data: currentSeason } = SeasonApi.useFetchCurrentSeasonQuery();
-  const [postTeamToGroup] = GroupApi.usePostTeamToGroupMutation();
   const [
     randomizeGroups,
     { data: randomizeGroupsData, isLoading: randomizeGroupsLoading },
   ] = GroupApi.useRandmizeGroupsMutation();
-  const [draggedTeam, setDraggedTeam] = useState<IClan | null>(null);
   const [groupsCnt, setGroupsCnt] = useState<number>(0);
   const cntInputRef = useRef<HTMLInputElement>(null);
   const groups = useAppSelector(selectGroups);
@@ -102,7 +101,7 @@ const GroupDistribution: FC = () => {
         <FormattedMessage id="groupStageDistribution" />
       </h2>
       {currentSeason && (
-        <div>
+        <div className={classes.randomizeContainer}>
           <div className={classes.randomizeBlock}>
             <h2>
               <FormattedMessage
@@ -145,7 +144,7 @@ const GroupDistribution: FC = () => {
                 <FormattedMessage id="randomizeGroups" />
               </Button7x>
               <Button7x
-                className={`${classes.button} ${classes.addGroupButton}`}
+                className={classes.addGroupButton}
                 onClick={() => {
                   dispatch(addGroup());
                 }}
@@ -160,103 +159,23 @@ const GroupDistribution: FC = () => {
                 <h3>
                   <FormattedMessage id="undistributedTeams" />
                 </h3>
-                {undistributedTeams.map((team: IClan) => {
-                  return (
-                    <div
-                      className={classes.team}
-                      draggable={true}
-                      onDragStart={() => {
-                        setDraggedTeam(team);
-                      }}
-                      onDragEnd={() => {
-                        setDraggedTeam(null);
-                      }}
-                      key={team.id}
-                    >
-                      <img
-                        draggable={false}
-                        className={classes.teamLogo}
-                        src={`${import.meta.env.VITE_SERVER_URL}${team.logo}`}
-                        alt=""
-                      />
-                      <div>
-                        <h3 className={classes.teamName}>{team.name}</h3>
-                        <h4 className={classes.teamTag}>&lt;{team.tag}&gt;</h4>
-                      </div>
-                    </div>
-                  );
-                })}
+                <div className={classes.groupTeams}>
+                  {undistributedTeams.map((team: IClan) => (
+                    <DraggableTeam key={team.id} team={team} />
+                  ))}
+                </div>
               </div>
             )}
-            {registredTeamsLoading && <Loader7x />}
-            {fetchedGroupsLoading && <Loader7x />}
-            {randomizeGroupsLoading && <Loader7x />}
+            {(registredTeamsLoading ||
+              fetchedGroupsLoading ||
+              randomizeGroupsLoading) && <Loader7x />}
             {groups &&
               !registredTeamsLoading &&
               !fetchedGroupsLoading &&
               !randomizeGroupsLoading &&
-              groups.map((group: IGroup) => {
-                return (
-                  <div
-                    className={classes.group}
-                    key={group.id}
-                    onDragOver={(e) => {
-                      e.preventDefault();
-                    }}
-                    onDrop={() => {
-                      if (draggedTeam) {
-                        dispatch(
-                          updateGroupTeams({
-                            groupId: group.id || 0,
-                            team: draggedTeam,
-                          })
-                        );
-                        postTeamToGroup({
-                          token: cookies.token,
-                          groupStageMark: group.groupMark,
-                          teamId: draggedTeam.id || 0,
-                        });
-                      }
-                    }}
-                  >
-                    <h3>
-                      <FormattedMessage id="group" /> {group.groupMark}
-                    </h3>
-                    <div className={classes.groupTeams}>
-                      {group.teams.map((team: IClan) => {
-                        return (
-                          <div
-                            className={classes.team}
-                            draggable={true}
-                            onDragStart={() => {
-                              setDraggedTeam(team);
-                            }}
-                            onDragEnd={() => {
-                              setDraggedTeam(null);
-                            }}
-                            key={team.id}
-                          >
-                            <img
-                              draggable={false}
-                              className={classes.teamLogo}
-                              src={`${import.meta.env.VITE_SERVER_URL}${
-                                team.logo
-                              }`}
-                              alt=""
-                            />
-                            <div>
-                              <h3 className={classes.teamName}>{team.name}</h3>
-                              <h4 className={classes.teamTag}>
-                                &lt;{team.tag}&gt;
-                              </h4>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
+              groups.map((group: IGroup) => (
+                <GroupZone key={group.id} group={group} />
+              ))}
           </div>
         </div>
       )}
