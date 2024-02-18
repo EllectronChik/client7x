@@ -54,7 +54,7 @@ const StartSeason: FC<StartSeasonProps> = ({ ...props }) => {
           <FormattedMessage id="requiredField" />
         </div>
       )}
-      <div className={classes.form_content}>
+      <div className={classes.formContent}>
         <label htmlFor="start_time">
           <FormattedMessage id="start_time" /> (UTC {props.timeZoneOffsetString}
           ){" "}
