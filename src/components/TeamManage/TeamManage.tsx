@@ -48,9 +48,7 @@ const TeamManage: FC = () => {
         myTeam.isRegToCurrentSeason &&
         currentTournament &&
         moment(currentDateTime).isAfter(currentTournament.start_datetime) && (
-          <div>
-            <TournamentProgress />
-          </div>
+          <TournamentProgress />
         )}
     </div>
   );
