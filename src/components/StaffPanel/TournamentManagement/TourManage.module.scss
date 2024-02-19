@@ -1,4 +1,6 @@
 .tournamentManageContainer {
+  display: flex;
+  flex-direction: column;
   .tournamentManage {
     width: 1400px;
     justify-content: space-between;

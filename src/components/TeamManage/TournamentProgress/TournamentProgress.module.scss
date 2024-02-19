@@ -323,3 +323,53 @@
     }
   }
 }
+
+@media (max-width: 576px) {
+  .tournamentProgressBlock {
+    width: 100%;
+    .notRunning {
+      flex-direction: column;
+      width: 100%;
+      .notRunningBlock {
+        width: 100%;
+        .upcomingTournament {
+          width: 100%;
+        }
+        .finishedTournament {
+          width: 100%;
+        }
+      }
+    }
+    .tournamentProgress {
+      .tournament {
+        width: 100%;
+        .tournamentHeader {
+          padding: 20px 5px;
+          gap: 5px;
+          .HeaderText {
+            width: 100px;
+          }
+        }
+        .tourBlock {
+          .match {
+            .matchLineTop {
+              gap: 5px;
+              .select {
+                width: 100px;
+              }
+            }
+            .matchLineBottom {
+              gap: 5px;
+              .input {
+                width: 100px;
+              }
+              .select {
+                width: 100px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

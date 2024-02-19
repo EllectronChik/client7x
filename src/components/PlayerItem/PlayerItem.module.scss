@@ -41,10 +41,10 @@
 .infoWrapper {
   display: flex;
   align-items: center;
+  gap: 10px;
   .avatarWrapper {
     display: flex;
     flex-direction: column;
-    margin-right: 10px;
     .flag {
       width: 40px;
       margin-bottom: 10px;
@@ -62,5 +62,29 @@
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .playerItem {
+    min-width: 100%;
+    padding: 10px;
+    flex-direction: column;
+    align-items: start;
+    .infoWrapper {
+      .avatarWrapper {
+        .flag {
+          width: 30px;
+        }
+        .avatarLeague {
+          width: 30px;
+        }
+      }
+    }
+    .selectWrapper {
+      .select {
+        font-size: 15px;
+      }
+    }
   }
 }

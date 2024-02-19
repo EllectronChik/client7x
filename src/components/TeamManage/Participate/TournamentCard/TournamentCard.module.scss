@@ -116,3 +116,25 @@
     opacity: 1;
   }
 }
+
+@media (max-width: 576px) {
+  .tournamentCard {
+    justify-content: center;
+    .opponent {
+      .opponentRight {
+        .opponentTime {
+          margin-top: 0;
+          font-size: 15px;
+        }
+        .tooltip {
+          width: 90%;
+        }
+      }
+    }
+    .inputContainer {
+      .input {
+        font-size: 15px;
+      }
+    }
+  }
+}

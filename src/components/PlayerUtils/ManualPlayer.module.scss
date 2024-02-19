@@ -30,10 +30,28 @@
         }
       }
       .select {
-        color: $clrDark;
+        background: $clrDark;
+        color-scheme: dark;
+        color: $clrLight;
+        border: none;
+        border-bottom: $clrRed 1px solid;
         width: 220px;
         .option {
-          color: $clrDark;
+          color: $clrLight;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .playerForm {
+    .playerFormBox {
+      .playerFormBoxElement {
+        flex-direction: column;
+        .playerFormInput {
+          width: 220px;
+          margin-top: 0;
         }
       }
     }

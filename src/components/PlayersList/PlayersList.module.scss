@@ -153,3 +153,21 @@
 .lightBtn {
   color: $clrLight;
 }
+
+@media (max-width: 576px) {
+  .container {
+    width: 100%;
+    .clanBox {
+      width: 100%;
+      .clanInfo {
+        width: 100%;
+        .clanInfoBox {
+          flex-direction: column;
+        }
+      }
+      .addPlayerButton {
+        font-size: 15px;
+      }
+    }
+  }
+}
