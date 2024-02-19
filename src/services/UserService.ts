@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 import { ITokenData } from "models/ITokenData";
+import { IUser } from "models/IUser";
 import { IUserCreate } from "models/IUserCreate";
 import { IUserLogin } from "models/IUserLogin";
 
@@ -31,6 +32,31 @@ export const UsersApi = createApi({
         method: "POST",
         headers: {
           Authorization: `Token ${token}`,
+        },
+      }),
+    }),
+    fetchAllUsers: builder.query<IUser[], string>({
+      query: (token) => ({
+        url: "/api/v1/getAllUsers/",
+        method: "GET",
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      }),
+    }),
+    setStaffUser: builder.mutation<
+      void,
+      { id: number; token: string; state: number }
+    >({
+      query: ({ id, token, state }) => ({
+        url: `/api/v1/setStaffStatus/`,
+        method: "PATCH",
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+        body: {
+          id: id,
+          state: state,
         },
       }),
     }),
