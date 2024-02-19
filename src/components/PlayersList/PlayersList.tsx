@@ -274,7 +274,7 @@ const PlayersList: FC<PlayersListProps> = ({ tag }) => {
   return (
     <div className={classes.container}>
       {!isClanCreating ? (
-        <div>
+        <div className={classes.clanBox}>
           <form className={classes.clanInfo}>
             <h2 className={classes.clanInfoTitle}>
               <FormattedMessage id="enterClanData" />
