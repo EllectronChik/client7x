@@ -15,6 +15,7 @@ const AddAdmin: FC = () => {
   const { data: allUsers } = UsersApi.useFetchAllUsersQuery(cookies.token);
   const [setIsStaff, {}] = UsersApi.useSetStaffUserMutation();
   const [users, setUsers] = useState<IUserDict>({});
+  const [usersFilter, setUsersFilter] = useState<IUserDict>({});
 
   useEffect(() => {
     if (allUsers) {
@@ -30,13 +31,29 @@ const AddAdmin: FC = () => {
     }
   }, [allUsers]);
 
+  useEffect(() => {
+    setUsersFilter(users);
+  }, [users]);
+
   return (
     <div className={classes.container}>
-      <div className={classes.header}>
+      <div className={classes.headerTop}>
         <h2>Username</h2>
         <h2>Is staff</h2>
       </div>
-      {Object.keys(users)
+      <div className={classes.header}>
+        <input placeholder="Username filter" type="text" className={classes.input} onChange={(e) => {
+          setUsersFilter(
+            Object.keys(users)
+              .filter((userId) => users[Number(userId)].username.toLowerCase().includes(e.target.value.toLowerCase()))
+              .reduce((acc, userId) => {
+                acc[Number(userId)] = users[Number(userId)];
+                return acc;
+              }, {} as IUserDict)
+          )
+        }}/>
+      </div>
+      {Object.keys(usersFilter)
         ?.filter((userId) => userId !== String(cookies.userId))
         .map((userId) => (
           <div key={userId} className={classes.user}>
