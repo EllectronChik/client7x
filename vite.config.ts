@@ -10,4 +10,9 @@ export default defineConfig({
     host: '0.0.0.0', // Разрешить подключения со всех IP-адресов
     port: 5173,
   },
+  resolve: {
+    alias: {
+      '@settings.scss': './src/settings.scss',
+    }
+  }
 })
