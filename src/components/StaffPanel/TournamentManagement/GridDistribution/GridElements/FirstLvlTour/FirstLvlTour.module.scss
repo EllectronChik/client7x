@@ -1,0 +1,18 @@
+@import '@settings.scss';
+
+.col {
+  display: flex;
+  flex-direction: column;
+  .select {
+    width: 200px;
+    font-size: 20px;
+    color: $clrLight;
+    background-color: $clrDark;
+    border-color: $clrRed;
+    height: 30px;
+
+    &:not(:last-child) {
+      border-bottom: 0;
+    }
+  }
+}

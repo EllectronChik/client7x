@@ -1,0 +1,31 @@
+@import '@settings.scss';
+
+.thirdPlace {
+  right: 175px;
+  display: flex;
+  flex-direction: column;
+
+  .select {
+    width: 200px;
+    font-size: 20px;
+    color: $clrLight;
+    background-color: $clrDark;
+    border-color: $clrRed;
+    height: 30px;
+
+    &:not(:last-child) {
+      border-bottom: 0;
+    }
+  }
+
+  .winner {
+    text-shadow: 0 0 10px rgba(41, 228, 235, 0.8),
+      0 0 10px rgba(41, 228, 235, 0.8), 0 0 10px rgba(41, 228, 235, 0.8);
+  }
+}
+
+@media (max-width: 576px) {
+  .thirdPlace {
+    right: 0;
+  }
+}
