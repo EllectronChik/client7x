@@ -10,34 +10,18 @@ import {
 import { useCookies } from "react-cookie";
 import { GroupApi } from "services/GroupService";
 import classes from "./GridDistribution.module.scss";
-import { IClan } from "models/IClan";
 import { selectTournamentsData } from "store/reducers/TournamentsAdminSlice";
 import { useAppSelector } from "hooks/reduxHooks";
 import { FormattedMessage } from "react-intl";
-
-interface IWins {
-  [key: number]: {
-    [key: number]: number;
-  };
-}
-
-interface ITeamDict {
-  [key: number]: IClan;
-}
+import { ITeamDict } from "./GridModels/ITeamDict";
+import { IWins } from "./GridModels/IWins";
+import { ILevelsTournaments } from "./GridModels/ILevelsTournaments";
+import ThirdPlaceMatch from "./GridElements/ThirdPlaceMatch/ThirdPlaceMatch";
+import GridSettings from "./GridElements/GridSettings/GridSettings";
+import FirstLvlTour from "./GridElements/FirstLvlTour/FirstLvlTour";
 
 interface IProps {
   tournamentsWebSocketRef: MutableRefObject<WebSocket | undefined>;
-}
-
-interface ILevelsTournaments {
-  [key: number]: {
-    [key: number]: {
-      teamOne: number;
-      teamTwo: number;
-      winner: number;
-      id: number | null;
-    };
-  };
 }
 
 const GridDistribution: FC<IProps> = ({ tournamentsWebSocketRef }) => {
@@ -207,7 +191,10 @@ const GridDistribution: FC<IProps> = ({ tournamentsWebSocketRef }) => {
             winner: tournament.winner ? tournament.winner : -1,
             id: tournament.id,
           };
-          maxKey = Math.max(...Object.keys(locLvllsTournaments[1]).map(Number));
+          maxKey =
+            locLvllsTournaments && locLvllsTournaments[1]
+              ? Math.max(...Object.keys(locLvllsTournaments[1]).map(Number))
+              : 0;
 
           setMinGridRow(
             locLvllsTournaments[1] ? Math.ceil(Math.log2(maxKey + 1) + 1) : 1
@@ -313,135 +300,53 @@ const GridDistribution: FC<IProps> = ({ tournamentsWebSocketRef }) => {
             </div>
           ))}
       </div>
-      <div className={classes.gridBox}>
-        <div className={classes.gridTitleBox}>
-          <div>
-            <h3>
-              <FormattedMessage id="specifyGrid" />
-            </h3>
-            <div className={classes.gridTitle}>
-              <input
-                type="range"
-                min={1}
-                max={maxGridRow}
-                value={gridRow}
-                onChange={(e) => {
-                  if (Number(e.target.value) >= minGridRow) {
-                    setGridRow(Number(e.target.value));
-                  }
-                }}
-              />
-              <h3>{gridRow}</h3>
-            </div>
-          </div>
-          <div className={classes.thirdPlace}>
-            <label htmlFor="thirdPlace">
-              <h3>
-                <FormattedMessage id="thirdPlace" />
-              </h3>
-            </label>
-            <input
-              id="thirdPlace"
-              type="checkbox"
-              className={classes.checkbox}
-              checked={thirdPlace}
-              onChange={() => setThirdPlace(!thirdPlace)}
-            />
-          </div>
-        </div>
-        <div className={classes.grid}>
-          {Array.from(Array(gridRow).keys()).map((row) => (
-            <div className={classes.row} key={row}>
-              {Array.from(Array(2 ** row).keys()).map((col) => (
-                <div className={classes.colBox} key={col}>
-                  {row + 1 == gridRow && (
-                    <div className={classes.col}>
-                      {row === 0 && (
-                        <p className={classes.final}>
-                          <FormattedMessage id="final" />
-                        </p>
-                      )}
-                      <select
-                        className={`${classes.select} 
-                      ${
-                        lvlsTournaments[1] &&
-                        lvlsTournaments[1][col] &&
-                        lvlsTournaments[1][col].teamOne &&
-                        lvlsTournaments[1][col].winner &&
-                        lvlsTournaments[1][col].teamOne ==
-                          lvlsTournaments[1][col].winner
-                          ? classes.winner
-                          : ""
-                      }`}
-                        value={
-                          lvlsTournaments[1] && lvlsTournaments[1][col]
-                            ? lvlsTournaments[1][col].teamOne
-                            : 0
-                        }
-                        onChange={(e) => handleSelectFirstTeam(e, col, 1)}
+      {window.innerWidth >= 576 && (
+        <div className={classes.gridBox}>
+          <GridSettings
+            gridRow={gridRow}
+            setGridRow={setGridRow}
+            thirdPlace={thirdPlace}
+            setThirdPlace={setThirdPlace}
+            maxGridRow={maxGridRow}
+            minGridRow={minGridRow}
+          />
+          <div className={classes.grid}>
+            {Array.from(Array(gridRow).keys()).map((row) => (
+              <div className={classes.row} key={row}>
+                {Array.from(Array(2 ** row).keys()).map((col) => (
+                  <div className={classes.colBox} key={col}>
+                    {row + 1 == gridRow && (
+                      <FirstLvlTour
+                        lvlsTournaments={lvlsTournaments}
+                        teamDict={teamDict}
+                        handleSelectFirstTeam={handleSelectFirstTeam}
+                        handleSelectSecondTeam={handleSelectSecondTeam}
+                        row={row}
+                        col={col}
+                      />
+                    )}
+                    {row + 1 !== gridRow && (
+                      <div
+                        style={{
+                          width: `${
+                            (200 * 2 ** (gridRow - 1)) /
+                              Array(2 ** row).length +
+                            20 * (gridRow - row - 1)
+                          }px`,
+                        }}
+                        className={`${classes.col} ${classes.textCol}`}
                       >
-                        <option value="0" disabled>
-                          <FormattedMessage id="selectTeam" />
-                        </option>
-                        {teamDict &&
-                          Object.values(teamDict).map((team) => (
-                            <option key={team.id} value={team.id}>
-                              {team.name}
-                            </option>
-                          ))}
-                      </select>
-                      <select
-                        className={`${classes.select} 
-                      ${
-                        lvlsTournaments[1] &&
-                        lvlsTournaments[1][col] &&
-                        lvlsTournaments[1][col].teamTwo &&
-                        lvlsTournaments[1][col].winner &&
-                        lvlsTournaments[1][col].teamTwo ==
-                          lvlsTournaments[1][col].winner
-                          ? classes.winner
-                          : ""
-                      }`}
-                        value={
-                          lvlsTournaments[1] && lvlsTournaments[1][col]
-                            ? lvlsTournaments[1][col].teamTwo
-                            : 0
-                        }
-                        onChange={(e) => handleSelectSecondTeam(e, col, 1)}
-                      >
-                        <option value="0" disabled>
-                          <FormattedMessage id="selectTeam" />
-                        </option>
-                        {teamDict &&
-                          Object.values(teamDict).map((team) => (
-                            <option key={team.id} value={team.id}>
-                              {team.name}
-                            </option>
-                          ))}
-                      </select>
-                    </div>
-                  )}
-                  {row + 1 !== gridRow && (
-                    <div
-                      style={{
-                        width: `${
-                          (200 * 2 ** (gridRow - 1)) / Array(2 ** row).length +
-                          20 * (gridRow - row - 1)
-                        }px`,
-                      }}
-                      className={`${classes.col} ${classes.textCol}`}
-                    >
-                      {row === 0 && (
-                        <p>
-                          <FormattedMessage id="final" />
-                        </p>
-                      )}
-                      {lvlsTournaments[gridRow - row] &&
-                        lvlsTournaments[gridRow - row][col] &&
-                        lvlsTournaments[gridRow - row][col].id && (
-                          <div className={classes.teamBox}>
-                            <p
-                              className={`${classes.team} 
+                        {row === 0 && (
+                          <p>
+                            <FormattedMessage id="final" />
+                          </p>
+                        )}
+                        {lvlsTournaments[gridRow - row] &&
+                          lvlsTournaments[gridRow - row][col] &&
+                          lvlsTournaments[gridRow - row][col].id && (
+                            <div className={classes.teamBox}>
+                              <p
+                                className={`${classes.team} 
                         ${
                           lvlsTournaments[gridRow - row] &&
                           lvlsTournaments[gridRow - row][col] &&
@@ -452,14 +357,14 @@ const GridDistribution: FC<IProps> = ({ tournamentsWebSocketRef }) => {
                             ? classes.winner
                             : ""
                         }`}
-                            >
-                              {teamDict &&
-                                teamDict[
-                                  lvlsTournaments[gridRow - row][col].teamOne
-                                ]?.name}
-                            </p>
-                            <p
-                              className={`${classes.team}
+                              >
+                                {teamDict &&
+                                  teamDict[
+                                    lvlsTournaments[gridRow - row][col].teamOne
+                                  ]?.name}
+                              </p>
+                              <p
+                                className={`${classes.team}
                         ${
                           lvlsTournaments[gridRow - row] &&
                           lvlsTournaments[gridRow - row][col] &&
@@ -470,144 +375,123 @@ const GridDistribution: FC<IProps> = ({ tournamentsWebSocketRef }) => {
                             ? classes.winner
                             : ""
                         }`}
-                            >
-                              {teamDict &&
-                                teamDict[
-                                  lvlsTournaments[gridRow - row][col].teamTwo
-                                ]?.name}
-                            </p>
+                              >
+                                {teamDict &&
+                                  teamDict[
+                                    lvlsTournaments[gridRow - row][col].teamTwo
+                                  ]?.name}
+                              </p>
+                            </div>
+                          )}
+                        {(!lvlsTournaments[gridRow - row] ||
+                          !lvlsTournaments[gridRow - row][col] ||
+                          !lvlsTournaments[gridRow - row][col].id) && (
+                          <div className={classes.teamBox}>
+                            {lvlsTournaments[gridRow - row - 1] &&
+                            lvlsTournaments[gridRow - row - 1][col * 2] &&
+                            lvlsTournaments[gridRow - row - 1][col * 2]
+                              ?.winner !== -1 ? (
+                              <p className={classes.team}>
+                                {teamDict &&
+                                  teamDict[
+                                    lvlsTournaments[gridRow - row - 1][col * 2]
+                                      ?.winner
+                                  ]?.name}
+                              </p>
+                            ) : (
+                              <p className={classes.team}></p>
+                            )}
+                            {lvlsTournaments[gridRow - row - 1] &&
+                            lvlsTournaments[gridRow - row - 1][col * 2 + 1] &&
+                            lvlsTournaments[gridRow - row - 1][col * 2 + 1]
+                              ?.winner !== -1 ? (
+                              <p className={classes.team}>
+                                {teamDict &&
+                                  teamDict[
+                                    lvlsTournaments[gridRow - row - 1][
+                                      col * 2 + 1
+                                    ]?.winner
+                                  ]?.name}
+                              </p>
+                            ) : (
+                              <p className={classes.team}></p>
+                            )}
                           </div>
                         )}
-                      {(!lvlsTournaments[gridRow - row] ||
-                        !lvlsTournaments[gridRow - row][col] ||
-                        !lvlsTournaments[gridRow - row][col].id) && (
-                        <div className={classes.teamBox}>
-                          {lvlsTournaments[gridRow - row - 1] &&
-                          lvlsTournaments[gridRow - row - 1][col * 2] &&
-                          lvlsTournaments[gridRow - row - 1][col * 2]
-                            ?.winner !== -1 ? (
-                            <p className={classes.team}>
-                              {teamDict &&
-                                teamDict[
-                                  lvlsTournaments[gridRow - row - 1][col * 2]
-                                    ?.winner
-                                ]?.name}
-                            </p>
-                          ) : (
-                            <p className={classes.team}></p>
-                          )}
-                          {lvlsTournaments[gridRow - row - 1] &&
-                          lvlsTournaments[gridRow - row - 1][col * 2 + 1] &&
-                          lvlsTournaments[gridRow - row - 1][col * 2 + 1]
-                            ?.winner !== -1 ? (
-                            <p className={classes.team}>
-                              {teamDict &&
-                                teamDict[
-                                  lvlsTournaments[gridRow - row - 1][
-                                    col * 2 + 1
-                                  ]?.winner
-                                ]?.name}
-                            </p>
-                          ) : (
-                            <p className={classes.team}></p>
-                          )}
+                        <div className={classes.line_1}>
+                          <div
+                            className={classes.col_1}
+                            style={{
+                              width: `${100 * 2 ** (gridRow - row - 2) + 20}px`,
+                            }}
+                          ></div>
+                          <div
+                            className={classes.col_2}
+                            style={{
+                              width: `${100 * 2 ** (gridRow - row - 2) + 20}px`,
+                            }}
+                          ></div>
                         </div>
-                      )}
-                      <div className={classes.line_1}>
                         <div
-                          className={classes.col_1}
+                          className={classes.line_2}
                           style={{
-                            width: `${100 * 2 ** (gridRow - row - 2) + 20}px`,
-                          }}
-                        ></div>
-                        <div
-                          className={classes.col_2}
-                          style={{
-                            width: `${100 * 2 ** (gridRow - row - 2) + 20}px`,
+                            width: `${200 * 2 ** (gridRow - row - 2) + 40}px`,
                           }}
                         ></div>
                       </div>
-                      <div
-                        className={classes.line_2}
-                        style={{
-                          width: `${200 * 2 ** (gridRow - row - 2) + 40}px`,
-                        }}
-                      ></div>
-                    </div>
-                  )}
-                </div>
-              ))}
-              {thirdPlace && row === 0 && (
-                <div
-                  className={classes.thirdPlace}
-                  style={{ position: gridRow >= 4 ? "relative" : "absolute" }}
-                >
-                  <p>
-                    <FormattedMessage id="thirdPlace" />
-                  </p>
-                  <select
-                    className={`${classes.select} ${
-                      lvlsTournaments[999] &&
-                      lvlsTournaments[999][0] &&
-                      lvlsTournaments[999][0].teamOne &&
-                      lvlsTournaments[999][0].winner &&
-                      lvlsTournaments[999][0].teamOne ==
-                        lvlsTournaments[999][0].winner
-                        ? classes.winner
-                        : ""
-                    }`}
-                    value={
-                      lvlsTournaments[999] && lvlsTournaments[999][0]
-                        ? lvlsTournaments[999][0].teamOne
-                        : 0
-                    }
-                    onChange={(e) => handleSelectFirstTeam(e, 0, 999)}
-                  >
-                    <option value="0" disabled>
-                      <FormattedMessage id="selectTeam" />
-                    </option>
-                    {teamDict &&
-                      Object.values(teamDict).map((team) => (
-                        <option key={team.id} value={team.id}>
-                          {team.name}
-                        </option>
-                      ))}
-                  </select>
-                  <select
-                    className={`${classes.select} ${
-                      lvlsTournaments[999] &&
-                      lvlsTournaments[999][0] &&
-                      lvlsTournaments[999][0].teamTwo &&
-                      lvlsTournaments[999][0].winner &&
-                      lvlsTournaments[999][0].teamTwo ==
-                        lvlsTournaments[999][0].winner
-                        ? classes.winner
-                        : ""
-                    }`}
-                    value={
-                      lvlsTournaments[999] && lvlsTournaments[999][0]
-                        ? lvlsTournaments[999][0].teamTwo
-                        : 0
-                    }
-                    onChange={(e) => handleSelectSecondTeam(e, 0, 999)}
-                  >
-                    <option value="0" disabled>
-                      <FormattedMessage id="selectTeam" />
-                    </option>
-                    {teamDict &&
-                      Object.values(teamDict).map((team) => (
-                        <option key={team.id} value={team.id}>
-                          {team.name}
-                        </option>
-                      ))}
-                  </select>
-                </div>
-              )}
-            </div>
-          ))}
+                    )}
+                  </div>
+                ))}
+                {thirdPlace && row === 0 && (
+                  <ThirdPlaceMatch
+                    gridRow={gridRow}
+                    lvlsTournaments={lvlsTournaments}
+                    teamDict={teamDict}
+                    handleSelectFirstTeam={handleSelectFirstTeam}
+                    handleSelectSecondTeam={handleSelectSecondTeam}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+          <div></div>
         </div>
-        <div></div>
-      </div>
+      )}
+      {window.innerWidth < 576 && (
+        <div className={classes.mobileGrid}>
+          <GridSettings
+            gridRow={gridRow}
+            setGridRow={setGridRow}
+            thirdPlace={thirdPlace}
+            setThirdPlace={setThirdPlace}
+            maxGridRow={maxGridRow}
+            minGridRow={minGridRow}
+          />
+          <div className={classes.mobileGridContainer}>
+            {thirdPlace && (
+              <ThirdPlaceMatch
+                gridRow={gridRow}
+                lvlsTournaments={lvlsTournaments}
+                teamDict={teamDict}
+                handleSelectFirstTeam={handleSelectFirstTeam}
+                handleSelectSecondTeam={handleSelectSecondTeam}
+              />
+            )}
+            <h3>Set the games of the first leg of the Playoffs</h3>
+            {Array.from({ length: 2 ** (gridRow - 1) }, (_, i) => (
+              <FirstLvlTour
+                key={i}
+                row={gridRow - 1}
+                col={i}
+                lvlsTournaments={lvlsTournaments}
+                teamDict={teamDict}
+                handleSelectFirstTeam={handleSelectFirstTeam}
+                handleSelectSecondTeam={handleSelectSecondTeam}
+              />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

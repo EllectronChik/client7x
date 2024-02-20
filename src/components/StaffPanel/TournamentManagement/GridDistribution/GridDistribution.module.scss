@@ -1,4 +1,4 @@
-@import "../../../../settings.scss";
+@import "@settings.scss";
 
 .container {
   display: flex;
@@ -47,28 +47,6 @@
     border-radius: 25px;
     padding: 25px 50px;
 
-    .gridTitleBox {
-      display: flex;
-      gap: 25px;
-      .gridTitle {
-        display: flex;
-        gap: 10px;
-        width: 100%;
-        justify-content: space-between;
-      }
-
-      .thirdPlace {
-        display: flex;
-        align-items: start;
-        gap: 10px;
-
-        .checkbox {
-          width: 15px;
-          height: 15px;
-          margin-top: 5px;
-        }
-      }
-    }
 
     .grid {
       display: flex;
@@ -151,29 +129,38 @@
           }
         }
 
-        .thirdPlace {
-          right: 175px;
-          display: flex;
-          flex-direction: column;
 
-          .select {
-            width: 200px;
-            font-size: 20px;
-            color: $clrLight;
-            background-color: $clrDark;
-            border-color: $clrRed;
-            height: 30px;
+      }
+    }
+  }
+}
 
-            &:not(:last-child) {
-              border-bottom: 0;
-            }
-          }
 
-          .winner {
-            text-shadow: 0 0 10px rgba(41, 228, 235, 0.8),
-              0 0 10px rgba(41, 228, 235, 0.8), 0 0 10px rgba(41, 228, 235, 0.8);
-          }
-        }
+@media (max-width: 576px) {
+  .container {
+    width: 100%;
+    flex-direction: column;
+    .groups {
+      width: 100%;
+      .group {
+        padding: 25px 20px;
+        width: 100%;
+      }
+    }
+    .mobileGrid {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 25px 20px;
+      border: 2px solid $clrRed;
+      border-radius: 20px;
+      .mobileGridContainer {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 25px;
+        gap: 25px;
       }
     }
   }
