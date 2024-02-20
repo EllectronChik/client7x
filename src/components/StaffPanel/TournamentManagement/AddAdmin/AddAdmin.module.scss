@@ -1,4 +1,4 @@
-@import "../../../../settings.scss";
+@import "@settings.scss";
 
 .container {
   display: flex;
@@ -38,5 +38,25 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+}
+
+
+@media (max-width: 576px) {
+  .container {
+    width: 100%;
+    padding: 25px 20px;
+    .headerTop {
+      width: 100%;
+    }
+    .header {
+      width: 100%;
+      .input {
+        font-size: 16px;
+      }
+    }
+    .user {
+      width: 100%;
+    }
   }
 }
