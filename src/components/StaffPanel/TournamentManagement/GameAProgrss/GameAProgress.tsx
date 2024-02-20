@@ -14,7 +14,7 @@ import {
 } from "store/reducers/TournamentsAdminSlice";
 import { useAppDispatch, useAppSelector } from "hooks/reduxHooks";
 import { TournamentApi } from "services/TournamentService";
-import classes from "./TournamentAdminProgress.module.scss";
+import classes from "./GameAProgress.module.scss";
 import { ITournamentAdmin } from "models/ITournamentAdmin";
 import { IMatch } from "models/IMatch";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -159,7 +159,7 @@ const GameAProgress: FC<IProps> = ({
         Object.keys(playersInTeams).length > 0 &&
         Object.values(matches[tournament.id]).map((match: IMatch) => {
           return (
-            <div key={match.id}>
+            <div className={classes.matchContainerBox} key={match.id}>
               {!matchEdit[match.id] && (
                 <div className={classes.matchContainer}>
                   <div className={classes.match}>

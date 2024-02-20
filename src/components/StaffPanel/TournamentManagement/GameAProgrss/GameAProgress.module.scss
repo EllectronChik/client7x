@@ -1,0 +1,201 @@
+@import '@settings.scss';
+
+.tournament {
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px;
+  border: 2px solid $clrRed;
+  border-radius: 25px;
+
+  .team {
+    cursor: pointer;
+  }
+
+  .winner {
+    text-shadow: 0 0 10px rgba(41, 228, 235, 0.8),
+      0 0 10px rgba(41, 228, 235, 0.8), 0 0 10px rgba(41, 228, 235, 0.8);
+  }
+
+  .tournamentInfo {
+    display: flex;
+    gap: 5px;
+  }
+
+  .techInputContainer {
+    display: flex;
+    gap: 10px;
+
+    .dateInput {
+      font-size: 16px;
+      background: none;
+      color: $clrLight;
+      color-scheme: dark;
+      border: 0;
+      border-bottom: 1px solid $clrLight;
+    }
+
+    .addMatch {
+      cursor: pointer;
+      border: 1px solid $clrRed;
+      background-color: $clrLight;
+      color: $clrRed;
+      color-scheme: dark;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  .matchContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .match {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      min-width: 310px;
+
+      .player {
+        cursor: pointer;
+        word-wrap: break-word;
+        width: 130px;
+      }
+
+      .select {
+        width: 130px;
+        font-size: 18.72px;
+        font-weight: bold;
+        background: none;
+        color: $clrLight;
+        color-scheme: dark;
+        border: 0;
+        border-bottom: 1px solid $clrLight;
+
+        .option {
+          background: $clrDark;
+          color: $clrLight;
+          color-scheme: dark;
+          border: 0;
+          border-bottom: 1px solid $clrLight;
+        }
+      }
+
+      .playerOne {
+        text-align: right;
+      }
+
+      .winner {
+        text-shadow: 0 0 10px rgba(41, 228, 235, 0.5),
+          0 0 10px rgba(41, 228, 235, 0.5), 0 0 10px rgba(41, 228, 235, 0.5);
+      }
+    }
+
+    .matchInfo {
+      display: flex;
+      gap: 10px;
+      margin-top: 5px;
+      min-width: 310px;
+      justify-content: center;
+      .editButton {
+        cursor: pointer;
+        .edit {
+          height: 25px;
+        }
+      }
+
+      .deleteButton {
+        cursor: pointer;
+        .delete {
+          height: 25px;
+        }
+      }
+
+      .mapNames {
+        text-align: center;
+        display: flex;
+        background: none;
+        border: 0;
+        font-size: 16px;
+        border-bottom: 1px solid $clrLight;
+        color: $clrLight;
+        min-width: 235px;
+      }
+
+      .map {
+        min-width: 200px;
+        text-align: center;
+      }
+
+      .loader {
+        width: 24px;
+        height: 24px;
+        border: 3px solid #fff;
+        border-radius: 50%;
+        display: inline-block;
+        position: relative;
+        box-sizing: border-box;
+        animation: rotation 1s linear infinite;
+
+        &::after {
+          content: "";
+          box-sizing: border-box;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          border: 3px solid;
+          border-color: #ff3d00 transparent;
+        }
+      }
+    }
+  }
+
+  .isFinished {
+    display: flex;
+    gap: 10px;
+
+    .isFinishedLabel {
+      cursor: pointer;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .tournament {
+    width: 100%;
+    .matchContainerBox {
+      width: 100%;
+      .matchContainer {
+        width: 100%;
+        .match {
+          width: 100%;
+          min-width: 0;
+          .select {
+            font-size: 15px;
+            width: 120px;
+          }
+        }
+        .matchInfo {
+          width: 100%;
+          min-width: 0;
+          .mapNames {
+            font-size: 15px;
+            min-width: 0;
+            width: 220px;
+          }
+        }
+      }
+    }
+  }
+}
