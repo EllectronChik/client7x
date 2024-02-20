@@ -16,7 +16,7 @@ import { ITournamentAdmin } from "models/ITournamentAdmin";
 import moment from "moment";
 import editBlack from "assets/images/techImages/edit.svg";
 import deleteBlack from "assets/images/techImages/delete.svg";
-import GameAProgress from "./GameAProgress";
+import GameAProgress from "../GameAProgrss/GameAProgress";
 import GridDistribution from "../GridDistribution/GridDistribution";
 import { FormattedMessage } from "react-intl";
 
