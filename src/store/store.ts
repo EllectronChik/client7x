@@ -10,6 +10,7 @@ import { SeasonApi } from "services/SeasonService";
 import { GroupApi } from "../services/GroupService";
 import { TournamentApi } from "services/TournamentService";
 import { StatisticsApi } from "services/StatisticsService";
+import { MapsApi } from "services/MapsService";
 import clanSlice from "store/reducers/ClanSlice";
 import playerListSlice from "./reducers/PlayerListSlice";
 import pageManagerSlice from "./reducers/pageManagerSlice";
@@ -34,6 +35,7 @@ const rootReducer = combineReducers({
   [GroupApi.reducerPath]: GroupApi.reducer,
   [TournamentApi.reducerPath]: TournamentApi.reducer,
   [StatisticsApi.reducerPath]: StatisticsApi.reducer,
+  [MapsApi.reducerPath]: MapsApi.reducer,
   clan: clanSlice,
   players: playerListSlice,
   pageManager: pageManagerSlice,
@@ -62,7 +64,8 @@ export const setupStore = () => {
         .concat(SeasonApi.middleware)
         .concat(GroupApi.middleware)
         .concat(TournamentApi.middleware)
-        .concat(StatisticsApi.middleware),
+        .concat(StatisticsApi.middleware)
+        .concat(MapsApi.middleware)
   });
 };
 
