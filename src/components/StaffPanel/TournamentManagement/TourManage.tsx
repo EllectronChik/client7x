@@ -14,6 +14,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { isMobile } from "react-device-detect";
 import AddAdmin from "./AddAdmin/AddAdmin";
+import MapsDistribution from "./MapsDistribution/MapsDistribution";
 
 const TourManage: FC = () => {
   const {
@@ -86,6 +87,7 @@ const TourManage: FC = () => {
               timeZoneOffsetString={timeZoneOffsetString}
             />
             <MatchDistribution />
+            <MapsDistribution />
           </div>
           <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
             <GroupDistribution />

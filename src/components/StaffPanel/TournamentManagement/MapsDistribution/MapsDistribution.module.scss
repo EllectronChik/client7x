@@ -1,0 +1,110 @@
+@import '@settings.scss';
+
+.maps {
+  display: flex;
+  padding: 25px 25px;
+  justify-content: center;
+  border: 2px solid $clrRed;
+  border-radius: 25px;
+  margin-top: 30px;
+
+  .mapBox {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    &:not(:last-child) {
+      border-right: 2px solid $clrRed;
+    }
+    &:last-child {
+      text-align: right;
+    }
+    .header {
+      width: 100%;
+      border-bottom: 1px solid $clrRed;
+      padding-bottom: 5px;
+      margin-bottom: 5px;
+      height: 50px;
+    }
+    .input {
+      width: 70%;
+      font-size: 19px;
+      font-weight: bold;
+      text-align: left;
+      background-color: $clrDark;
+      color: $clrLight;
+      color-scheme: dark;
+      border: 0;
+      border-bottom: 1px solid $clrLight;
+    }
+    .map {
+      line-height: 2;
+      &:hover {
+        cursor: pointer;
+        font-style: italic;
+      }
+    }
+    .editingMap {
+      display: flex;
+      justify-content: space-between;
+      .button {
+        cursor: pointer;
+        font-size: 20px;
+        width: 30%;
+        color: $clrLight;
+        align-self: center;
+      }
+      .input {
+        width: 70%;
+        font-size: 19px;
+        font-weight: bold;
+        text-align: right;
+        background-color: $clrDark;
+        color: $clrLight;
+        color-scheme: dark;
+        border: 0;
+        border-bottom: 1px solid $clrLight;
+      }
+    }
+    .button {
+      color: $clrLight;
+      align-self: center;
+    }
+  }
+}
+
+
+@media (max-width: 576px) {
+  .maps {
+    flex-direction: column;
+    width: 100%;
+    .mapBox {
+      width: 100%;
+      text-align: center;
+      &:not(:last-child) {
+        border-right: 0;
+        border-bottom: 2px solid $clrRed;
+      }
+      &:last-child {
+        margin-top: 25px;
+        text-align: center;
+      }
+      .header {
+        height: 50px;
+        padding-top: 5px;
+      }
+      .input {
+        width: 100%;
+      }
+      .map {
+        text-align: left;
+        line-height: 3;
+      }
+      .editingMap {
+        flex-direction: row-reverse;
+        .input {
+          text-align: left;
+        }
+      }
+    }
+  }
+}
