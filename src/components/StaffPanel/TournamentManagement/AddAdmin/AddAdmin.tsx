@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { UsersApi } from "services/UserService";
 import classes from "./AddAdmin.module.scss";
+import { FormattedMessage, useIntl } from "react-intl";
 
 interface IUserDict {
   [key: number]: {
@@ -16,6 +17,7 @@ const AddAdmin: FC = () => {
   const [setIsStaff, {}] = UsersApi.useSetStaffUserMutation();
   const [users, setUsers] = useState<IUserDict>({});
   const [usersFilter, setUsersFilter] = useState<IUserDict>({});
+  const intl = useIntl();
 
   useEffect(() => {
     if (allUsers) {
@@ -38,11 +40,11 @@ const AddAdmin: FC = () => {
   return (
     <div className={classes.container}>
       <div className={classes.headerTop}>
-        <h2>Username</h2>
-        <h2>Is staff</h2>
+        <h2><FormattedMessage id="username" /></h2>
+        <h2><FormattedMessage id="isStaff" /></h2>
       </div>
       <div className={classes.header}>
-        <input placeholder="Username filter" type="text" className={classes.input} onChange={(e) => {
+        <input placeholder={intl.formatMessage({ id: "usernameFilter" })} type="text" className={classes.input} onChange={(e) => {
           setUsersFilter(
             Object.keys(users)
               .filter((userId) => users[Number(userId)].username.toLowerCase().includes(e.target.value.toLowerCase()))
