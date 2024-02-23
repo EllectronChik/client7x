@@ -1,0 +1,32 @@
+@import "@settings.scss";
+
+.teamBox {
+  display: flex;
+
+  .team {
+    text-align: center;
+    width: 175px;
+    border: 1px solid $clrRed;
+    border-right: 0;
+  }
+
+  .score {
+    width: 25px;
+    border: 1px solid $clrRed;
+    text-align: center;
+  }
+
+  .winner {
+    text-shadow: 0 0 10px rgba(41, 228, 235, 0.5),
+      0 0 10px rgba(41, 228, 235, 0.5),
+      0 0 10px rgba(41, 228, 235, 0.5);
+  }
+
+  &:last-child .team {
+    border-top: 0;
+  }
+
+  &:last-child .score {
+    border-top: 0;
+  }
+}
