@@ -1,4 +1,4 @@
-interface IInfoTours {
+export interface IInfoTours {
   groups: {
     [key: string]: {
       [key: string]: number;
