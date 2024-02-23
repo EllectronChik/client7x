@@ -477,7 +477,7 @@ const GridDistribution: FC<IProps> = ({ tournamentsWebSocketRef }) => {
                 handleSelectSecondTeam={handleSelectSecondTeam}
               />
             )}
-            <h3>Set the games of the first leg of the Playoffs</h3>
+            <h3><FormattedMessage id="setGames" /></h3>
             {Array.from({ length: 2 ** (gridRow - 1) }, (_, i) => (
               <FirstLvlTour
                 key={i}

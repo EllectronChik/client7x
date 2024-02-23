@@ -197,6 +197,7 @@ export const MESSAGES = {
       "Click on a player in the player list below to remove them from the tournament roster",
     clickOnPlayerToAdd:
       "Click on a player to add them to the tournament roster",
+    setGames: "Set the games of the first round of the Playoffs",
   },
   [LOCALES.RUSSIAN]: {
     statistic: "Статистика",
@@ -393,6 +394,7 @@ export const MESSAGES = {
       "Нажмите на игрока в списке игроков ниже, чтобы удалить его из списка участников турнира",
     clickOnPlayerToAdd:
       "Нажмите на игрока, чтобы добавить его в список участников турнира",
+    setGames: "Определите игры первого раунда плей-офф",
   },
   [LOCALES.UKRAINIAN]: {
     statistic: "Статистика",
@@ -589,5 +591,6 @@ export const MESSAGES = {
       "Натисніть на гравця у списку гравців нижче, щоб видалити його зі списку учасників турніру",
     clickOnPlayerToAdd:
       "Натисніть на гравця, щоб додати до списку учасників турніру",
+    setGames: "Встановіть ігри першого раунду плей-офф",
   },
 };
