@@ -8,7 +8,6 @@ import { useCookies } from "react-cookie";
 import Input7x from "components/UI/Input7x/Input7x";
 import { useNavigate } from "react-router-dom";
 import { FormattedMessage, useIntl } from "react-intl";
-import { DeviceCntApi } from "services/DeviceCntService";
 
 interface IErrorData {
   username: string[];
@@ -33,7 +32,6 @@ const Login: FC = () => {
   const [createUser, { error: errorCreate }] =
     UsersApi.useRegisterUserMutation();
   const [loginUser, {}] = UsersApi.useLoginUserMutation();
-  const [increaseDevices, {}] = DeviceCntApi.usePatchDeviceCntMutation();
 
   useEffect(() => {
     document.title = isLogin
@@ -80,10 +78,6 @@ const Login: FC = () => {
         }
         setCookie("token", responce.data.auth_token, { expires: exp_date });
         setCookie("userId", responce.data.user_id, { expires: exp_date });
-        await increaseDevices({
-          token: responce.data.auth_token,
-          action: "increase",
-        });
         setIsError(null);
         navigate("/account");
       } else if (responce.error) {

@@ -6,7 +6,6 @@ import { regionApi } from "services/regionService";
 import { PlayerLogoApi } from "services/PlayerLogoService";
 import { PlayerApi } from "services/PlayerService";
 import { ClanResourcesApi } from "services/ClanResourcesService";
-import { DeviceCntApi } from "services/DeviceCntService";
 import { SeasonApi } from "services/SeasonService";
 import { GroupApi } from "../services/GroupService";
 import { TournamentApi } from "services/TournamentService";
@@ -31,7 +30,6 @@ const rootReducer = combineReducers({
   [PlayerLogoApi.reducerPath]: PlayerLogoApi.reducer,
   [PlayerApi.reducerPath]: PlayerApi.reducer,
   [ClanResourcesApi.reducerPath]: ClanResourcesApi.reducer,
-  [DeviceCntApi.reducerPath]: DeviceCntApi.reducer,
   [SeasonApi.reducerPath]: SeasonApi.reducer,
   [GroupApi.reducerPath]: GroupApi.reducer,
   [TournamentApi.reducerPath]: TournamentApi.reducer,
@@ -61,7 +59,6 @@ export const setupStore = () => {
         .concat(PlayerLogoApi.middleware)
         .concat(PlayerApi.middleware)
         .concat(ClanResourcesApi.middleware)
-        .concat(DeviceCntApi.middleware)
         .concat(SeasonApi.middleware)
         .concat(GroupApi.middleware)
         .concat(TournamentApi.middleware)

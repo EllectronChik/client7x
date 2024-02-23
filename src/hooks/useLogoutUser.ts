@@ -1,13 +1,13 @@
 import { useCookies } from "react-cookie";
-import { DeviceCntApi } from "services/DeviceCntService";
+import { UsersApi } from "services/UserService";
 
 export const useLogoutUser = () => {
   const [cookie, setCookie] = useCookies(["token", "userId"]);
-  const [decreaseDevices, {}] = DeviceCntApi.usePatchDeviceCntMutation();
+  const [logoutUser, {}] = UsersApi.useLogoutUserMutation();
 
   const logout = async () => {
     try {
-      await decreaseDevices({ token: cookie.token, action: "decrease" });
+      await logoutUser(cookie.token);
       setCookie("token", "", { expires: new Date(0) });
       setCookie("userId", "", { expires: new Date(0) });
       window.location.reload();
