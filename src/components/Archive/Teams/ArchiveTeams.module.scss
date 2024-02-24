@@ -49,8 +49,15 @@
   .container {
     width: 100%;
     .table {
+      display: flex;
+      flex-direction: column;
       width: 100%;
       padding: 25px;
+      .button {
+        padding-top: 10px;
+        color: $clrLight;
+        align-self: center;
+      }
     }
   }
 }
