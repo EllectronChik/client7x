@@ -4,5 +4,5 @@ export interface IMatch {
   player_two: number;
   winner: number;
   tournament: number;
-  map: string;
+  map: number;
 }
