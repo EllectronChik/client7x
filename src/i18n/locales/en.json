@@ -182,5 +182,6 @@
   "usernameFilter": "Username filter",
   "mapNameFilter": "Map name filter",
   "strongest": "Strongest race",
-  "weakest": "Weakest race"
+  "weakest": "Weakest race",
+  "loadMore": "Load more"
 }
