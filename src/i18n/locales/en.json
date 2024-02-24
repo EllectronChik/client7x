@@ -180,6 +180,7 @@
   "editMapName":"Click to edit {br} map name",
   "isStaff": "Is staff",
   "usernameFilter": "Username filter",
-  "mapNameFilter": "Map name filter"
-
+  "mapNameFilter": "Map name filter",
+  "strongest": "Strongest race",
+  "weakest": "Weakest race"
 }
