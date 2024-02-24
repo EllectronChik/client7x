@@ -20,6 +20,7 @@ import sort from "assets/images/techImages/sort.svg";
 import axios from "axios";
 import { FormattedMessage, useIntl } from "react-intl";
 import { Link } from "react-router-dom";
+import Button7x from "components/UI/Button7x/Button7x";
 
 interface ISeasonData extends ISeason {
   winner: string;
@@ -44,9 +45,10 @@ const ArchiveSeasons: FC = () => {
 
   const scrollHandler = () => {
     if (
+      window.innerWidth >= 576 &&
       document.documentElement.scrollHeight -
         (document.documentElement.scrollTop + window.innerHeight) <
-        100 &&
+        260 &&
       nextPage
     ) {
       dispatch(setFetching(true));
@@ -174,6 +176,16 @@ const ArchiveSeasons: FC = () => {
             </Link>
           ))}
         </div>
+        {innerWidth < 576 && nextPage && (
+          <Button7x
+            className={classes.button}
+            onClick={() => {
+              dispatch(setFetching(true));
+            }}
+          >
+            <FormattedMessage id="loadMore" />
+          </Button7x>
+        )}
       </div>
     </div>
   );
