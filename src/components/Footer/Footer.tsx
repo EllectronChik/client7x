@@ -6,39 +6,21 @@ import blizzardLogo from "assets/images/campaignsLogos/Blizzard.webp";
 import { FormattedMessage } from "react-intl";
 
 const Footer: FC<HTMLProps<HTMLDivElement>> = ({ ...props }) => {
-  const languages = [
-    { name: "English", value: LOCALES.ENGLISH },
-    { name: "Русский", value: LOCALES.RUSSIAN },
-    { name: "Українська", value: LOCALES.UKRAINIAN },
-  ];
   const [cookie, setCookie] = useCookies(["locale"]);
-
-  const russianLanguageCodes = [
-    "ru",
-    "ru-RU",
-    "ru-UA",
-    "ru-BY",
-    "ru-KZ",
-    "ru-KG",
-    "ru-MD",
-  ];
-  const ukrainianLanguageCodes = ["uk", "uk-UA"];
 
   let language = LOCALES.ENGLISH;
   const propsClassName = props.className
     ? `${props.className} ${classes.footer}`
     : classes.footer;
-  if (
-    !cookie?.locale &&
-    russianLanguageCodes.includes(window.navigator.language)
-  ) {
-    language = LOCALES.RUSSIAN;
-  } else if (
-    !cookie?.locale &&
-    ukrainianLanguageCodes.includes(window.navigator.language)
-  ) {
-    language = LOCALES.UKRAINIAN;
-  }
+
+    if (!cookie.locale) {
+      Array.from(Object.keys(LOCALES)).forEach((key) => {
+        if (LOCALES[key].value.split("-")[0].indexOf(window.navigator.language) !== -1) {
+          language = LOCALES[key];
+        }
+      })
+    }
+
   return (
     <footer className={propsClassName}>
       <div className={classes.line}></div>
@@ -58,7 +40,7 @@ const Footer: FC<HTMLProps<HTMLDivElement>> = ({ ...props }) => {
               })
             }
           >
-            {languages.map((language) => (
+            {Array.from(Object.values(LOCALES)).map((language) => (
               <option
                 className={classes.option}
                 key={language.value}
