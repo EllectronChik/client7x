@@ -4,13 +4,12 @@ import { Tooltip } from "react-tooltip";
 import editWhite from "assets/images/techImages/editWhite.svg";
 import { useCookies } from "react-cookie";
 import {
-  selectMapNames,
-  setMapNames,
   selectLocalTimes,
   setLocalTimes,
   selectMatchEdit,
   setMatchEdit,
   selectMatches,
+  selectMaps,
 } from "store/reducers/TournamentsAdminSlice";
 import { useAppDispatch, useAppSelector } from "hooks/reduxHooks";
 import { TournamentApi } from "services/TournamentService";
@@ -38,10 +37,10 @@ const GameAProgress: FC<IProps> = ({
 }) => {
   const [cookies] = useCookies(["token", "userId"]);
   const dispatch = useAppDispatch();
-  const mapNames = useAppSelector(selectMapNames);
   const localTimes = useAppSelector(selectLocalTimes);
   const matchEdit = useAppSelector(selectMatchEdit);
   const matches = useAppSelector(selectMatches);
+  const maps = useAppSelector(selectMaps);
   const { data: playersInTeams } = TournamentApi.useFetchPlayerByTeamsQuery(
     cookies.token
   );
@@ -208,10 +207,8 @@ const GameAProgress: FC<IProps> = ({
                   </div>
                   <div className={classes.matchInfo}>
                     <h3 className={classes.map}>
-                      {match.map !== null
-                        ? match.map !== ""
-                          ? match.map
-                          : intl.formatMessage({ id: "mapUnspecified" })
+                      {match.map !== null && maps
+                        ? maps.find((map) => map.id === match.map)?.name
                         : intl.formatMessage({ id: "mapUnspecified" })}
                     </h3>
                     <button
@@ -337,18 +334,10 @@ const GameAProgress: FC<IProps> = ({
                     </select>
                   </div>
                   <div className={classes.matchInfo}>
-                    <input
-                      placeholder={intl.formatMessage({ id: "mapLabel" })}
+                    <select
                       className={classes.mapNames}
-                      type="text"
-                      value={mapNames[match.id]}
+                      value={match.map !== null ? match.map : 0}
                       onChange={(event) => {
-                        dispatch(
-                          setMapNames({
-                            matchId: match.id,
-                            mapNames: event.target.value,
-                          })
-                        );
                         matchesWebSocketsRef.current[tournament.id].send(
                           JSON.stringify({
                             action: "update",
@@ -358,7 +347,22 @@ const GameAProgress: FC<IProps> = ({
                           })
                         );
                       }}
-                    />
+                    >
+                      <option value="0" disabled>
+                        <FormattedMessage id="mapLabel" />
+                      </option>
+                      {maps.map((map) => {
+                        return (
+                          <option
+                            className={classes.option}
+                            key={map.id}
+                            value={map.id}
+                          >
+                            {map.name}
+                          </option>
+                        );
+                      })}
+                    </select>
                     <button
                       className={classes.editButton}
                       onClick={() => {

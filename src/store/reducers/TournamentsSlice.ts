@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { IMap } from "models/IMap";
 import { IMatch } from "models/IMatch";
 import { ITournamentApiResponse } from "models/ITournamentApiResponse";
 import { RootState } from "store/store";
@@ -8,29 +9,24 @@ interface IMatches {
     [key: number]: IMatch;
   };
 }
-
-interface IMapNames {
-  [key: number]: string;
-}
-
 interface IBooleanDict {
   [key: number]: boolean;
 }
 
 interface ITournamentsSlice {
   matches: IMatches;
-  mapNames: IMapNames;
   matchShowed: IBooleanDict;
   tournamentsData: ITournamentApiResponse[];
   unstartedTournaments: number[];
+  maps: IMap[];
 }
 
 const initialState: ITournamentsSlice = {
   matches: {},
-  mapNames: {},
   matchShowed: {},
   tournamentsData: [],
   unstartedTournaments: [],
+  maps: [],
 };
 
 export const tournamentsSlice = createSlice({
@@ -58,12 +54,6 @@ export const tournamentsSlice = createSlice({
       state.matches[action.payload.tournamentId][action.payload.match.id] =
         action.payload.match;
     },
-    setMapNames: (
-      state,
-      action: PayloadAction<{ matchId: number; mapNames: string }>
-    ) => {
-      state.mapNames[action.payload.matchId] = action.payload.mapNames;
-    },
     setMatchShowed: (
       state,
       action: PayloadAction<{ tournamentId: number; showed: boolean }>
@@ -87,26 +77,29 @@ export const tournamentsSlice = createSlice({
         state.unstartedTournaments.splice(index, 1);
       }
     },
+    setMaps: (state, action: PayloadAction<IMap[]>) => {
+      state.maps = action.payload;
+    },
   },
 });
 
 export const selectMatches = (state: RootState) => state.tournaments.matches;
-export const selectMapNames = (state: RootState) => state.tournaments.mapNames;
 export const selectMatchShowed = (state: RootState) =>
   state.tournaments.matchShowed;
 export const selectTournamentsData = (state: RootState) =>
   state.tournaments.tournamentsData;
 export const selectUnstartedTournaments = (state: RootState) =>
   state.tournaments.unstartedTournaments;
+export const selectMaps = (state: RootState) => state.tournaments.maps;
 
 export const {
   setMatches,
   updateMatch,
-  setMapNames,
   setMatchShowed,
   setTournamentsData,
   setUnstartedTournaments,
   deleteUnstartedTournament,
+  setMaps,
 } = tournamentsSlice.actions;
 
 export default tournamentsSlice.reducer;

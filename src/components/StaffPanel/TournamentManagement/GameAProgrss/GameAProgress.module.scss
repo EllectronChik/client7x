@@ -121,12 +121,22 @@
       .mapNames {
         text-align: center;
         display: flex;
-        background: none;
+        background: $clrDark;
         border: 0;
-        font-size: 16px;
         border-bottom: 1px solid $clrLight;
         color: $clrLight;
         min-width: 235px;
+        color-scheme: dark;
+        font-weight: bold;
+        font-size: 19px;
+
+        .option {
+          font-size: 19px;
+          font-weight: bold;
+          background: $clrDark;
+          color: $clrLight;
+          color-scheme: dark;
+        }
       }
 
       .map {

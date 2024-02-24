@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { IMap } from "models/IMap";
 import { IMatch } from "models/IMatch";
 import { ITournamentAdmin } from "models/ITournamentAdmin";
 import { RootState } from "store/store";
@@ -7,10 +8,6 @@ interface IMatches {
   [key: number]: {
     [key: number]: IMatch;
   };
-}
-
-interface IMapNames {
-  [key: number]: string;
 }
 
 interface ILocalTimes {
@@ -23,18 +20,18 @@ interface IMatchEdit {
 
 interface ITournamentsSlice {
   matches: IMatches;
-  mapNames: IMapNames;
   tournamentsData: ITournamentAdmin[];
   localTimes: ILocalTimes;
   matchEdit: IMatchEdit;
+  maps: IMap[];
 }
 
 const initialState: ITournamentsSlice = {
   matches: {},
-  mapNames: {},
   tournamentsData: [],
   localTimes: {},
   matchEdit: {},
+  maps: [],
 };
 
 export const tournamentsAdminSlice = createSlice({
@@ -46,12 +43,6 @@ export const tournamentsAdminSlice = createSlice({
       action: PayloadAction<{ tournamentId: number; matches: IMatch[] }>
     ) => {
       state.matches[action.payload.tournamentId] = action.payload.matches;
-    },
-    setMapNames: (
-      state,
-      action: PayloadAction<{ matchId: number; mapNames: string }>
-    ) => {
-      state.mapNames[action.payload.matchId] = action.payload.mapNames;
     },
     setTournamentsData: (state, action: PayloadAction<ITournamentAdmin[]>) => {
       state.tournamentsData = action.payload;
@@ -68,26 +59,28 @@ export const tournamentsAdminSlice = createSlice({
     ) => {
       state.matchEdit[action.payload.matchId] = action.payload.edit;
     },
+    setMaps: (state, action: PayloadAction<IMap[]>) => {
+      state.maps = action.payload;
+    },
   },
 });
 
 export const selectMatches = (state: RootState) =>
   state.tournamentsAdmin.matches;
-export const selectMapNames = (state: RootState) =>
-  state.tournamentsAdmin.mapNames;
 export const selectTournamentsData = (state: RootState) =>
   state.tournamentsAdmin.tournamentsData;
 export const selectLocalTimes = (state: RootState) =>
   state.tournamentsAdmin.localTimes;
 export const selectMatchEdit = (state: RootState) =>
   state.tournamentsAdmin.matchEdit;
+export const selectMaps = (state: RootState) => state.tournamentsAdmin.maps;
 
 export const {
   setMatches,
-  setMapNames,
   setTournamentsData,
   setLocalTimes,
   setMatchEdit,
+  setMaps,
 } = tournamentsAdminSlice.actions;
 
 export default tournamentsAdminSlice.reducer;

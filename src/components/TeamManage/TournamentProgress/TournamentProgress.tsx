@@ -1,7 +1,6 @@
 import moment from "moment";
 import { useEffect, useRef, FC } from "react";
 import { useCookies } from "react-cookie";
-import { IMatch } from "../../../models/IMatch";
 import { ClanApi } from "services/ClanService";
 import classes from "./TournamentProgress.module.scss";
 import { Tooltip } from "react-tooltip";
@@ -10,12 +9,10 @@ import { ITournamentApiResponse } from "models/ITournamentApiResponse";
 import Button7x from "components/UI/Button7x/Button7x";
 import Loader7x from "components/UI/Loader7x/Loader7x";
 import { useAppDispatch, useAppSelector } from "hooks/reduxHooks";
-import { FormattedMessage, useIntl } from "react-intl";
+import { FormattedMessage } from "react-intl";
 import {
   selectMatches,
   setMatches,
-  selectMapNames,
-  setMapNames,
   selectMatchShowed,
   setMatchShowed,
   selectTournamentsData,
@@ -23,6 +20,8 @@ import {
   selectUnstartedTournaments,
   setUnstartedTournaments,
   deleteUnstartedTournament,
+  setMaps,
+  selectMaps,
 } from "store/reducers/TournamentsSlice";
 import {
   setPlayerGames,
@@ -39,14 +38,12 @@ const TournamentProgress: FC = () => {
   const matchesWebSocketsRef = useRef<{ [key: number]: WebSocket }>({});
   const tournamentsWebSocketRef = useRef<WebSocket>();
   const matches = useAppSelector(selectMatches);
-  const mapNames = useAppSelector(selectMapNames);
   const matchShowed = useAppSelector(selectMatchShowed);
   const tournamentsData = useAppSelector(selectTournamentsData);
   const unstartedTournaments = useAppSelector(selectUnstartedTournaments);
   const players = useAppSelector(selectPlayers);
+  const maps = useAppSelector(selectMaps);
   const dispatch = useAppDispatch();
-  let mapSendTimeout: NodeJS.Timeout;
-  const intl = useIntl();
 
   const matchesWebSocketFunc = (tournament: ITournamentApiResponse) => {
     const matchesWebSocket = new WebSocket(
@@ -70,23 +67,6 @@ const TournamentProgress: FC = () => {
           matches: message,
         })
       );
-      message.forEach((match: IMatch) => {
-        if (match.map !== null) {
-          dispatch(
-            setMapNames({
-              matchId: match.id,
-              mapNames: match.map,
-            })
-          );
-        } else {
-          dispatch(
-            setMapNames({
-              matchId: match.id,
-              mapNames: "",
-            })
-          );
-        }
-      });
     };
 
     matchesWebSocket.onclose = () => {
@@ -117,7 +97,8 @@ const TournamentProgress: FC = () => {
 
     tournamentsWebSocket.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      dispatch(setTournamentsData(message[0]));
+      dispatch(setTournamentsData(message.tournaments));
+      dispatch(setMaps(message.maps));
     };
 
     tournamentsWebSocket.onclose = () => {
@@ -227,7 +208,9 @@ const TournamentProgress: FC = () => {
                           {tournament?.opponent.name}
                         </h2>
                         <Tooltip id={key} border="1px solid red">
-                          <h3>Add a new match</h3>
+                          <h3>
+                            <FormattedMessage id="addMatch" />
+                          </h3>
                         </Tooltip>
                         <button
                           data-tooltip-id={key}
@@ -449,39 +432,39 @@ const TournamentProgress: FC = () => {
                               <span className={classes.plug}></span>
                             </div>
                             <div className={classes.matchLineBottom}>
-                              <input
-                                type="text"
-                                className={classes.input}
-                                placeholder={intl.formatMessage({
-                                  id: "mapLabel",
-                                })}
-                                value={mapNames[parseInt(key2)]}
+                              <select
+                                className={classes.select}
+                                value={
+                                  matches[parseInt(key)][parseInt(key2)].map
+                                    ? matches[parseInt(key)][parseInt(key2)].map
+                                    : 0
+                                }
                                 onChange={(event) => {
-                                  if (mapSendTimeout) {
-                                    clearTimeout(mapSendTimeout);
-                                  }
-                                  dispatch(
-                                    setMapNames({
-                                      matchId: parseInt(key2),
-                                      mapNames: event.target.value,
+                                  matchesWebSocketsRef.current[
+                                    parseInt(key)
+                                  ].send(
+                                    JSON.stringify({
+                                      action: "update",
+                                      updated_field:
+                                        matches[parseInt(key)][parseInt(key2)]
+                                          .id,
+                                      updated_column: "map",
+                                      updated_value: event.target.value,
                                     })
                                   );
-                                  mapSendTimeout = setTimeout(() => {
-                                    matchesWebSocketsRef.current[
-                                      parseInt(key)
-                                    ].send(
-                                      JSON.stringify({
-                                        action: "update",
-                                        updated_field:
-                                          matches[parseInt(key)][parseInt(key2)]
-                                            .id,
-                                        updated_column: "map",
-                                        updated_value: event.target.value,
-                                      })
-                                    );
-                                  }, 1000);
                                 }}
-                              />
+                              >
+                                <option value="0" disabled>
+                                  <FormattedMessage id="mapLabel" />
+                                </option>
+                                {maps.map((map) => {
+                                  return (
+                                    <option key={map.id} value={map.id}>
+                                      {map.name}
+                                    </option>
+                                  );
+                                })}
+                              </select>
                               <span className={classes.plug1}></span>
                               <select
                                 className={classes.select}

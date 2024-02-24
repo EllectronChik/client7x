@@ -5,11 +5,11 @@ import classes from "./TournamentAdminProgress.module.scss";
 import {
   selectMatches,
   setMatches,
-  setMapNames,
   selectTournamentsData,
   setTournamentsData,
   setLocalTimes,
   setMatchEdit,
+  setMaps,
 } from "store/reducers/TournamentsAdminSlice";
 import { IMatch } from "models/IMatch";
 import { ITournamentAdmin } from "models/ITournamentAdmin";
@@ -48,7 +48,8 @@ const TournamentAdminProgress: FC = () => {
 
     tournamentsWebSocket.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      dispatch(setTournamentsData(message));
+      dispatch(setTournamentsData(message.tournaments));
+      dispatch(setMaps(message.maps));
     };
 
     tournamentsWebSocket.onclose = () => {
@@ -84,23 +85,6 @@ const TournamentAdminProgress: FC = () => {
           matches: message,
         })
       );
-      message.forEach((match: IMatch) => {
-        if (match.map !== null) {
-          dispatch(
-            setMapNames({
-              matchId: match.id,
-              mapNames: match.map,
-            })
-          );
-        } else {
-          dispatch(
-            setMapNames({
-              matchId: match.id,
-              mapNames: "",
-            })
-          );
-        }
-      });
     };
 
     matchesWebSocket.onclose = () => {
