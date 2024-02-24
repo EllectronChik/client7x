@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { IInfoTours } from "models/IInfoTours";
 import { RootState } from "store/store";
 
 interface IPrevSeasons {
