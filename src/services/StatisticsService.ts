@@ -3,25 +3,38 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 interface IStatistics {
   playerCnt: number;
   maxTeamsInSeasonCnt: number;
-  playerGmLeagueCnt: number;
-  playerMLeagueCnt: number;
-  playerDmLeagueCnt: number;
-  otherLeaguesCnt: number;
-  playerZergCnt: number;
-  playerTerranCnt: number;
-  playerProtossCnt: number;
-  playerRandomCnt: number;
   inSeasonTeams: {
-    [teamId: string]: number;
-  };
-  matchesCnt: number;
-  pvzCnt: number;
-  tvpCnt: number;
-  tvzCnt: number;
-  pvzProtossWins: number;
-  tvpTerranWins: number;
-  tvzTerranWins: number;
-  mirrorsCnt: number;
+    number: number;
+    teamCount: number;
+  }[];
+  leagueStats: {
+    league: number;
+    playerCount: number;
+  }[];
+  raceStats: {
+    race: number;
+    playerCount: number;
+  }[];
+  matchStats: {
+    totalMatches: number;
+    mirrors: number;
+    tvzCount: number;
+    tvzTerranWins: number;
+    tvpCount: number;
+    tvpTerranWins: number;
+    pvzCount: number;
+    pvzProtossWins: number;
+  }
+  maps: {
+    id: number;
+    name: string;
+    tvzCount: number;
+    tvzTerranWins: number;
+    tvpCount: number;
+    tvpTerranWins: number;
+    pvzCount: number;
+    pvzProtossWins: number;
+  }[]
 }
 
 export const StatisticsApi = createApi({
