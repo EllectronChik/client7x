@@ -8,25 +8,22 @@ import { useCookies } from "react-cookie";
 function App() {
   const [cookies] = useCookies(["locale"]);
   let language = window.navigator.language;
-  if (language === undefined) {
-    language = LOCALES.ENGLISH;
-  } else if (language === "ru-UA" || language === "uk-UA") {
-    language = LOCALES.UKRAINIAN;
-  } else if (language === "ru" || language === "ru-RU") {
-    language = LOCALES.RUSSIAN;
-  } else {
-    language = LOCALES.ENGLISH;
-  }
 
   if (cookies.locale) {
     language = cookies.locale;
+  } else {
+    Array.from(Object.keys(LOCALES)).forEach((key) => {
+      if (LOCALES[key].value.split("-")[0].indexOf(language) !== -1) {
+        language = LOCALES[key].value;
+      }
+    });
   }
   return (
     <div className="App">
       <IntlProvider
         messages={MESSAGES[language]}
         locale={language}
-        defaultLocale={LOCALES.ENGLISH}
+        defaultLocale={LOCALES.ENGLISH.value}
       >
         <AppRouter />
       </IntlProvider>
