@@ -1,0 +1,31 @@
+@import '@settings.scss';
+
+.container {
+  @include container();
+  width: 1400px;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-around;
+  color: $clrLight;
+  margin-top: 35px;
+  .title {
+    font-size: 160px;
+    text-align: center
+  }
+  .subtitle {
+    font-size: 40px;
+  }
+  .sectitle {
+    text-align: center;
+    font-size: 35px;
+    .link {
+      font-size: 25px;
+      color: $clrLight;
+      text-decoration: underline;
+      &:hover {
+        cursor: pointer;
+        font-style: italic;
+      }
+    }
+  }
+}
