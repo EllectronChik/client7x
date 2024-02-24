@@ -27,10 +27,12 @@
       display: flex;
       align-items: center;
       color: $clrLight;
-      gap: 25px;
 
       .teamCount {
-        width: 40px;
+        width: 50px;
+      }
+      .seasonName {
+        width: 110px;
       }
 
       .lineBox {

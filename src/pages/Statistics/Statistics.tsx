@@ -29,19 +29,18 @@ const Statistics: FC = () => {
       statistics.maps.forEach((map) => {
         const tvpTerranWinPercentage =
           map.tvpCount !== 0 ? (map.tvpTerranWins / map.tvpCount) * 100 : null;
-        const tvpProtossWinPercentage = tvpTerranWinPercentage !== null
-          ? 100 - tvpTerranWinPercentage
-          : null;
+        const tvpProtossWinPercentage =
+          tvpTerranWinPercentage !== null ? 100 - tvpTerranWinPercentage : null;
         const tvzTerranWinPercentage =
           map.tvzCount !== 0 ? (map.tvzTerranWins / map.tvzCount) * 100 : null;
-        const tvzZergWinPercentage = tvzTerranWinPercentage !== null
-          ? 100 - tvzTerranWinPercentage
-          : null;
+        const tvzZergWinPercentage =
+          tvzTerranWinPercentage !== null ? 100 - tvzTerranWinPercentage : null;
         const pvzProtossWinPercentage =
           map.pvzCount !== 0 ? (map.pvzProtossWins / map.pvzCount) * 100 : null;
-        const pvzZergWinPercentage = pvzProtossWinPercentage !== null
-          ? 100 - pvzProtossWinPercentage
-          : null;
+        const pvzZergWinPercentage =
+          pvzProtossWinPercentage !== null
+            ? 100 - pvzProtossWinPercentage
+            : null;
         const maxPercentage = Math.max(
           tvpTerranWinPercentage ? tvpTerranWinPercentage : 0,
           tvzTerranWinPercentage ? tvzTerranWinPercentage : 0,
@@ -58,7 +57,7 @@ const Statistics: FC = () => {
           tvpProtossWinPercentage ? tvpProtossWinPercentage : 0,
           tvzZergWinPercentage ? tvzZergWinPercentage : 0
         );
-        
+
         setStrongestRaces((prev) => ({
           ...prev,
           [map.id]:
@@ -109,7 +108,7 @@ const Statistics: FC = () => {
         {statistics &&
           statistics.inSeasonTeams.map((inSeasonTeam, key) => (
             <div key={key} className={classes.appliedTeam}>
-              <h3>
+              <h3 className={classes.seasonName}>
                 <FormattedMessage id="season" /> {inSeasonTeam.number}
               </h3>
               <h3 className={classes.teamCount}>{inSeasonTeam.teamCount}</h3>
@@ -328,10 +327,16 @@ const Statistics: FC = () => {
             <h3 className={classes.mapStatistics}>TvZ</h3>
             <h3 className={classes.mapStatistics}>TvP</h3>
             <h3 className={classes.mapStatistics}>PvZ</h3>
-            {window.innerWidth > 576 && 
-            <h3 className={classes.mapStatistics}><FormattedMessage id="strongest" /></h3>}
-            {window.innerWidth > 576 &&
-            <h3 className={classes.mapStatistics}><FormattedMessage id="weakest" /></h3>}
+            {window.innerWidth > 576 && (
+              <h3 className={classes.mapStatistics}>
+                <FormattedMessage id="strongest" />
+              </h3>
+            )}
+            {window.innerWidth > 576 && (
+              <h3 className={classes.mapStatistics}>
+                <FormattedMessage id="weakest" />
+              </h3>
+            )}
           </div>
         </div>
         {statistics &&
@@ -369,28 +374,32 @@ const Statistics: FC = () => {
                     ({map.pvzProtossWins} : {map.pvzCount - map.pvzProtossWins})
                   </p>
                 </div>
-                {window.innerWidth > 576 && <div className={classes.mapStatistics}>
-                  <h3>
-                    {strongestRaces[map.id] === 0
-                      ? "-"
-                      : strongestRaces[map.id] === 1
-                      ? intl.formatMessage({ id: "zerg" })
-                      : strongestRaces[map.id] === 2
-                      ? intl.formatMessage({ id: "terran" })
-                      : intl.formatMessage({ id: "protoss" })}
-                  </h3>
-                </div>}
-                {window.innerWidth > 576 && <div className={classes.mapStatistics}>
-                  <h3>
-                    {weakestRaces[map.id] === 0
-                      ? "-"
-                      : weakestRaces[map.id] === 1
-                      ? intl.formatMessage({ id: "zerg" })
-                      : weakestRaces[map.id] === 2
-                      ? intl.formatMessage({ id: "terran" })
-                      : intl.formatMessage({ id: "protoss" })}
-                  </h3>
-                </div>}
+                {window.innerWidth > 576 && (
+                  <div className={classes.mapStatistics}>
+                    <h3>
+                      {strongestRaces[map.id] === 0
+                        ? "-"
+                        : strongestRaces[map.id] === 1
+                        ? intl.formatMessage({ id: "zerg" })
+                        : strongestRaces[map.id] === 2
+                        ? intl.formatMessage({ id: "terran" })
+                        : intl.formatMessage({ id: "protoss" })}
+                    </h3>
+                  </div>
+                )}
+                {window.innerWidth > 576 && (
+                  <div className={classes.mapStatistics}>
+                    <h3>
+                      {weakestRaces[map.id] === 0
+                        ? "-"
+                        : weakestRaces[map.id] === 1
+                        ? intl.formatMessage({ id: "zerg" })
+                        : weakestRaces[map.id] === 2
+                        ? intl.formatMessage({ id: "terran" })
+                        : intl.formatMessage({ id: "protoss" })}
+                    </h3>
+                  </div>
+                )}
               </div>
             </div>
           ))}
