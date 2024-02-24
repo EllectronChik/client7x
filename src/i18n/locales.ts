@@ -6,5 +6,5 @@ export const LOCALES: {
 } = {
   ENGLISH: { value: "en", name: "English" },
   RUSSIAN: { value: "ru", name: "Русский" },
-  UKRAINIAN: { value: "uk-UA", name: "Українська" },
+  UKRAINIAN: { value: "uk", name: "Українська" },
 };
