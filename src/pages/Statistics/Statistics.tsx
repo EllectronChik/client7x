@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import classes from "./Statistics.module.scss";
 import { StatisticsApi } from "services/StatisticsService";
 import grandmaster from "@assets/images/leagueMarks/7.webp";
@@ -12,11 +12,90 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 const Statistics: FC = () => {
   const { data: statistics } = StatisticsApi.useFetchStatisticsQuery();
+  const [strongestRaces, setStrongestRaces] = useState<{
+    [key: number]: number;
+  }>({});
+  const [weakestRaces, setWeakestRaces] = useState<{
+    [key: number]: number;
+  }>({});
   const intl = useIntl();
 
   useEffect(() => {
     document.title = intl.formatMessage({ id: "statistic" });
   }, [intl]);
+
+  useEffect(() => {
+    if (statistics) {
+      statistics.maps.forEach((map) => {
+        const tvpTerranWinPercentage =
+          map.tvpCount !== 0 ? (map.tvpTerranWins / map.tvpCount) * 100 : null;
+        const tvpProtossWinPercentage = tvpTerranWinPercentage !== null
+          ? 100 - tvpTerranWinPercentage
+          : null;
+        const tvzTerranWinPercentage =
+          map.tvzCount !== 0 ? (map.tvzTerranWins / map.tvzCount) * 100 : null;
+        const tvzZergWinPercentage = tvzTerranWinPercentage !== null
+          ? 100 - tvzTerranWinPercentage
+          : null;
+        const pvzProtossWinPercentage =
+          map.pvzCount !== 0 ? (map.pvzProtossWins / map.pvzCount) * 100 : null;
+        const pvzZergWinPercentage = pvzProtossWinPercentage !== null
+          ? 100 - pvzProtossWinPercentage
+          : null;
+        const maxPercentage = Math.max(
+          tvpTerranWinPercentage ? tvpTerranWinPercentage : 0,
+          tvzTerranWinPercentage ? tvzTerranWinPercentage : 0,
+          pvzProtossWinPercentage ? pvzProtossWinPercentage : 0,
+          pvzZergWinPercentage ? pvzZergWinPercentage : 0,
+          tvpProtossWinPercentage ? tvpProtossWinPercentage : 0,
+          tvzZergWinPercentage ? tvzZergWinPercentage : 0
+        );
+        const minPercentage = Math.min(
+          tvpTerranWinPercentage ? tvpTerranWinPercentage : 0,
+          tvzTerranWinPercentage ? tvzTerranWinPercentage : 0,
+          pvzProtossWinPercentage ? pvzProtossWinPercentage : 0,
+          pvzZergWinPercentage ? pvzZergWinPercentage : 0,
+          tvpProtossWinPercentage ? tvpProtossWinPercentage : 0,
+          tvzZergWinPercentage ? tvzZergWinPercentage : 0
+        );
+        
+        setStrongestRaces((prev) => ({
+          ...prev,
+          [map.id]:
+            maxPercentage === tvpProtossWinPercentage
+              ? 3
+              : maxPercentage === pvzProtossWinPercentage
+              ? 3
+              : maxPercentage === tvpTerranWinPercentage
+              ? 2
+              : maxPercentage === tvzTerranWinPercentage
+              ? 2
+              : maxPercentage === pvzZergWinPercentage
+              ? 1
+              : maxPercentage === tvzZergWinPercentage
+              ? 1
+              : 0,
+        }));
+        setWeakestRaces((prev) => ({
+          ...prev,
+          [map.id]:
+            minPercentage === tvpProtossWinPercentage
+              ? 3
+              : minPercentage === pvzProtossWinPercentage
+              ? 3
+              : minPercentage === tvpTerranWinPercentage
+              ? 2
+              : minPercentage === tvzTerranWinPercentage
+              ? 2
+              : minPercentage === pvzZergWinPercentage
+              ? 1
+              : minPercentage === tvzZergWinPercentage
+              ? 1
+              : 0,
+        }));
+      });
+    }
+  }, [statistics]);
 
   return (
     <div className={classes.container}>
@@ -28,19 +107,19 @@ const Statistics: FC = () => {
           <FormattedMessage id="teamsParticipating" />
         </h3>
         {statistics &&
-          Array.from(Object.keys(statistics.inSeasonTeams)).map((key) => (
+          statistics.inSeasonTeams.map((inSeasonTeam, key) => (
             <div key={key} className={classes.appliedTeam}>
               <h3>
-                <FormattedMessage id="season" /> {key}
+                <FormattedMessage id="season" /> {inSeasonTeam.number}
               </h3>
-              <h3>{statistics.inSeasonTeams[key]}</h3>
+              <h3 className={classes.teamCount}>{inSeasonTeam.teamCount}</h3>
               {statistics.maxTeamsInSeasonCnt !== 0 && (
                 <div className={classes.lineBox}>
                   <div
                     className={classes.line}
                     style={{
                       width: `${
-                        (100 * statistics.inSeasonTeams[key]) /
+                        (100 * inSeasonTeam.teamCount) /
                         statistics.maxTeamsInSeasonCnt
                       }%`,
                     }}
@@ -63,25 +142,58 @@ const Statistics: FC = () => {
               <h3>
                 <FormattedMessage id="otherLeagues" />:
               </h3>
-              <h3>{statistics.otherLeaguesCnt}</h3>
+              <h3>
+                {
+                  statistics.leagueStats.find((l) => l.league === 0)
+                    ?.playerCount
+                }
+              </h3>
             </div>
           </div>
           <div className={classes.playerStatsBox}>
             <div className={classes.playerBox}>
-              <img className={classes.techImg} src={zerg} alt="zerg" />
-              <h3>{statistics.playerZergCnt}</h3>
+              <img
+                className={classes.techImg}
+                src={zerg}
+                alt="zerg"
+                draggable={false}
+              />
+              <h3>
+                {statistics.raceStats.find((r) => r.race === 1)?.playerCount}
+              </h3>
             </div>
             <div className={classes.playerBox}>
-              <img className={classes.techImg} src={terran} alt="terran" />
-              <h3>{statistics.playerTerranCnt}</h3>
+              <img
+                className={classes.techImg}
+                src={terran}
+                alt="terran"
+                draggable={false}
+              />
+              <h3>
+                {statistics.raceStats.find((r) => r.race === 2)?.playerCount}
+              </h3>
             </div>
             <div className={classes.playerBox}>
-              <img className={classes.techImg} src={protoss} alt="protoss" />
-              <h3>{statistics.playerProtossCnt}</h3>
+              <img
+                className={classes.techImg}
+                src={protoss}
+                alt="protoss"
+                draggable={false}
+              />
+              <h3>
+                {statistics.raceStats.find((r) => r.race === 3)?.playerCount}
+              </h3>
             </div>
             <div className={classes.playerBox}>
-              <img className={classes.techImg} src={random} alt="random" />
-              <h3>{statistics.playerRandomCnt}</h3>
+              <img
+                className={classes.techImg}
+                src={random}
+                alt="random"
+                draggable={false}
+              />
+              <h3>
+                {statistics.raceStats.find((r) => r.race === 4)?.playerCount}
+              </h3>
             </div>
           </div>
           <div className={classes.playerStatsBox}>
@@ -90,16 +202,42 @@ const Statistics: FC = () => {
                 className={classes.techImg}
                 src={grandmaster}
                 alt="grandmaster"
+                draggable={false}
               />
-              <h3>{statistics.playerGmLeagueCnt}</h3>
+              <h3>
+                {
+                  statistics.leagueStats.find((l) => l.league === 7)
+                    ?.playerCount
+                }
+              </h3>
             </div>
             <div className={classes.playerBox}>
-              <img className={classes.techImg} src={master} alt="master" />
-              <h3>{statistics.playerMLeagueCnt}</h3>
+              <img
+                className={classes.techImg}
+                src={master}
+                alt="master"
+                draggable={false}
+              />
+              <h3>
+                {
+                  statistics.leagueStats.find((l) => l.league === 6)
+                    ?.playerCount
+                }
+              </h3>
             </div>
             <div className={classes.playerBox}>
-              <img className={classes.techImg} src={diamond} alt="diamond" />
-              <h3>{statistics.playerDmLeagueCnt}</h3>
+              <img
+                className={classes.techImg}
+                src={diamond}
+                alt="diamond"
+                draggable={false}
+              />
+              <h3>
+                {
+                  statistics.leagueStats.find((l) => l.league === 5)
+                    ?.playerCount
+                }
+              </h3>
             </div>
           </div>
         </div>
@@ -111,67 +249,152 @@ const Statistics: FC = () => {
               <h3>
                 <FormattedMessage id="totalGames" />:
               </h3>
-              <h3>{statistics.matchesCnt}</h3>
+              <h3>{statistics.matchStats.totalMatches}</h3>
             </div>
             <div className={classes.totalMatches}>
               <h3>
                 <FormattedMessage id="mirrors" />:{" "}
               </h3>
-              <h3>{statistics.mirrorsCnt}</h3>
+              <h3>{statistics.matchStats.mirrors}</h3>
             </div>
           </div>
           <div className={classes.matchesBox}>
-            {statistics.tvzCnt > 0 && (
+            {statistics.matchStats.tvzCount > 0 && (
               <div className={classes.matchBox}>
                 <h3>TvZ</h3>
                 <h3>
                   {(
-                    (statistics.tvzTerranWins / statistics.tvzCnt) *
+                    (statistics.matchStats.tvzTerranWins /
+                      statistics.matchStats.tvzCount) *
                     100
                   ).toFixed(2)}
                   %
                 </h3>
                 <p>
-                  ({statistics.tvzTerranWins} :{" "}
-                  {statistics.tvzCnt - statistics.tvzTerranWins})
+                  ({statistics.matchStats.tvzTerranWins} :{" "}
+                  {statistics.matchStats.tvzCount -
+                    statistics.matchStats.tvzTerranWins}
+                  )
                 </p>
               </div>
             )}
-            {statistics.tvpCnt > 0 && (
+            {statistics.matchStats.tvpCount > 0 && (
               <div className={classes.matchBox}>
                 <h3>TvP</h3>
                 <h3>
                   {(
-                    (statistics.tvpTerranWins / statistics.tvpCnt) *
+                    (statistics.matchStats.tvpTerranWins /
+                      statistics.matchStats.tvpCount) *
                     100
                   ).toFixed(2)}
                   %
                 </h3>
                 <p>
-                  ({statistics.tvpTerranWins} :{" "}
-                  {statistics.tvpCnt - statistics.tvpTerranWins})
+                  ({statistics.matchStats.tvpTerranWins} :{" "}
+                  {statistics.matchStats.tvpCount -
+                    statistics.matchStats.tvpTerranWins}
+                  )
                 </p>
               </div>
             )}
-            {statistics.pvzCnt > 0 && (
+            {statistics.matchStats.pvzCount > 0 && (
               <div className={classes.matchBox}>
                 <h3>PvZ</h3>
                 <h3>
                   {(
-                    (statistics.pvzProtossWins / statistics.pvzCnt) *
+                    (statistics.matchStats.pvzProtossWins /
+                      statistics.matchStats.pvzCount) *
                     100
                   ).toFixed(2)}
                   %
                 </h3>
                 <p>
-                  ({statistics.pvzProtossWins} :{" "}
-                  {statistics.pvzCnt - statistics.pvzProtossWins})
+                  ({statistics.matchStats.pvzProtossWins} :{" "}
+                  {statistics.matchStats.pvzCount -
+                    statistics.matchStats.pvzProtossWins}
+                  )
                 </p>
               </div>
             )}
           </div>
         </div>
       )}
+      <div className={classes.mapStats}>
+        <div className={classes.mapBox}>
+          <h3 className={classes.mapName}>
+            <FormattedMessage id="mapLabel" />
+          </h3>
+          <div className={classes.mapStatsBox}>
+            <h3 className={classes.mapStatistics}>TvZ</h3>
+            <h3 className={classes.mapStatistics}>TvP</h3>
+            <h3 className={classes.mapStatistics}>PvZ</h3>
+            {window.innerWidth > 576 && 
+            <h3 className={classes.mapStatistics}><FormattedMessage id="strongest" /></h3>}
+            {window.innerWidth > 576 &&
+            <h3 className={classes.mapStatistics}><FormattedMessage id="weakest" /></h3>}
+          </div>
+        </div>
+        {statistics &&
+          statistics.maps.map((map) => (
+            <div className={classes.mapBox} key={map.id}>
+              <h3 className={classes.mapName}>{map.name}</h3>
+              <div className={classes.mapStatsBox}>
+                <div className={classes.mapStatistics}>
+                  <h3>
+                    {map.tvzCount > 0
+                      ? `${(map.tvzTerranWins / map.tvzCount) * 100}%`
+                      : "0%"}
+                  </h3>
+                  <p>
+                    ({map.tvzTerranWins} : {map.tvzCount - map.tvzTerranWins})
+                  </p>
+                </div>
+                <div className={classes.mapStatistics}>
+                  <h3>
+                    {map.tvpCount > 0
+                      ? `${(map.tvpTerranWins / map.tvpCount) * 100}%`
+                      : "0%"}
+                  </h3>
+                  <p>
+                    ({map.tvpTerranWins} : {map.tvpCount - map.tvpTerranWins})
+                  </p>
+                </div>
+                <div className={classes.mapStatistics}>
+                  <h3>
+                    {map.pvzCount > 0
+                      ? `${(map.pvzProtossWins / map.pvzCount) * 100}%`
+                      : "0%"}
+                  </h3>
+                  <p>
+                    ({map.pvzProtossWins} : {map.pvzCount - map.pvzProtossWins})
+                  </p>
+                </div>
+                {window.innerWidth > 576 && <div className={classes.mapStatistics}>
+                  <h3>
+                    {strongestRaces[map.id] === 0
+                      ? "-"
+                      : strongestRaces[map.id] === 1
+                      ? intl.formatMessage({ id: "zerg" })
+                      : strongestRaces[map.id] === 2
+                      ? intl.formatMessage({ id: "terran" })
+                      : intl.formatMessage({ id: "protoss" })}
+                  </h3>
+                </div>}
+                {window.innerWidth > 576 && <div className={classes.mapStatistics}>
+                  <h3>
+                    {weakestRaces[map.id] === 0
+                      ? "-"
+                      : weakestRaces[map.id] === 1
+                      ? intl.formatMessage({ id: "zerg" })
+                      : weakestRaces[map.id] === 2
+                      ? intl.formatMessage({ id: "terran" })
+                      : intl.formatMessage({ id: "protoss" })}
+                  </h3>
+                </div>}
+              </div>
+            </div>
+          ))}
+      </div>
     </div>
   );
 };
