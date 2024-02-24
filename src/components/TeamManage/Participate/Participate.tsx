@@ -29,6 +29,13 @@ import { TournamentApi } from "services/TournamentService";
 import TournamentCard from "./TournamentCard/TournamentCard";
 import InClanPlayerBox from "components/InClanPlayerBox/InClanPlayerBox";
 
+/**
+ * Participate component handles the participation of a team in a tournament.
+ * It displays tournament details, allows teams to register for the tournament,
+ * displays upcoming matches, and manages registered players.
+ *
+ * @param {HTMLProps<HTMLDivElement>} props - Props for the Participate component
+ */
 const Participate: FC<HTMLProps<HTMLDivElement>> = ({ ...props }) => {
   const intl = useIntl();
   const [cookies] = useCookies(["token", "userId", "locale"]);

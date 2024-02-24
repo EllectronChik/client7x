@@ -20,6 +20,13 @@ import GameAProgress from "../GameAProgrss/GameAProgress";
 import GridDistribution from "../GridDistribution/GridDistribution";
 import { FormattedMessage } from "react-intl";
 
+/**
+ * TournamentAdminProgress component
+ * 
+ * This component is responsible for displaying the progress of tournaments in the admin panel.
+ * It subscribes to WebSocket updates for tournaments and matches, handles match editing and deletion,
+ * and renders the tournament progress including group stage, grid distribution, and playoff stages.
+ */
 const TournamentAdminProgress: FC = () => {
   const [cookies] = useCookies(["token", "userId"]);
   const matches = useAppSelector(selectMatches);

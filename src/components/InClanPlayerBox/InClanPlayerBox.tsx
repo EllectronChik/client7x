@@ -9,6 +9,16 @@ interface IProps extends HTMLProps<HTMLDivElement> {
   player: IPlayer;
 }
 
+/**
+ * InClanPlayerBox component
+ *
+ * This component represents a box displaying information about a player within a clan.
+ * It includes the player's avatar, username, MMR (Match Making Rating), total games played, and wins.
+ *
+ * @param props - HTMLProps props for the div element representing the player box
+ * @param props.player - Information about the player to be displayed
+ * @param props.onClick - Event handler for the click event on the player box
+ */
 const InClanPlayerBox: FC<IProps> = ({ ...props }) => {
   return (
     <div

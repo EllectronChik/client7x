@@ -5,6 +5,12 @@ import { TournamentApi } from "services/TournamentService";
 import { Link } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
 
+/**
+ * Tournament Component
+ * 
+ * This component displays information about a specific tournament, including team details,
+ * match schedules, and match results.
+ */
 const Tournament: FC = () => {
   const params = useParams();
   const { data: tournamentData } = TournamentApi.useFetchTournamentByIdQuery(

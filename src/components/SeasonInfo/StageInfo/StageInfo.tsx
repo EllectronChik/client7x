@@ -9,6 +9,16 @@ interface IProps {
   col: number;
 }
 
+/**
+ * StageInfo Component
+ * 
+ * This component displays information about teams and scores for a particular stage of a tournament.
+ * 
+ * @param tours - An object containing information about the tournament, including playoff details.
+ * @param gridRow - The row index within the playoff grid.
+ * @param row - The current row index.
+ * @param col - The current column index.
+ */
 const StageInfo: FC<IProps> = ({ tours, gridRow, row, col }) => {
   return (
     <div>

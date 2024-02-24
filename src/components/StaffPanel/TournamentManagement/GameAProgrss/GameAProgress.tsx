@@ -27,6 +27,19 @@ interface IProps {
   setDeletedMatches: Dispatch<SetStateAction<number[]>>;
 }
 
+/**
+ * GameAProgress Component
+ * 
+ * This component represents the progress of a game within a tournament. It displays tournament information, 
+ * allows for editing match details, and provides functionality to update match status.
+ * 
+ * @param tournament - The tournament data for which the progress is displayed.
+ * @param tournamentsWebSocketRef - Reference to the WebSocket connection for tournament updates.
+ * @param matchesWebSocketsRef - Reference to the WebSocket connections for match updates.
+ * @param matchesWebSocketFunc - Function to establish WebSocket connection for matches.
+ * @param deletedMatches - Array of IDs of deleted matches.
+ * @param setDeletedMatches - Function to update the array of deleted match IDs.
+ */
 const GameAProgress: FC<IProps> = ({
   tournament,
   tournamentsWebSocketRef,

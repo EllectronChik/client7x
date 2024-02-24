@@ -5,6 +5,13 @@ import SeasonInfo from "components/SeasonInfo/SeasonInfo";
 import { SeasonApi } from "services/SeasonService";
 import { FormattedMessage, useIntl } from "react-intl";
 
+/**
+ * Season Component
+ * 
+ * This component renders information about a specific season.
+ * It fetches data for the season using SeasonApi and displays
+ * the season's title and additional information.
+ */
 const Season: FC = () => {
   const params = useParams();
   const intl = useIntl();

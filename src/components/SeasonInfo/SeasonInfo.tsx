@@ -9,6 +9,15 @@ interface IProps {
   gridRow: number;
 }
 
+/**
+ * SeasonInfo component
+ * 
+ * This component displays information about the season, including group standings and playoff stages.
+ * 
+ * @param tours - Information about the tours in the season
+ * @param gridRow - The number of rows in the playoff grid
+ */
+
 const SeasonInfo: FC<IProps> = ({ tours, gridRow }) => {
   return (
     <div className={classes.seasonContent}>

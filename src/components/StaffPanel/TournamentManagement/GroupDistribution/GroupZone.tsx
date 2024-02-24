@@ -14,6 +14,16 @@ interface IProps extends HTMLProps<HTMLDivElement> {
   group: IGroup;
 }
 
+/**
+ * GroupZone Component
+ * 
+ * This component represents a group zone where teams can be dropped into. It displays a group header
+ * with a group mark and lists the teams within the group. Teams can be dragged and dropped into this 
+ * zone.
+ * 
+ * @param props - HTMLProps props for the div element representing the group zone
+ * @param props.group - The group object containing information about the group
+ */
 const GroupZone: FC<IProps> = ({ ...props }) => {
   const dispatch = useAppDispatch();
   const [cookies] = useCookies(["token"]);

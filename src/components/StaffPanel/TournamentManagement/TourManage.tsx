@@ -16,6 +16,11 @@ import { isMobile } from "react-device-detect";
 import AddAdmin from "./AddAdmin/AddAdmin";
 import MapsDistribution from "./MapsDistribution/MapsDistribution";
 
+/**
+ * TourManage component
+ * 
+ * This component manages tournament seasons. It handles the logic for starting, managing, and displaying tournament seasons.
+ */
 const TourManage: FC = () => {
   const {
     data: currentSeason,

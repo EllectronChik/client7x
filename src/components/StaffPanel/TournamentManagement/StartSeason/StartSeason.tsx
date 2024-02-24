@@ -11,6 +11,16 @@ interface StartSeasonProps extends HTMLProps<HTMLFormElement> {
   timeZoneOffsetString: string;
 }
 
+/**
+ * StartSeason Component
+ * 
+ * This component represents the form for starting a new season in the application.
+ * It allows users to specify the start time for the season and initiates the process
+ * to start a new season upon submission.
+ * @param {StartSeasonProps} props - Props for the StartSeason component.
+ * @param {Dispatch<SetStateAction<boolean | undefined>>} props.setSeasonStarted - Function to set whether a season has started.
+ * @param {string} props.timeZoneOffsetString - String representing the timezone offset.
+ */
 const StartSeason: FC<StartSeasonProps> = ({ ...props }) => {
   const [startSeason, { error: seasonStartError }] =
     SeasonApi.useStartSeasonMutation();

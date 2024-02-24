@@ -24,6 +24,7 @@ import {
   setLeaguesCnt,
 } from "store/reducers/StartPageSlice";
 import Link7x from "components/UI/Link7x/Link7x";
+import { IInfoTours } from "models/IInfoTours";
 
 interface IPrevSeasons {
   [key: string]: {

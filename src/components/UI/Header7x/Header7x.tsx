@@ -11,6 +11,10 @@ import Button7x from "components/UI/Button7x/Button7x";
 import { useNavigate } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
 
+/**
+ * Header component for the 7x app.
+ * Handles navigation, authentication, and logout functionality.
+ */
 const Header7x: FC = () => {
   const [cookie] = useCookies(["token", "userId"]);
   const [boorgerOpen, setBoorgerOpen] = useState(false);

@@ -10,6 +10,19 @@ import protoss from "@assets/images/races/protoss.svg";
 import random from "@assets/images/races/random.svg";
 import { FormattedMessage, useIntl } from "react-intl";
 
+/**
+ * Statistics component displays various statistics related to a gaming platform, including player counts, match outcomes, and map statistics.
+ * 
+ * It fetches data from an API using the StatisticsApi hook provided by the StatisticsService.
+ * 
+ * The component is divided into several sections:
+ * - Teams Participating: Displays the number of teams participating in each season along with a graphical representation.
+ * - Player Stats: Shows the total number of players, distribution of players by race, and distribution of players by league.
+ * - Matches Stats: Displays the total number of matches played, along with win percentages for different matchup types (TvZ, TvP, PvZ).
+ * - Map Stats: Provides statistics for each map, including win percentages for different matchups and identification of strongest and weakest races on each map.
+ * 
+ * This component also uses the react-intl library for internationalization (i18n).
+ */
 const Statistics: FC = () => {
   const { data: statistics } = StatisticsApi.useFetchStatisticsQuery();
   const [strongestRaces, setStrongestRaces] = useState<{

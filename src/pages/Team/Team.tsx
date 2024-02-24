@@ -7,6 +7,10 @@ import playerDefault from "assets/images/player/default.svg";
 import { Link } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
 
+/**
+ * Functional component representing a team page.
+ * This component displays information about a specific team including its logo, name, tag, region, resources, players, tournaments, manager, and manager contacts.
+ */
 const Team: FC = () => {
   const params = useParams();
   const { data: teamData } = ClanApi.useFetchClanDataQuery(

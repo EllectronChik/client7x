@@ -13,6 +13,15 @@ interface IProps {
   clantag: string;
 }
 
+/**
+ * AddPlayers Component
+ * 
+ * This component allows the addition of players to a clan.
+ * It fetches new players from the API and displays them.
+ * Users can click on players to add them to the clan.
+ * 
+ * @param {string} clantag - The tag of the clan to which players will be added.
+ */
 const AddPlayers: FC<IProps> = ({ clantag }) => {
   const players = useAppSelector(selectPlayers);
   const dispatch = useAppDispatch();

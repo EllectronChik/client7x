@@ -7,6 +7,14 @@ interface IProps extends HTMLProps<HTMLDivElement> {
   team: IClan;
 }
 
+/**
+ * DraggableTeam component
+ * 
+ * This component represents a draggable team element. It displays the team's logo, name, and tag.
+ * 
+ * @param props - HTMLProps props for the div element representing the draggable team
+ * @param props.team - The team data containing information such as name, logo, and tag
+ */
 const DraggableTeam: FC<IProps> = ({ ...props }) => {
   const [{ isDragging }, dragRef] = useDrag({
     type: "team",

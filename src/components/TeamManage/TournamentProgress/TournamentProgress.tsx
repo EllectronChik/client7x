@@ -29,6 +29,13 @@ import {
   selectPlayers,
 } from "store/reducers/ClanSlice";
 
+/**
+ * TournamentProgress component
+ * 
+ * This component is responsible for displaying the progress of tournaments.
+ * It subscribes to WebSocket updates for tournaments and matches, handles match editing,
+ * and renders the tournament progress.
+ */
 const TournamentProgress: FC = () => {
   const [cookies] = useCookies(["token", "userId"]);
   const { data: myTeam } = ClanApi.useFetchClanByManagerQuery(cookies.userId);

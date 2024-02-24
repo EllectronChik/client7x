@@ -25,6 +25,11 @@ import {
 } from "store/reducers/AccountSlice";
 import TourManage from "components/StaffPanel/TournamentManagement/TourManage";
 
+/**
+ * Account Component
+ * 
+ * This component represents the user account page, where users can manage their teams, staff roles, and perform other account-related actions.
+ */
 const Account: FC = () => {
   const dispatch = useAppDispatch();
   const pageManager = useAppSelector(selectManagerPage);

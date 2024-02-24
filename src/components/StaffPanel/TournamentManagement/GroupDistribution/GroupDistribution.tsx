@@ -24,6 +24,12 @@ import { SeasonApi } from "services/SeasonService";
 import DraggableTeam from "./DraggableTeam";
 import GroupZone from "./GroupZone";
 
+/**
+ * GroupDistribution component
+ *
+ * This component handles the distribution of teams into groups for a tournament's group stage.
+ * It allows randomizing groups, adding groups, and managing undistributed teams.
+ */
 const GroupDistribution: FC = () => {
   const [cookies] = useCookies(["token"]);
   const { data: registredTeams, isLoading: registredTeamsLoading } =

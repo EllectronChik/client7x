@@ -2,6 +2,10 @@ import { FC, useEffect } from 'react';
 import classes from './NotFoundPage.module.scss';
 import { Link } from 'react-router-dom';
 
+/**
+ * NotFoundPage component renders a 404 error page when the requested page is not found.
+ * It sets the document title to 'Page not found' and provides a link to navigate back to the main page.
+ */
 const NotFoundPage: FC = () => {
 
   useEffect(() => {

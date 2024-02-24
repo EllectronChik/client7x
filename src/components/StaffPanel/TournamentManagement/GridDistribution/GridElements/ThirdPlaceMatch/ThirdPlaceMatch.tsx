@@ -20,6 +20,18 @@ interface IProps {
   ) => void;
 }
 
+/**
+ * ThirdPlaceMatch Component
+ * 
+ * This component represents the third place match section in a tournament grid.
+ * It allows users to select teams for the third place match.
+ * 
+ * @param gridRow - The grid row number where the component is positioned.
+ * @param lvlsTournaments - Object containing tournament levels and matches.
+ * @param teamDict - Dictionary containing information about teams participating in the tournament.
+ * @param handleSelectFirstTeam - Function to handle the selection of the first team for the match.
+ * @param handleSelectSecondTeam - Function to handle the selection of the second team for the match.
+ */
 const ThirdPlaceMatch: FC<IProps> = ({
   gridRow,
   lvlsTournaments,

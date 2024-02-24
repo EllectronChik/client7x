@@ -34,6 +34,13 @@ interface PlayersListProps {
   tag: string;
 }
 
+/**
+ * PlayersList component
+ * 
+ * This component displays a list of players, allowing the user to select players for a clan and create a new clan with selected players.
+ * 
+ * @param tag - A string representing the tag of the clan.
+ */
 const PlayersList: FC<PlayersListProps> = ({ tag }) => {
   const dispatch = useAppDispatch();
   const clan = useAppSelector(selectClan);

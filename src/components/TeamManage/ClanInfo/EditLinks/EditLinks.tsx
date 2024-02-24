@@ -25,6 +25,16 @@ interface IProps extends HTMLProps<HTMLDivElement> {
   managerResources?: IManagerResource[];
 }
 
+/**
+ * EditLinks Component
+ * 
+ * This component provides functionality to edit team resources and manager contacts.
+ * It allows adding, updating, and deleting team resources and manager contacts.
+ * 
+ * @param {Object} props - Props for the component.
+ * @param {ITeamResource[]} props.teamResources - An array of team resources.
+ * @param {IManagerResource[]} props.managerResources - An array of manager resources.
+ */
 const EditLinks: FC<IProps> = ({ ...props }) => {
   const [timeouts] = useState<{
     [key: number]: [

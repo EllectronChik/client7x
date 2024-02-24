@@ -21,6 +21,19 @@ interface IProps {
   ) => void;
 }
 
+/**
+ * FirstLvlTour component
+ * 
+ * This component represents the first level section of the tour grid.
+ * It allows users to select teams for matches in the first stage of the tournament.
+ * 
+ * @param row - The row index of the tournament grid.
+ * @param col - The column index of the tournament grid.
+ * @param lvlsTournaments - Object containing tournament data for different levels.
+ * @param teamDict - Dictionary object containing team information.
+ * @param handleSelectFirstTeam - Function to handle selection of the first team for a match.
+ * @param handleSelectSecondTeam - Function to handle selection of the second team for a match.
+ */
 const FirstLvlTour: FC<IProps> = ({ row, col, lvlsTournaments, teamDict, handleSelectFirstTeam, handleSelectSecondTeam }) => {
   return (
     <div className={classes.col}>

@@ -33,6 +33,13 @@ interface ISeasonApiResponse {
   results: ISeasonData[];
 }
 
+/**
+ * Archive Seasons Component
+ *
+ * This component displays a list of archived seasons including season number and winner.
+ * It allows sorting the seasons by season number or winner's name.
+ * It also implements lazy loading for fetching more seasons as the user scrolls.
+ */
 const ArchiveSeasons: FC = () => {
   const dispatch = useAppDispatch();
   const seasons = useAppSelector(selectSeasons);

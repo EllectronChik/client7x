@@ -9,6 +9,12 @@ import { useCookies } from "react-cookie";
 import TournamentProgress from "./TournamentProgress/TournamentProgress";
 import { useIntl } from "react-intl";
 
+/**
+ * TeamManage Component
+ * 
+ * This component is responsible for managing a team within a tournament. It displays information about the team, 
+ * allows the team to participate in upcoming tournaments, and shows the progress of the team during ongoing tournaments.
+ */
 const TeamManage: FC = () => {
   const [cookies] = useCookies(["userId", "token"]);
   const intl = useIntl();

@@ -4,6 +4,14 @@ import { IResorce } from "models/IResorce";
 import { FormattedMessage } from "react-intl";
 import { JSX, Dispatch, SetStateAction } from "react";
 
+/**
+ * MediaForm Component
+ *
+ * This component handles the addition of media forms, allowing users to input media URLs and names.
+ * @param {JSX.Element[]} resForms - Array of JSX elements representing media forms
+ * @param {function} setResForms - Function to update the state of media forms
+ * @param {function} setResources - Function to update the state of resources
+ */
 export const handleAddMediaForm = (
   resForms: JSX.Element[],
   setResForms: Dispatch<SetStateAction<JSX.Element[]>>,

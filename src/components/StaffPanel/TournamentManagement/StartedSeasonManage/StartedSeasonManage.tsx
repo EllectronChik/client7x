@@ -23,6 +23,15 @@ interface StartedSeasonManageProps {
   timeZoneOffsetString: string;
 }
 
+/**
+ * StartedSeasonManage component
+ * 
+ * This component manages the functionality for a started season, allowing users to modify season details such as start time and registration status.
+ * 
+ * @param props Object containing props for the component
+ * @param props.setSeasonStarted Function to set the state indicating whether the season has started or not
+ * @param props.timeZoneOffsetString String representing the time zone offset
+ */
 const StartedSeasonManage: FC<StartedSeasonManageProps> = ({ ...props }) => {
   const { data: currentSeason } = SeasonApi.useFetchCurrentSeasonQuery();
   const [seasonNumber, setSeasonNumber] = useState<number | undefined>(

@@ -24,6 +24,14 @@ interface IProps {
   tournamentsWebSocketRef: MutableRefObject<WebSocket | undefined>;
 }
 
+/**
+ * Grid Distribution Component
+ * 
+ * This component handles the distribution and display of tournament grid data.
+ * It allows users to select teams, view matches, and configure grid settings.
+ *
+ * @param tournamentsWebSocketRef - MutableRefObject for WebSocket reference.
+ */
 const GridDistribution: FC<IProps> = ({ tournamentsWebSocketRef }) => {
   const [cookies] = useCookies(["token", "userId"]);
   const { data: groups } = GroupApi.useFetchGroupsQuery(cookies.token);

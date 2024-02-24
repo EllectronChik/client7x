@@ -11,6 +11,12 @@ interface IUserDict {
   };
 }
 
+/**
+ * AddAdmin Component
+ * 
+ * This component allows administrators to manage user roles and permissions. 
+ * Administrators can view a list of users, filter them by username, and toggle their 'isStaff' status.
+ */
 const AddAdmin: FC = () => {
   const [cookies] = useCookies(["token", "userId"]);
   const { data: allUsers } = UsersApi.useFetchAllUsersQuery(cookies.token);

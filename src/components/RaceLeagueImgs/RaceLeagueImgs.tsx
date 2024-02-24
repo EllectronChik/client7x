@@ -14,6 +14,14 @@ import leagueDefault from "@assets/images/leagueMarks/0.svg";
 import classes from "./RaceLeagueImgs.module.scss";
 import { IPlayer } from "models/IPlayer";
 
+/**
+ * RaceLeagueImgs component
+ *
+ * This component displays images representing a player's race and league in a game.
+ * It takes a player object as a prop and renders the corresponding league and race images.
+ *
+ * @param {IPlayer} player - The player object containing information about the player, including race and league
+ */
 const RaceLeagueImgs: FC<{ player: IPlayer }> = ({ player }) => {
   return (
     <div className={classes.infoImages}>

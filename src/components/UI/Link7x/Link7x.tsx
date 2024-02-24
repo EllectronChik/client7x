@@ -7,6 +7,14 @@ interface Button7xProps {
   children?: ReactNode;
 }
 
+/**
+ * Link7x Component
+ * 
+ * A custom link component styled with CSS modules for the 7x app.
+ * 
+ * @param {string} to - The destination URL for the link.
+ * @param {ReactNode} children - The content to be displayed inside the link.
+ */
 const Link7x: FC<Button7xProps> = ({ to, children }) => {
   return (
     <Link to={to}>

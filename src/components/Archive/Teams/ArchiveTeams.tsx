@@ -24,6 +24,11 @@ interface ITeamsApiResponse {
   results: IClanData[];
 }
 
+/**
+ * ArchiveTeams component
+ * 
+ * This component fetches and displays a list of archived teams. It supports infinite scrolling to load more teams.
+ */
 const ArchiveTeams: FC = () => {
   const dispatch = useAppDispatch();
   const teams = useAppSelector(selectTeams);

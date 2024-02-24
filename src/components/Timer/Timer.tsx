@@ -13,6 +13,12 @@ interface ITimeLeft {
   seconds: number;
 }
 
+/**
+ * Timer component displays the countdown timer based on the provided datetime prop.
+ * It calculates the time left until the specified datetime and updates every second.
+ * @param props - HTML attributes for the div element containing the timer.
+ * @param props.datetime - The target datetime in string format (ISO 8601).
+ */
 const Timer: FC<TimerProps> = ({ ...props }) => {
   const intl = useIntl();
   const calculateTimeLeft = () => {

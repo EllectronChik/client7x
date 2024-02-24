@@ -18,6 +18,13 @@ import EditLinks from "./EditLinks/EditLinks";
 import { SeasonApi } from "services/SeasonService";
 import { FormattedMessage } from "react-intl";
 
+/**
+ * ClanInfo Component
+ * 
+ * This component represents the management interface for a clan/team. It allows users
+ * to view and modify various aspects of the clan/team, such as logo, name, tag, players,
+ * and links.
+ */
 const ClanInfo: FC = () => {
   const [cookies] = useCookies(["userId", "token"]);
   const { data: myTeam } = ClanApi.useFetchClanByManagerQuery(cookies.userId);

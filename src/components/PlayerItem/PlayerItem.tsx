@@ -24,6 +24,17 @@ interface PlayerItemProps {
   title?: string;
 }
 
+/**
+ * PlayerItem Component
+ * 
+ * This component represents an individual player item within a list.
+ * It displays player information such as username, MMR, avatar, league, and race.
+ * Users can interact with the player item by selecting the race from a dropdown menu.
+ * 
+ * @param player - The player object containing information like username, MMR, league, race, etc.
+ * @param onClick - Optional click event handler for the player item.
+ * @param title - Optional title attribute for the player item.
+ */
 const PlayerItem: FC<PlayerItemProps> = ({ player, onClick, title }) => {
   const dispatch = useAppDispatch();
   const [playerLeagueLogo, setPlayerLeagueLogo] = useState<string>("");

@@ -16,6 +16,12 @@ import grandmaster from "assets/images/leagueMarks/7.webp";
 import { Link } from "react-router-dom";
 import { FormattedMessage, useIntl } from "react-intl";
 
+/**
+ * Player Component
+ * 
+ * This component displays information about a player, including their avatar, username, MMR, league, race,
+ * total games, wins, and a list of matches with opponents, results, and maps played.
+ */
 const Player: FC = () => {
   const params = useParams();
   const intl = useIntl();

@@ -15,6 +15,12 @@ interface IErrorData {
   re_password: string[];
 }
 
+/**
+ * Login Component
+ * 
+ * This component provides functionality for user authentication, including user registration and login.
+ * It utilizes React hooks such as useState, useEffect, and custom hooks from the UsersApi for handling user actions.
+ */
 const Login: FC = () => {
   const [isLogin, setIsLogin] = useState<boolean>(true);
   const [isError, setIsError] = useState<string | null>(null);

@@ -14,6 +14,12 @@ interface IEditingMapValues {
   };
 }
 
+/**
+ * MapsDistribution component
+ * 
+ * This component handles the distribution of maps for the current season.
+ * It allows users to add, edit, and filter maps, as well as manage the maps for the current season.
+ */
 const MapsDistribution: FC = () => {
   const [cookies] = useCookies(["token"]);
   const { data: maps } = MapsApi.useFetchMapsQuery(cookies.token);

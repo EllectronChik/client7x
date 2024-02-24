@@ -12,6 +12,15 @@ interface TournamentCardProps extends HTMLProps<HTMLDivElement> {
   tournament: ITournamentApiResponse;
 }
 
+/**
+ * Functional component for rendering a tournament card.
+ * 
+ * This component displays information about a tournament, including opponent details and start time.
+ * Users can request a change in start time and accept or propose alternative times.
+ * 
+ * @param props - Props for the TournamentCard component.
+ * @param props.tournament - The tournament data to display.
+ */
 const TournamentCard: FC<TournamentCardProps> = ({ ...props }) => {
   const [askForChange, setAskForChange] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>(

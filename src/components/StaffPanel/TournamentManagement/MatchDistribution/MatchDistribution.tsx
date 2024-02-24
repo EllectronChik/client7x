@@ -16,6 +16,12 @@ import Button7x from "components/UI/Button7x/Button7x";
 import { Tooltip } from "react-tooltip";
 import { FormattedMessage } from "react-intl";
 
+/**
+ * MatchDistribution component
+ * 
+ * This component manages the distribution of matches between teams in different groups and stages.
+ * It allows users to select teams for matches, set match start times, and reset the match distribution.
+ */
 const MatchDistribution: FC = () => {
   const [slideGroupIndex, setSlideGroupIndex] = useState<number>(0);
   const [slideStageIndex, setSlideStageIndex] = useState<number>(0);
