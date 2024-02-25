@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 import { ISeason } from "../models/ISeason";
+import { IInfoTours } from "models/IInfoTours";
 
 export const SeasonApi = createApi({
   reducerPath: "SeasonApi",
