@@ -1,4 +1,4 @@
-import { useState, useEffect, FC, FormEvent } from "react";
+import { useState, useEffect, FC, FormEvent, lazy, Suspense } from "react";
 import { useCookies } from "react-cookie";
 import { StatusApi } from "services/StatusService";
 import { useNavigate } from "react-router";
@@ -7,7 +7,6 @@ import classes from "./Account.module.scss";
 import { useLogoutUser } from "hooks/useLogoutUser";
 import Button7x from "components/UI/Button7x/Button7x";
 import Input7x from "components/UI/Input7x/Input7x";
-import PlayersList from "components/PlayersList/PlayersList";
 import { useAppDispatch, useAppSelector } from "hooks/reduxHooks";
 import {
   setPageManager,
@@ -23,11 +22,14 @@ import {
   selectIsManager,
   selectIsStaff,
 } from "store/reducers/AccountSlice";
-import TourManage from "components/StaffPanel/TournamentManagement/TourManage";
+const TourManage = lazy(
+  () => import("components/StaffPanel/TournamentManagement/TourManage")
+);
+const PlayersList = lazy(() => import("components/PlayersList/PlayersList"));
 
 /**
  * Account Component
- * 
+ *
  * This component represents the user account page, where users can manage their teams, staff roles, and perform other account-related actions.
  */
 const Account: FC = () => {
@@ -139,7 +141,9 @@ const Account: FC = () => {
             )}
             {renderList && (
               <div className={classes.playersList}>
-                <PlayersList tag={clanTag} />
+                <Suspense fallback={<Loader7x />}>
+                  <PlayersList tag={clanTag} />
+                </Suspense>
                 <Button7x
                   className={classes.returnBtn}
                   onClick={() => {
@@ -154,7 +158,11 @@ const Account: FC = () => {
           </div>
         )}
         {pageManager === 1 && !isLoading && <TeamManage />}
-        {pageManager === 2 && !isLoading && <TourManage />}
+        {pageManager === 2 && !isLoading && (
+          <Suspense>
+            <TourManage />
+          </Suspense>
+        )}
         {isStaff && !isManager && pageManager === 0 && (
           <Button7x
             className={classes.staffBtn}

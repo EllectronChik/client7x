@@ -1,4 +1,4 @@
-import { useEffect, useState, FC } from "react";
+import { useEffect, useState, FC, lazy, Suspense } from "react";
 import ClanInfo from "./ClanInfo/ClanInfo";
 import Participate from "./Participate/Participate";
 import classes from "./TeamManage.module.scss";
@@ -6,13 +6,16 @@ import { SeasonApi } from "services/SeasonService";
 import moment from "moment";
 import { ClanApi } from "services/ClanService";
 import { useCookies } from "react-cookie";
-import TournamentProgress from "./TournamentProgress/TournamentProgress";
 import { useIntl } from "react-intl";
+import Loader7x from "components/UI/Loader7x/Loader7x";
+const TournamentProgress = lazy(
+  () => import("./TournamentProgress/TournamentProgress")
+);
 
 /**
  * TeamManage Component
- * 
- * This component is responsible for managing a team within a tournament. It displays information about the team, 
+ *
+ * This component is responsible for managing a team within a tournament. It displays information about the team,
  * allows the team to participate in upcoming tournaments, and shows the progress of the team during ongoing tournaments.
  */
 const TeamManage: FC = () => {
@@ -54,7 +57,9 @@ const TeamManage: FC = () => {
         myTeam.isRegToCurrentSeason &&
         currentTournament &&
         moment(currentDateTime).isAfter(currentTournament.start_datetime) && (
-          <TournamentProgress />
+          <Suspense fallback={<Loader7x />}>
+            <TournamentProgress />
+          </Suspense>
         )}
     </div>
   );

@@ -1,13 +1,14 @@
 import StartPage from "../pages/StartPage/StartPage";
 import Archive from "../pages/Archive/Archive";
 import Login from "../pages/Login/Login";
-import Account from "./../pages/Account/Account";
 import Season from "pages/Season/Season";
 import Team from "pages/Team/Team";
 import Player from "pages/Player/Player";
 import Tournament from "pages/Tournament/Tournament";
 import Statistics from "pages/Statistics/Statistics";
 import NotFoundPage from "pages/NotFoundPage/NotFoundPage";
+import { lazy } from "react";
+const Account = lazy(() => import("../pages/Account/Account"));
 
 export const PublicRoutes = [
   { path: "/archive", Element: Archive },

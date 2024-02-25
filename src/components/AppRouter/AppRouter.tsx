@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { PublicRoutes } from "../../router/routes";
 import Header7x from "../UI/Header7x/Header7x";
@@ -24,7 +24,7 @@ const AppRouter: FC = () => {
             <Route
               key={route.path}
               path={route.path}
-              element={<route.Element />}
+              element={<Suspense><route.Element /></Suspense>}
             />
           ))}
         </Routes>
