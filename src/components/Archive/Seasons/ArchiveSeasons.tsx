@@ -8,11 +8,13 @@ import {
   selectPage,
   selectSeasons,
   selectSortDirection,
+  selectIsScrollable,
   setFetching,
   setNextPage,
   setPage,
   setSeasons,
   setSortDirection,
+  setIsScrollable,
 } from "store/reducers/ArchiveSeasonsSlice";
 import SortUp from "assets/images/techImages/sortUp.svg";
 import SortDown from "assets/images/techImages/sortDown.svg";
@@ -46,6 +48,7 @@ const ArchiveSeasons: FC = () => {
   const page = useAppSelector(selectPage);
   const fetching = useAppSelector(selectFetching);
   const sortDirection = useAppSelector(selectSortDirection);
+  const isScrollable = useAppSelector(selectIsScrollable);
 
   const nextPage = useAppSelector(selectNextPage);
   const intl = useIntl();
@@ -53,6 +56,7 @@ const ArchiveSeasons: FC = () => {
   const scrollHandler = () => {
     if (
       window.innerWidth >= 576 &&
+      isScrollable &&
       document.documentElement.scrollHeight -
         (document.documentElement.scrollTop + window.innerHeight) <
         260 &&
@@ -62,12 +66,31 @@ const ArchiveSeasons: FC = () => {
     }
   };
 
+  const handleResize = () => {
+    dispatch(
+      setIsScrollable(
+        document.body.scrollHeight - 23 > window.innerHeight
+      )
+    );
+    console.log(
+      document.body.scrollHeight - 23,
+      window.innerHeight,
+      isScrollable
+    );
+  };
+
+  useEffect(() => {
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [window.innerHeight, document.body.scrollHeight]);
+  
   useEffect(() => {
     document.addEventListener("scroll", scrollHandler);
     document.title = intl.formatMessage({ id: "archive" });
-
+    
     return () => document.removeEventListener("scroll", scrollHandler);
-  }, [nextPage]);
+  }, [nextPage, isScrollable]);
 
   const handleSortByWinner = () => {
     const newSeasons = [...seasons];
@@ -183,7 +206,7 @@ const ArchiveSeasons: FC = () => {
             </Link>
           ))}
         </div>
-        {innerWidth < 576 && nextPage && (
+        {(innerWidth < 576 || !isScrollable) && nextPage && (
           <Button7x
             className={classes.button}
             onClick={() => {

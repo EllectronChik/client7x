@@ -5,6 +5,8 @@
   flex-direction: column;
   align-items: center;
   .table {
+    display: flex;
+    flex-direction: column;
     width: 500px;
     padding: 25px 50px;
     border: 2px solid $clrRed;
@@ -50,6 +52,11 @@
         text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
       }
     }
+    .button {
+      padding-top: 10px;
+      color: $clrLight;
+      align-self: center;
+    }
   }
 }
 
@@ -57,15 +64,8 @@
   .container {
     width: 98%;
     .table {
-      display: flex;
-      flex-direction: column;
       width: 100%;
       padding: 25px;
-      .button {
-        padding-top: 10px;
-        color: $clrLight;
-        align-self: center;
-      }
     }
   }
 }

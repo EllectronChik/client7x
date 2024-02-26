@@ -16,6 +16,7 @@ interface IArchiveTeams {
   fetching: boolean;
   nextPage: string | null;
   sortDirection: number;
+  isScrollable: boolean;
 }
 
 const initialState: IArchiveTeams = {
@@ -24,6 +25,7 @@ const initialState: IArchiveTeams = {
   fetching: true,
   nextPage: null,
   sortDirection: 1,
+  isScrollable: false,
 };
 
 const archiveSeasonsSlice = createSlice({
@@ -45,6 +47,9 @@ const archiveSeasonsSlice = createSlice({
     setSortDirection(state, action: PayloadAction<number>) {
       state.sortDirection = action.payload;
     },
+    setIsScrollable(state, action: PayloadAction<boolean>) {
+      state.isScrollable = action.payload;
+    },
   },
 });
 
@@ -54,7 +59,15 @@ export const selectFetching = (state: RootState) => state.archiveTeams.fetching;
 export const selectNextPage = (state: RootState) => state.archiveTeams.nextPage;
 export const selectSortDirection = (state: RootState) =>
   state.archiveTeams.sortDirection;
+export const selectIsScrollable = (state: RootState) =>
+  state.archiveTeams.isScrollable;
 
-export const { setTeams, setPage, setFetching, setNextPage, setSortDirection } =
-  archiveSeasonsSlice.actions;
+export const {
+  setTeams,
+  setPage,
+  setFetching,
+  setNextPage,
+  setSortDirection,
+  setIsScrollable,
+} = archiveSeasonsSlice.actions;
 export default archiveSeasonsSlice.reducer;

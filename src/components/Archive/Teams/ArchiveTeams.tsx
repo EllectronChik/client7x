@@ -6,10 +6,12 @@ import {
   selectNextPage,
   selectPage,
   selectTeams,
+  selectIsScrollable,
   setFetching,
   setNextPage,
   setPage,
   setTeams,
+  setIsScrollable,
 } from "store/reducers/ArchiveTeamsSlice";
 import axios from "axios";
 import { IClanData } from "store/reducers/ArchiveTeamsSlice";
@@ -26,7 +28,7 @@ interface ITeamsApiResponse {
 
 /**
  * ArchiveTeams component
- * 
+ *
  * This component fetches and displays a list of archived teams. It supports infinite scrolling to load more teams.
  */
 const ArchiveTeams: FC = () => {
@@ -34,12 +36,13 @@ const ArchiveTeams: FC = () => {
   const teams = useAppSelector(selectTeams);
   const page = useAppSelector(selectPage);
   const fetching = useAppSelector(selectFetching);
-
   const nextPage = useAppSelector(selectNextPage);
+  const isScrollable = useAppSelector(selectIsScrollable);
 
   const scrollHandler = () => {
     if (
       window.innerWidth >= 576 &&
+      isScrollable &&
       document.documentElement.scrollHeight -
         (document.documentElement.scrollTop + window.innerHeight) <
         260 &&
@@ -49,11 +52,25 @@ const ArchiveTeams: FC = () => {
     }
   };
 
+  const handleResize = () => {
+    dispatch(
+      setIsScrollable(
+        document.body.scrollHeight - 23 > window.innerHeight
+      )
+    );
+  };
+
+  useEffect(() => {
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [window.innerHeight, document.body.scrollHeight]);
+
   useEffect(() => {
     document.addEventListener("scroll", scrollHandler);
 
     return () => document.removeEventListener("scroll", scrollHandler);
-  }, [nextPage]);
+  }, [nextPage, isScrollable]);
 
   useEffect(() => {
     if (fetching) {
@@ -90,7 +107,7 @@ const ArchiveTeams: FC = () => {
             </Link>
           ))}
         </div>
-        {innerWidth < 576 && nextPage && (
+        {(innerWidth < 576 || !isScrollable) && nextPage && (
           <Button7x
             className={classes.button}
             onClick={() => {
