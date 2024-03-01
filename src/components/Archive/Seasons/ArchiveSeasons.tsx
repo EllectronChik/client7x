@@ -72,11 +72,6 @@ const ArchiveSeasons: FC = () => {
         document.body.scrollHeight - 23 > window.innerHeight
       )
     );
-    console.log(
-      document.body.scrollHeight - 23,
-      window.innerHeight,
-      isScrollable
-    );
   };
 
   useEffect(() => {
