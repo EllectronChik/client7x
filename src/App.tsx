@@ -18,6 +18,9 @@ function App() {
       }
     });
   }
+  if (!MESSAGES[language]) {
+    language = LOCALES.ENGLISH.value;
+  }
   return (
     <div className="App">
       <IntlProvider
