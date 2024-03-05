@@ -11,6 +11,8 @@ import { useAppDispatch, useAppSelector } from "hooks/reduxHooks";
 import {
   setPageManager,
   selectManagerPage,
+  setFirstLoad,
+  selectManagerFirstLoad,
 } from "store/reducers/pageManagerSlice";
 import { Tooltip } from "react-tooltip";
 import TeamManage from "components/TeamManage/TeamManage";
@@ -35,6 +37,7 @@ const PlayersList = lazy(() => import("components/PlayersList/PlayersList"));
 const Account: FC = () => {
   const dispatch = useAppDispatch();
   const pageManager = useAppSelector(selectManagerPage);
+  const firstLoad = useAppSelector(selectManagerFirstLoad);
   const [clanTag, setClanTag] = useState<string>("");
   const [renderList, setRenderList] = useState<boolean>(false);
   const [cookie] = useCookies(["token", "userId"]);
@@ -57,16 +60,19 @@ const Account: FC = () => {
     }, [status]);
 
     useEffect(() => {
-      if (isStaff === false && isManager === false) {
-        dispatch(setPageManager(0));
-      } else if (isManager && !isStaff) {
-        dispatch(setPageManager(1));
-      } else if (!isManager && isStaff) {
-        dispatch(setPageManager(2));
-      } else if (isManager && isStaff) {
-        dispatch(setPageManager(1));
+      if (firstLoad === true && isManager !== null && isStaff !== null) {
+        dispatch(setFirstLoad(false));
+        if (isStaff === false && isManager === false) {
+          dispatch(setPageManager(0));
+        } else if (isManager && !isStaff) {
+          dispatch(setPageManager(1));
+        } else if (!isManager && isStaff) {
+          dispatch(setPageManager(2));
+        } else if (isManager && isStaff) {
+          dispatch(setPageManager(1));
+        }
       }
-    }, [isManager, isStaff]);
+    }, [isManager, isStaff, firstLoad]);
     return (
       <div className={classes.container}>
         {isManager && isStaff && (
