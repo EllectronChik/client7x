@@ -26,7 +26,7 @@ interface IProps {
 
 /**
  * Grid Distribution Component
- * 
+ *
  * This component handles the distribution and display of tournament grid data.
  * It allows users to select teams, view matches, and configure grid settings.
  *
@@ -41,7 +41,7 @@ const GridDistribution: FC<IProps> = ({ tournamentsWebSocketRef }) => {
   const [gridRow, setGridRow] = useState<number>(0);
   const [maxGridRow, setMaxGridRow] = useState<number>(0);
   const [minGridRow, setMinGridRow] = useState<number>(1);
-  const [thirdPlace, setThirdPlace] = useState<boolean>(true);
+  const [thirdPlace, setThirdPlace] = useState<boolean>(false);
   const [lvlsTournaments, setLvlsTournaments] = useState<ILevelsTournaments>(
     {}
   );
@@ -209,11 +209,19 @@ const GridDistribution: FC<IProps> = ({ tournamentsWebSocketRef }) => {
           );
           setLvlsTournaments(locLvllsTournaments);
         });
+        if (locLvllsTournaments[999]) {
+          setThirdPlace(true);
+        }
+        
       if (gridRow === 0) {
         locLvllsTournaments[1]
           ? setGridRow(Math.ceil(Math.log2(maxKey + 1) + 1))
           : setGridRow(
-              maxGridRow / 2 + 1 <= maxGridRow ? maxGridRow / 2 + 1 : maxGridRow
+              maxGridRow / 2 + 1 <= maxGridRow
+                ? maxGridRow / 2 + 1
+                : maxGridRow !== 0
+                ? maxGridRow
+                : 1
             );
       }
     }
@@ -485,7 +493,9 @@ const GridDistribution: FC<IProps> = ({ tournamentsWebSocketRef }) => {
                 handleSelectSecondTeam={handleSelectSecondTeam}
               />
             )}
-            <h3><FormattedMessage id="setGames" /></h3>
+            <h3>
+              <FormattedMessage id="setGames" />
+            </h3>
             {Array.from({ length: 2 ** (gridRow - 1) }, (_, i) => (
               <FirstLvlTour
                 key={i}
