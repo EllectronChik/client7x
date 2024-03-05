@@ -44,7 +44,7 @@ const Footer: FC<HTMLProps<HTMLDivElement>> = ({ ...props }) => {
           </h3>
           <select
             className={classes.select}
-            value={cookie?.locale || language}
+            value={cookie?.locale || language.value}
             onChange={(e) =>
               setCookie("locale", e.target.value, {
                 expires: new Date(
