@@ -31,7 +31,7 @@ import {
 
 /**
  * TournamentProgress component
- * 
+ *
  * This component is responsible for displaying the progress of tournaments.
  * It subscribes to WebSocket updates for tournaments and matches, handles match editing,
  * and renders the tournament progress.
@@ -885,7 +885,12 @@ const TournamentProgress: FC = () => {
                                         )?.username}{" "}
                                     </h3>
                                   </div>
-                                  <h3 className={classes.map}>{match.map}</h3>
+                                  <h3 className={classes.map}>
+                                    {
+                                      maps.find((map) => map.id === match.map)
+                                        ?.name
+                                    }
+                                  </h3>
                                 </div>
                               );
                             })}
