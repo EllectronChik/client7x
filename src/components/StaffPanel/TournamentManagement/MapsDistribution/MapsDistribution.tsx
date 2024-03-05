@@ -107,7 +107,7 @@ const MapsDistribution: FC = () => {
   return (
     <div className={classes.maps}>
       <div className={classes.mapBox}>
-        <h3><FormattedMessage id="currentSeasonMaps" /></h3>
+        <h3><FormattedMessage id="prevSeasonsMaps" /></h3>
         <h4 className={classes.header}><FormattedMessage id="clickToAddMap" values={{ br: <br /> }} /></h4>
         <input
           placeholder={intl.formatMessage({ id: "mapNameFilter" })}
