@@ -56,6 +56,7 @@ This frontend project serves as the interface for a platform dedicated to organi
 ### Built With
 
 * [![React][React.js]][React-url]
+* [![Redux][Redux]][Redux-url]
 * [![Scss][Sass]][Sass-url]
 * [![Typescript][Typescript]][Typescript-url]
 
@@ -104,6 +105,8 @@ _First run server: https://github.com/EllectronChik/server7x#installation_
 [product-screenshot]: readmeMedia/screen.png
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
+[Redux]: https://img.shields.io/badge/Redux-764ABC?style=for-the-badge&logo=redux&logoColor=white
+[Redux-url]: https://redux.js.org
 [Sass]: https://img.shields.io/badge/Sass-CC6699?style=for-the-badge&logo=sass&logoColor=white
 [Sass-url]: https://sass-lang.com
 [Typescript]: https://img.shields.io/badge/Typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white
