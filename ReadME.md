@@ -10,7 +10,7 @@
   <h3 align="center">7x Team League Client</h3>
 
   <p align="center">
-    Client side of the project dedicated to holding team leagues on StartCraft 2 game
+    Client side of the project dedicated to holding team leagues in StartCraft 2 game
     <br />
     <a href="https://github.com/EllectronChik/client7x/issues">Report Bug</a>
     ·
@@ -93,7 +93,7 @@ _First run server: https://github.com/EllectronChik/server7x#installation_
   VITE_SERVER_WS_URL = ws://{{SERVER_URL}}/ws/
   ```
   If you have a server that is running on port 3000, you can use `localhost:3000` instead of `{{SERVER_URL}}`. <br/>
-  If you use https, you can use `https` instead of `http` and `wss` instead of `ws`.
+  if you use https, change `http` to `https` and `ws` to `wss`
 
 4. Run `npm run dev` to start the dev server or `npm run build` to build the app. <br/>
   Builded app can be found in `dist` folder.
