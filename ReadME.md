@@ -3,7 +3,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
+  <a href="https://github.com/EllectronChik/client7x">
     <img src="public/assets/favicon.svg" alt="Logo" width="80" height="80">
   </a>
 
@@ -74,6 +74,8 @@ This frontend project serves as the interface for a platform dedicated to organi
 - [ ] Git
 
 ### Installation
+
+_First run server: https://github.com/EllectronChik/server7x#installation_
 
 1. Clone the repo
   ```sh
